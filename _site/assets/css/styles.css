@@ -1,0 +1,42 @@
+body {
+    background-color: #feffee;
+    font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+}
+
+nav {
+    float: left;
+    width: 10rem;
+}
+
+.content {
+    margin: 5rem 1rem 0 10rem;
+    max-width: 50rem;
+}
+
+img {
+    max-width: 100%;
+}
+
+@media (max-width: 540px) {
+    
+    nav {
+        font-size: 14px;
+        width: 4rem;
+    }
+
+    .content {
+        margin-left: 0;
+        margin-right: .25rem;
+    }
+}
+
+@media (min-width: 1400px) {
+
+    .content {
+        margin-left: calc((100% - 1800px) / 2 + 232px + 10rem);
+    }
+
+    nav {
+        margin-left: calc((100% - 1900px) / 2 + 232px);
+    }
+}
