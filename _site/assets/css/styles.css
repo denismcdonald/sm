@@ -7,13 +7,15 @@ img {
     width: 10rem;
     position: absolute;
     top: -1rem;
-    left: 3rem;
-    transform: rotate(163deg);
+    left: 4rem;
+    transform: rotate(160deg);
 }
 
 @media (max-width: 540px) {
     
     img {
+        left: 2rem;
+        top: -0.8rem;
         width: 8rem;
     }
 }
