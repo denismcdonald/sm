@@ -471,6 +471,10 @@
             color: #16a34a;
         }
 
+       #currentCollectionStatus:hover {
+            border-color: #666 !important;
+        }
+
         .no-results {
             text-align: center;
             padding: 1.5rem;
@@ -1002,6 +1006,31 @@
                 <h1>Glenelg Libraries</h1>
                 <p>Collection Analysis Tool (CAT)</p>
             </div>
+            <!-- In the tab-navigation div -->
+            <div id="currentCollectionStatus" onclick="event.stopPropagation(); showTab('snapshots');" style="
+                margin-left: auto; 
+                margin-right: 1rem;
+                padding: 0.5rem 0.75rem;
+                background: #f0f9ff;
+                border: 1px solid #0284c7;
+                border-radius: 0.5rem;
+                font-size: 0.75rem;
+                color: #0284c7;
+                font-weight: 500;
+                display: none;
+                max-width: 250px;
+                min-width: 0;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            ">
+                <span id="collectionName" style="font-weight: 600;"></span>
+                <span id="collectionStats" style="margin-left: 0.5rem; opacity: 0.8;"></span>
+            </div>
+            </div>
         </div>
     </div>
 
@@ -1019,7 +1048,7 @@
                     Weed Whacker
                 </button>
                 <button class="tab-btn" onclick="showTab('authors')">
-                    Author Performance
+                    Author Olympics
                 </button>
                 <button class="tab-btn" onclick="showTab('snapshots')">
                     Snapshots
@@ -1799,9 +1828,9 @@
         <div class="analysis-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <h3>Saved Snapshots</h3>
-                <button id="loadSnapshotBtn" class="btn btn-secondary" onclick="loadSelectedSnapshot()">
+                <!-- <button id="loadSnapshotBtn" class="btn btn-secondary" onclick="loadSelectedSnapshot()">
                     📁 Load Selected
-                </button>
+                </button> -->
             </div>
             <div id="snapshotsList"></div>
         </div>
@@ -1858,19 +1887,28 @@
                     💾 Save Snapshot
                 </button>
             </div>
-            <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1.5rem;">
+            <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
                 Snapshots are saved locally in your browser and persist across sessions. You can compare snapshots
                 to track collection changes over time.
             </p>
+            <div id="databaseStatus" style="margin-bottom: 1rem;"></div>
+            <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+                <button id="resetDatabaseBtn" class="btn btn-danger" onclick="resetDatabaseAndReload()" style="display: none;">
+                    🔄 Reset Database
+                </button>
+                <span id="resetDatabaseInfo" style="font-size: 0.875rem; color: #6b7280; display: none;">
+                    If snapshots aren't working, try resetting the database
+                </span>
+            </div>
         </div>
 
         <!-- Saved Snapshots -->
         <div class="analysis-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <h3>Saved Snapshots</h3>
-                <button id="loadSnapshotBtn" class="btn btn-secondary" onclick="loadSelectedSnapshot()">
+                <!-- <button id="loadSnapshotBtn" class="btn btn-secondary" onclick="loadSelectedSnapshot()">
                     📁 Load Selected
-                </button>
+                </button> -->
             </div>
             <div id="snapshotsList"></div>
         </div>
@@ -1915,7 +1953,12 @@
         let columnMappings = {}; // Store detected column mappings
         let fuseInstance = null; // Fuse.js search instance
         let db = null; // IndexedDB database
-        let selectedSnapshots = []; // For snapshot selection
+        // Create stable database instance identifier that persists across page loads
+            window.dbInstance = window.dbInstance || localStorage.getItem('collectionToolDbInstance') || 'main';
+            if (window.dbInstance !== 'main') {
+                localStorage.setItem('collectionToolDbInstance', window.dbInstance);
+            }
+        let selectedSnapshot = null; // For single snapshot selection
         let currentSnapshotId = null; // Track currently loaded snapshot
         let searchResults = []; // Store current search results
         let currentSort = { field: null, direction: 'asc' }; // Track current sort state
@@ -2018,6 +2061,35 @@
             renderExcludedSamples();
         }
 
+        //===========================================================================
+            // resetDatabase() - Reset corrupted database
+            //===========================================================================
+            async function resetDatabase() {
+                try {
+                    if (db) {
+                        db.close();
+                        db = null;
+                    }
+
+                    const dbName = 'CollectionSnapshots_' + (window.dbInstance || 'main');
+                    const deleteRequest = indexedDB.deleteDatabase(dbName);
+
+                    return new Promise((resolve, reject) => {
+                        deleteRequest.onsuccess = () => {
+                            console.log('Database reset successfully');
+                            resolve();
+                        };
+
+                        deleteRequest.onerror = () => {
+                            console.error('Failed to reset database:', deleteRequest.error);
+                            reject(deleteRequest.error);
+                        };
+                    });
+                } catch (error) {
+                    console.error('Error resetting database:', error);
+                    throw error;
+                }
+            }
 
         //===========================================================================
         // Weeding Candidates table configuration to load 100 more items
@@ -2747,43 +2819,94 @@
         //===========================================================================
 
         //===========================================================================
-        // initializeDB() - Initialize IndexedDB for snapshot storage
-        //===========================================================================
-        function initializeDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('CollectionSnapshots', 1);
+            // initializeDB() - Initialize IndexedDB with error recovery
+            //===========================================================================
+            function initializeDB() {
+                return new Promise((resolve, reject) => {
+                    // Add timestamp to database name to avoid conflicts between different instances
+                    const dbName = 'CollectionSnapshots_' + (window.dbInstance || 'main');
 
-                request.onerror = () => {
-                    console.error('Error opening IndexedDB:', request.error);
-                    reject(request.error);
-                };
+                    const request = indexedDB.open(dbName, 1);
 
-                request.onsuccess = () => {
-                    db = request.result;
-                    console.log('IndexedDB initialized successfully');
-                    resolve(db);
-                };
+                    request.onerror = () => {
+                        console.error('Error opening IndexedDB:', request.error);
 
-                request.onupgradeneeded = (event) => {
-                    db = event.target.result;
+                        // Try to recover by deleting the corrupted database
+                        if (request.error && request.error.name !== 'VersionError') {
+                            console.log('Attempting to recover by clearing corrupted database...');
+                            const deleteRequest = indexedDB.deleteDatabase(dbName);
 
-                    // Create object store for snapshots
-                    if (!db.objectStoreNames.contains('snapshots')) {
-                        const store = db.createObjectStore('snapshots', {
-                            keyPath: 'id',
-                            autoIncrement: false
-                        });
+                            deleteRequest.onsuccess = () => {
+                                console.log('Corrupted database deleted, trying again...');
+                                // Try again with a fresh database
+                                const retryRequest = indexedDB.open(dbName, 1);
 
-                        // Create indexes for better querying
-                        store.createIndex('name', 'name', { unique: false });
-                        store.createIndex('timestamp', 'timestamp', { unique: false });
-                        store.createIndex('itemCount', 'itemCount', { unique: false });
-                    }
+                                retryRequest.onsuccess = () => {
+                                    db = retryRequest.result;
+                                    console.log('IndexedDB recovered successfully');
+                                    resolve(db);
+                                };
 
-                    console.log('IndexedDB schema created/upgraded');
-                };
-            });
-        }
+                                retryRequest.onerror = () => {
+                                    console.error('Recovery failed:', retryRequest.error);
+                                    reject(retryRequest.error);
+                                };
+
+                                retryRequest.onupgradeneeded = (event) => {
+                                    const recoveredDb = event.target.result;
+                                    createObjectStore(recoveredDb);
+                                };
+                            };
+
+                            deleteRequest.onerror = () => {
+                                console.error('Failed to delete corrupted database:', deleteRequest.error);
+                                reject(request.error);
+                            };
+                        } else {
+                            reject(request.error);
+                        }
+                    };
+
+                    request.onsuccess = () => {
+                        db = request.result;
+                        console.log('IndexedDB initialized successfully');
+                        resolve(db);
+                    };
+
+                    request.onupgradeneeded = (event) => {
+                        db = event.target.result;
+                        createObjectStore(db);
+                        console.log('IndexedDB schema created/upgraded');
+                    };
+
+                    // Handle database blocking (when another tab has it open)
+                    request.onblocked = () => {
+                        console.warn('IndexedDB blocked by another tab. Please close other tabs with this application.');
+                        // Don't reject immediately, wait a bit for other tabs to close
+                        setTimeout(() => {
+                            reject(new Error('Database blocked by another tab. Please close other tabs with this application and refresh.'));
+                        }, 5000);
+                    };
+                });
+            }
+
+            //===========================================================================
+            // createObjectStore() - Helper function to create the object store
+            //===========================================================================
+            function createObjectStore(database) {
+                // Create object store for snapshots
+                if (!database.objectStoreNames.contains('snapshots')) {
+                    const store = database.createObjectStore('snapshots', {
+                        keyPath: 'id',
+                        autoIncrement: false
+                    });
+
+                    // Create indexes for better querying
+                    store.createIndex('name', 'name', { unique: false });
+                    store.createIndex('timestamp', 'timestamp', { unique: false });
+                    store.createIndex('itemCount', 'itemCount', { unique: false });
+                }
+            }
 
         //===========================================================================
         // saveSnapshot() - Save collection snapshot to IndexedDB
@@ -2934,9 +3057,6 @@
                             <button class="btn btn-secondary" onclick="showTab('snapshots')">
                                 View All Snapshots
                             </button>
-                            <button class="btn btn-secondary" onclick="dismissRecovery()">
-                                Upload New Collection
-                            </button>
                             <button class="btn btn-danger" onclick="deletePreviousCollection('${latestSnapshot.id}')">
                                 🗑️ Delete Collection
                             </button>
@@ -2963,6 +3083,8 @@
                 if (snapshot && snapshot.data) {
                     libraryData = snapshot.data;
                     currentSnapshotId = id;
+                    // Update header status
+                    updateCurrentCollectionStatus();
 
                     // Update branch filter options
                     updateBranchFilter();
@@ -2986,7 +3108,7 @@
                     showStatus(`✅ Loaded snapshot "${snapshot.name}" (${snapshot.itemCount.toLocaleString()} items)`, 'success');
 
                     // Hide the success message after 2 seconds
-                    setTimeout(() => {
+                    window.statusClearTimer = setTimeout(() => {
                         const uploadStatus = document.getElementById('uploadStatus');
                         const statusEl = document.querySelector('.status-success');
                         if (statusEl && statusEl.textContent.includes('Loaded snapshot')) {
@@ -2994,6 +3116,12 @@
                             uploadStatus.className = '';
                         }
                     }, 2000);
+
+                    // Always refresh snapshots list to show "Currently Loaded" status
+                    // (even if not currently on snapshots tab, for when user navigates there later)
+                    setTimeout(() => {
+                        refreshSnapshotsList();
+                    }, 200);
 
                 } else {
                     showStatus('Error: Snapshot not found or corrupted', 'error');
@@ -3033,6 +3161,15 @@
 
                 request.onsuccess = () => {
                     console.log('✅ Collection auto-saved for recovery');
+
+                    // If no current snapshot is set (i.e., this is fresh uploaded data),
+                    // mark the auto-save as the current snapshot
+                    if (!currentSnapshotId) {
+                        currentSnapshotId = 'recovery_latest';
+                        console.log('Auto-save marked as currently loaded');
+                        // Update header status
+                        updateCurrentCollectionStatus();
+                    }
                 };
 
                 request.onerror = () => {
@@ -3115,7 +3252,7 @@
 
             try {
                 showStatus('Saving snapshot...', 'loading');
-                await saveSnapshot(name, libraryData);
+                const snapshot = await saveSnapshot(name, libraryData);
 
                 // Clear input
                 nameInput.value = '';
@@ -3123,15 +3260,24 @@
                 // Show success
                 showStatus(`✅ Snapshot "${name}" saved successfully (${libraryData.length.toLocaleString()} items)`, 'success');
 
-                // Refresh the snapshots list
-                refreshSnapshotsList();
-                updateSnapshotMetrics();
+                // Mark this snapshot as currently loaded
+                currentSnapshotId = snapshot.id;
+                // Update header status
+                updateCurrentCollectionStatus();
 
-                // Hide status after a few seconds
+               // Refresh the snapshots list with a small delay to ensure currentSnapshotId is set
+                setTimeout(() => {
+                    refreshSnapshotsList();
+                    updateSnapshotMetrics();
+                }, 100);
+
+                // Hide status after a few seconds and reset upload status area
                 setTimeout(() => {
                     const statusEl = document.querySelector('.status-success');
                     if (statusEl && statusEl.textContent.includes('saved successfully')) {
-                        statusEl.style.display = 'none';
+                        const uploadStatus = document.getElementById('uploadStatus');
+                        uploadStatus.innerHTML = '';
+                        uploadStatus.className = '';
                     }
                 }, 3000);
 
@@ -3169,7 +3315,7 @@
 
                 // Update snapshots list
                 snapshotsList.innerHTML = snapshots.map(snapshot => {
-                    const isSelected = selectedSnapshots.includes(snapshot.id);
+                    const isSelected = selectedSnapshot === snapshot.id;
                     const isCurrent = currentSnapshotId === snapshot.id;
 
                     return `
@@ -3193,9 +3339,13 @@
                                 <span>${snapshot.collections} collections</span>
                             </div>
                             <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
-                                <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" 
+                                <button class="btn btn-primary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" 
                                         onclick="event.stopPropagation(); loadSnapshotById('${snapshot.id}')">
                                     Load
+                                </button>
+                                <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"
+                                        onclick="event.stopPropagation(); renameSnapshot('${snapshot.id}')">
+                                    Rename
                                 </button>
                                 <button class="btn btn-danger" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" 
                                         onclick="event.stopPropagation(); deleteSnapshotById('${snapshot.id}')">
@@ -3234,32 +3384,31 @@
         }
 
         //===========================================================================
-        // toggleSnapshotSelection() - Toggle snapshot selection for comparison
+        // toggleSnapshotSelection() - Toggle single snapshot selection
         //===========================================================================
         function toggleSnapshotSelection(snapshotId) {
-            const index = selectedSnapshots.indexOf(snapshotId);
-
-            if (index > -1) {
-                selectedSnapshots.splice(index, 1);
+            // Single selection only
+            if (selectedSnapshot === snapshotId) {
+                selectedSnapshot = null; // Deselect if clicking the same one
             } else {
-                selectedSnapshots.push(snapshotId);
+                selectedSnapshot = snapshotId; // Select the new one
             }
 
             // Refresh the display to show selection
             refreshSnapshotsList();
-        }
+        }   
 
         //===========================================================================
-        // loadSelectedSnapshot() - Load the first selected snapshot
+        // loadSelectedSnapshot() - Load the selected snapshot
         //===========================================================================
         function loadSelectedSnapshot() {
-            if (selectedSnapshots.length === 0) {
+            if (!selectedSnapshot) {
                 alert('Please select a snapshot to load');
                 return;
             }
 
-            loadSnapshotById(selectedSnapshots[0]);
-        }
+            loadSnapshotById(selectedSnapshot);
+        }    
 
         //===========================================================================
         // deleteSnapshotById() - Delete snapshot with confirmation
@@ -3278,10 +3427,9 @@
             try {
                 await deleteSnapshot(snapshotId);
 
-                // Remove from selected snapshots if present
-                const index = selectedSnapshots.indexOf(snapshotId);
-                if (index > -1) {
-                    selectedSnapshots.splice(index, 1);
+                // Clear selection if this snapshot was selected
+                if (selectedSnapshot === snapshotId) {
+                    selectedSnapshot = null;
                 }
 
                 // Clear current snapshot if it was deleted
@@ -3295,11 +3443,14 @@
 
                 showStatus(`✅ Snapshot "${snapshot.name}" deleted successfully`, 'success');
 
-                // Hide status after a few seconds
+                // Clear status after a few seconds
                 setTimeout(() => {
-                    const statusEl = document.querySelector('.status-success');
-                    if (statusEl && statusEl.textContent.includes('deleted successfully')) {
-                        statusEl.style.display = 'none';
+                    const uploadStatus = document.getElementById('uploadStatus');
+                    if (uploadStatus && uploadStatus.textContent.includes('deleted successfully')) {
+                        uploadStatus.innerHTML = '';
+                        uploadStatus.className = '';
+                        // Ensure it stays visible for future use
+                        uploadStatus.style.display = 'block';
                     }
                 }, 3000);
 
@@ -3738,6 +3889,63 @@
         }
 
         //===========================================================================
+        // renameSnapshot() - Rename a saved snapshot
+        //===========================================================================
+        async function renameSnapshot(snapshotId) {
+            try {
+                const snapshot = await getSnapshot(snapshotId);
+                if (!snapshot) {
+                    alert('Snapshot not found');
+                    return;
+                }
+
+                const newName = prompt(`Rename snapshot:`, snapshot.name);
+                if (!newName || newName.trim() === '' || newName === snapshot.name) {
+                    return; // User cancelled or didn't change the name
+                }
+
+                // Update the snapshot with new name
+                snapshot.name = newName.trim();
+
+                // Save the updated snapshot
+                const transaction = db.transaction(['snapshots'], 'readwrite');
+                const store = transaction.objectStore('snapshots');
+                const request = store.put(snapshot);
+
+                request.onsuccess = () => {
+                    // Refresh the display
+                    refreshSnapshotsList();
+                    updateSnapshotMetrics();
+
+                    // Update header if this is the currently loaded snapshot
+                    if (currentSnapshotId === snapshotId) {
+                        updateCurrentCollectionStatus();
+                    }
+
+                    showStatus(`✅ Snapshot renamed to "${newName}"`, 'success');
+
+                    // Hide status after a few seconds
+                    setTimeout(() => {
+                        const uploadStatus = document.getElementById('uploadStatus');
+                        if (uploadStatus && uploadStatus.textContent.includes('renamed to')) {
+                            uploadStatus.innerHTML = '';
+                            uploadStatus.className = '';
+                        }
+                    }, 3000);
+                };
+
+                request.onerror = () => {
+                    console.error('Error renaming snapshot:', request.error);
+                    alert('Error renaming snapshot: ' + request.error.message);
+                };
+
+            } catch (error) {
+                console.error('Error renaming snapshot:', error);
+                alert('Error renaming snapshot: ' + error.message);
+            }
+        }
+
+        //===========================================================================
         // debounce() - Delays function execution until after a pause in calls  
         // (kept for potential future use but not currently used)
         //===========================================================================
@@ -3938,13 +4146,22 @@
         //===========================================================================
 
         function showParsingResults(stats) {
-            // — Remove any previous panel —
-            const old = document.getElementById('parsingResults');
-            if (old) old.remove();
 
-            // — Compute counts & get container —
+                // — Remove any previous panel —
+                const old = document.getElementById('parsingResults');
+                if (old) old.remove();
+
+                // — Compute counts & get container —
             const excludedCount = stats.totalRows - stats.validItems - stats.emptyLines;
             const uploadStatus = document.getElementById('uploadStatus');
+
+            // Ensure upload status area is clean and ready
+            uploadStatus.innerHTML = '';
+            uploadStatus.className = '';
+
+            // CRITICAL: Ensure both upload section AND upload status are visible
+            document.getElementById('uploadSection').style.display = 'block';
+            uploadStatus.style.display = 'block';
 
             // — Create the outer DIV —
             const resultsDiv = document.createElement('div');
@@ -3964,6 +4181,8 @@
             if (excludedSamplesData.length > 0) {
                 renderExcludedSamples();
             }
+
+         
         }
 
 
@@ -4048,8 +4267,7 @@
                 // Add new listener
                 newInput.addEventListener('change', (e) => {
                     if (e.target.files.length > 0) {
-                        // Reset to normal upload area
-                        resetUploadArea();
+                        // Don't reset to normal upload area, just process the file
                         handleFile(e.target.files[0]);
                     }
                 });
@@ -6436,12 +6654,19 @@
             setTimeout(() => selectBook(barcode), 100);
         }
 
-        // File upload handling
         function handleFile(file) {
-            if (!file.name.toLowerCase().endsWith('.csv')) {
-                showStatus('Please select a CSV file.', 'error');
-                return;
-            }
+                if (!file.name.toLowerCase().endsWith('.csv')) {
+                    showStatus('Please select a CSV file.', 'error');
+                    return;
+                }
+
+                // Ensure upload status area is completely clean before processing
+                const uploadStatus = document.getElementById('uploadStatus');
+                uploadStatus.innerHTML = '';
+                uploadStatus.className = '';
+
+                // Clear any pending status clearing timers from previous operations
+                clearTimeout(window.statusClearTimer);
 
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -6449,6 +6674,11 @@
                     const data = parseCSV(e.target.result);
                     if (data) {
                         libraryData = data;
+
+                        // Clear current snapshot ID since this is fresh data
+                        currentSnapshotId = null;
+                        // Update header status
+                        updateCurrentCollectionStatus();
 
                         // Update branch filter options immediately
                         updateBranchFilter();
@@ -6458,10 +6688,13 @@
                         saveCurrentCollectionForRecovery();
 
                         // ─── Always show parsing details on every upload ───
+                        console.log('=== About to show parsing results ===');
+                        console.log('lastParsingStats exists:', !!window.lastParsingStats);
                         if (window.lastParsingStats) {
-                            const status = document.getElementById('uploadStatus');
-                            if (status) status.innerHTML = '';
+                            console.log('Calling showParsingResults...');
                             showParsingResults(window.lastParsingStats);
+                        } else {
+                            console.log('No parsing stats available!');
                         }
 
                         // ─── Now immediately refresh the "Currently Loaded Collection" info ───
@@ -6476,9 +6709,12 @@
                             refreshSnapshotsList();
                         }
 
-                        // Hide the original upload area and add header upload instead
+                        // Ensure upload area is hidden and parsing results are visible
                         const uploadArea = document.querySelector('.upload-area');
                         uploadArea.style.display = 'none';
+
+                        // Make sure upload section is visible so parsing results show
+                        document.getElementById('uploadSection').style.display = 'block';
 
                         // Add compact upload to header if not already there
                         let headerUpload = document.getElementById('headerUpload');
@@ -6535,7 +6771,7 @@
                             // Add file input listener
                             fileInput.addEventListener('change', (e) => {
                                 if (e.target.files.length > 0) {
-                                    resetUploadArea();
+                                    // Don't reset upload area when using compact upload
                                     handleFile(e.target.files[0]);
                                 }
                             });
@@ -6630,6 +6866,8 @@
         window.exportHighPerformers = exportHighPerformers;
         window.viewBookDetailsFromHighPerformers = viewBookDetailsFromHighPerformers;
         window.showHighPerformersForCollection = showHighPerformersForCollection;
+        window.resetDatabaseAndReload = resetDatabaseAndReload;
+        window.renameSnapshot = renameSnapshot;
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', async function () {
@@ -6650,7 +6888,14 @@
 
             } catch (error) {
                 console.error('❌ IndexedDB initialization failed:', error);
-                showStatus('Note: Snapshot functionality disabled (IndexedDB not available)', 'error');
+                const errorMsg = error.message || 'IndexedDB not available';
+                showStatus(`Note: Snapshot functionality disabled (${errorMsg})`, 'error');
+
+                // Show reset option if it seems like a corruption issue
+                if (error.message && (error.message.includes('blocked') || error.message.includes('operation failed'))) {
+                    document.getElementById('resetDatabaseBtn').style.display = 'inline-flex';
+                    document.getElementById('resetDatabaseInfo').style.display = 'inline';
+                }
 
                 // Upload section is already visible from above
             }
@@ -7112,6 +7357,93 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+            }
+
+            //===========================================================================
+            // resetDatabaseAndReload() - Reset database and reload page
+            //===========================================================================
+            async function resetDatabaseAndReload() {
+                if (!confirm('This will delete all saved snapshots and reset the database. Are you sure?')) {
+                    return;
+                }
+
+                try {
+                    showStatus('Resetting database...', 'loading');
+                    await resetDatabase();
+                    showStatus('Database reset successfully. Reloading...', 'success');
+
+                    // Reload the page after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Error resetting database:', error);
+                    showStatus('Error resetting database: ' + error.message, 'error');
+                }
+            }
+
+             //===========================================================================
+            // updateCurrentCollectionStatus() - Update header collection indicator
+            //===========================================================================
+            function updateCurrentCollectionStatus() {
+                const statusDiv = document.getElementById('currentCollectionStatus');
+                const nameDiv = document.getElementById('collectionName');
+
+                if (!libraryData || libraryData.length === 0) {
+                    statusDiv.style.display = 'none';
+                    return;
+                }
+
+                const filteredData = getFilteredData();
+                const itemCount = filteredData.length;
+                const totalCirculation = filteredData.reduce((sum, item) => sum + (item.circulation || 0), 0);
+
+                // Determine what collection is loaded
+                let collectionName = 'Unknown Collection';
+                let collectionType = 'uploaded';
+
+                if (currentSnapshotId) {
+                    if (currentSnapshotId === 'recovery_latest') {
+                        collectionName = 'Auto-saved Collection';
+                        collectionType = 'auto-saved';
+                    } else {
+                        // Try to get the snapshot name
+                        getSnapshot(currentSnapshotId).then(snapshot => {
+                            if (snapshot) {
+                                nameDiv.textContent = `${snapshot.name} • ${itemCount.toLocaleString()} items`;
+                            }
+                        }).catch(() => {
+                            nameDiv.textContent = `Saved Snapshot • ${itemCount.toLocaleString()} items`;
+                        });
+                        collectionName = 'Saved Snapshot';
+                        collectionType = 'snapshot';
+                    }
+                } else {
+                    const today = new Date().toLocaleDateString();
+                    collectionName = `Collection (${today})`;
+                    collectionType = 'fresh';
+                }
+
+                // Update the display
+                nameDiv.textContent = `${collectionName} • ${itemCount.toLocaleString()} items`;
+
+                // Set color based on type
+                if (collectionType === 'auto-saved') {
+                    statusDiv.style.background = '#fef3c7';
+                    statusDiv.style.borderColor = '#d97706';
+                    statusDiv.style.color = '#d97706';
+                } else if (collectionType === 'snapshot') {
+                    statusDiv.style.background = '#f0fdf4';
+                    statusDiv.style.borderColor = '#16a34a';
+                    statusDiv.style.color = '#16a34a';
+                } else {
+                    statusDiv.style.background = '#f0f9ff';
+                    statusDiv.style.borderColor = '#0284c7';
+                    statusDiv.style.color = '#0284c7';
+                }
+
+                statusDiv.style.display = 'block';
             }
 
     </script>
