@@ -4176,6 +4176,15 @@
         }
 
         //===========================================================================
+        // normalizeApostrophes() - Convert all apostrophe variants to standard apostrophe
+        //===========================================================================
+        function normalizeApostrophes(text) {
+            if (!text) return '';
+            // Replace various apostrophe and quote characters with standard apostrophe
+            return text.replace(/[''‛‚„""‟«»]/g, "'");
+        }
+
+        //===========================================================================
         // cleanText() - Clean up text fields by removing trailing punctuation
         //===========================================================================
         function cleanText(text) {
@@ -5097,40 +5106,43 @@
         }
 
         function performSearch(term) {
-            if (!term || term.length < 2) return [];
+                if (!term || term.length < 2) return [];
 
-            // Use filtered data instead of all libraryData
-            const searchData = getFilteredData();
+                // Use filtered data instead of all libraryData
+                const searchData = getFilteredData();
 
-            const termLower = term.toLowerCase();
-            return searchData.filter(book => {
-                const titleLower = book.title.toLowerCase();
-                const callLower = book.callNumber.toLowerCase();
-                const authorLower = book.author.toLowerCase();
+                // Normalize apostrophes in search term
+                const termLower = normalizeApostrophes(term.toLowerCase());
 
-                // 1) match title or call number as before
-                if (titleLower.includes(termLower) || callLower.includes(termLower)) {
-                    return true;
-                }
+                return searchData.filter(book => {
+                    // Normalize apostrophes in all searchable fields
+                    const titleLower = normalizeApostrophes(book.title.toLowerCase());
+                    const callLower = normalizeApostrophes(book.callNumber.toLowerCase());
+                    const authorLower = normalizeApostrophes(book.author.toLowerCase());
 
-                // 2) match the exact author string (with or without comma)
-                const authorNoComma = authorLower.replace(/,/g, '');
-                if (authorLower.includes(termLower) || authorNoComma.includes(termLower)) {
-                    return true;
-                }
-
-                // 3) match reversed "first last" (i.e. Denis Johnson for "Johnson, Denis")
-                if (authorLower.includes(',')) {
-                    const [last, first] = authorLower.split(',').map(s => s.trim());
-                    const reversed = `${first} ${last}`;
-                    if (reversed.includes(termLower)) {
+                    // 1) match title or call number as before
+                    if (titleLower.includes(termLower) || callLower.includes(termLower)) {
                         return true;
                     }
-                }
 
-                return false;
-            });
-        }
+                    // 2) match the exact author string (with or without comma)
+                    const authorNoComma = authorLower.replace(/,/g, '');
+                    if (authorLower.includes(termLower) || authorNoComma.includes(termLower)) {
+                        return true;
+                    }
+
+                    // 3) match reversed "first last" (i.e. Denis Johnson for "Johnson, Denis")
+                    if (authorLower.includes(',')) {
+                        const [last, first] = authorLower.split(',').map(s => s.trim());
+                        const reversed = `${first} ${last}`;
+                        if (reversed.includes(termLower)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                });
+            }
 
 
         function displaySearchResults(results) {
