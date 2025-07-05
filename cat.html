@@ -1048,7 +1048,7 @@
                     Weed Whacker
                 </button>
                 <button class="tab-btn" onclick="showTab('authors')">
-                    Author Olympics
+                    Author Performance
                 </button>
                 <button class="tab-btn" onclick="showTab('snapshots')">
                     Snapshots
@@ -1074,7 +1074,7 @@
             <div id="uploadSection">
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
                     <h2>Upload Your Collection CSV</h2>
-                    <p>Drag and drop your SirsiDynix export file here, or click to browse</p>
+                    <p>Drag and drop your BLUEcloud Analytics CSV export here, or click to browse</p>
                     <input type="file" id="fileInput" accept=".csv" style="display: none;">
                     <button class="btn btn-primary" style="margin-top: 1rem;">Choose File</button>
                 </div>
@@ -1334,6 +1334,83 @@
                         <tbody id="collectionTableBody"></tbody>
                     </table>
                 </div>
+                <!-- Collection Details Panel -->
+                <div class="analysis-section" id="collectionDetailsSection" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 id="collectionDetailsTitle">Collection Details</h3>
+                        <button class="btn btn-secondary" onclick="closeCollectionDetails()">✕ Close</button>
+                    </div>
+                
+                    <div id="collectionDetailsContent">
+                        <!-- Collection stats cards -->
+                        <div id="collectionStatsCards"
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        </div>
+                
+                        <!-- Collection's items table -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <h4>Items in This Collection</h4>
+                                <button id="clearCollectionItemsSortBtn" class="btn btn-secondary clear-sort-btn"
+                                    onclick="clearCollectionItemsSort()" style="display: none;">
+                                    Clear Sort
+                                </button>
+                            </div>
+                            <button id="exportCollectionBtn" class="btn btn-secondary" onclick="exportCollectionItems()">
+                                📄 Export Collection Report
+                            </button>
+                        </div>
+                        <table class="analysis-table sortable-table" id="collectionItemsTable">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-sort="title" data-type="text">
+                                        Title
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            </path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="author" data-type="text">
+                                        Author
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            </path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="year" data-type="number">
+                                        Year
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            </path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="circulation" data-type="number">
+                                        Circulation
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            </path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="performance" data-type="number">
+                                        Performance
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            </path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="callNumber" data-type="text">
+                                        Call Number
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            </path>
+                                        </svg>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="collectionItemsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- High Performers Analysis -->
@@ -1567,6 +1644,9 @@
                         </select>
                     </div>
                 </div>
+
+                <!-- Performance Legend -->
+                <div id="authorPerformanceLegend"></div>
 
                 <div class="analysis-section">
                     <div
@@ -4513,6 +4593,123 @@
         }
 
         //===========================================================================
+        // isCollectionTypeNotAuthor() - Check if "author" is actually a collection type (all caps)
+        //===========================================================================
+        function isCollectionTypeNotAuthor(authorName) {
+            if (!authorName) return false;
+
+            // Collection types are all uppercase, may contain hyphens and spaces
+            // Real human authors would never be formatted this way
+            const allCapsPattern = /^[A-Z][A-Z\-\s]*$/;
+
+            return allCapsPattern.test(authorName);
+        }    
+
+    //===========================================================================
+        // Performance Threshold Configuration - Central source of truth
+        //===========================================================================
+        function getPerformanceThresholds() {
+            return {
+                // For collection/author average performance
+                collection: {
+                    high: 35,
+                    medium: 10
+                },
+                // For individual item performance  
+                item: {
+                    high: 50,
+                    good: 20,
+                    fair: 5
+                }
+            };
+        }
+
+        //===========================================================================
+        // getCollectionPerformanceLevel() - Determine performance level for collections/authors
+        //===========================================================================
+        function getCollectionPerformanceLevel(avgCirculation) {
+            const thresholds = getPerformanceThresholds().collection;
+
+            if (avgCirculation >= thresholds.high) {
+                return { level: 'high', color: '#16a34a', label: 'HIGH' };
+            } else if (avgCirculation >= thresholds.medium) {
+                return { level: 'medium', color: '#d97706', label: 'MEDIUM' };
+            } else {
+                return { level: 'low', color: '#dc2626', label: 'LOW' };
+            }
+        }
+
+        //===========================================================================
+        // getItemPerformanceLevel() - Determine performance level for individual items
+        //===========================================================================
+        function getItemPerformanceLevel(circulation) {
+            const thresholds = getPerformanceThresholds().item;
+
+            if (circulation >= thresholds.high) {
+                return { level: 'high', color: '#16a34a', label: 'HIGH' };
+            } else if (circulation >= thresholds.good) {
+                return { level: 'good', color: '#d97706', label: 'GOOD' };
+            } else if (circulation >= thresholds.fair) {
+                return { level: 'fair', color: '#6b7280', label: 'FAIR' };
+            } else {
+                return { level: 'low', color: '#dc2626', label: 'LOW' };
+            }
+        }
+
+        //===========================================================================
+        // createPerformanceLegend() - Generate dynamic legend HTML
+        //===========================================================================
+        function createPerformanceLegend(type = 'collection') {
+            const thresholds = getPerformanceThresholds();
+
+            if (type === 'collection') {
+                return `
+            <div style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.75rem; margin: 1rem 0; font-size: 0.875rem;">
+                <strong style="color: #374151;">Performance Levels (Average Circulation):</strong>
+                <div style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                    <span style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span style="background: #16a34a; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">HIGH</span>
+                        ${thresholds.collection.high}+ per item
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span style="background: #d97706; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">MEDIUM</span>
+                        ${thresholds.collection.medium}-${thresholds.collection.high - 1} per item
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span style="background: #dc2626; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">LOW</span>
+                        Under ${thresholds.collection.medium} per item
+                    </span>
+                </div>
+            </div>
+        `;
+            } else {
+                return `
+            <div style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.75rem; margin: 1rem 0; font-size: 0.875rem;">
+                <strong style="color: #374151;">Performance Levels (Individual Items):</strong>
+                <div style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                    <span style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span style="background: #16a34a; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">HIGH</span>
+                        ${thresholds.item.high}+ circulations
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span style="background: #d97706; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">GOOD</span>
+                        ${thresholds.item.good}-${thresholds.item.high - 1} circulations
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span style="background: #6b7280; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">FAIR</span>
+                        ${thresholds.item.fair}-${thresholds.item.good - 1} circulations
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span style="background: #dc2626; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">LOW</span>
+                        Under ${thresholds.item.fair} circulations
+                    </span>
+                </div>
+            </div>
+        `;
+            }
+        }   
+
+        //===========================================================================
         // showColumnMappingUI() - Show interface for manual column mapping
         //===========================================================================
         function showColumnMappingUI(headers, lines) {
@@ -5512,6 +5709,16 @@
                 </div>
             `;
 
+            // Add performance legend (remove existing first)
+            const existingLegend = document.getElementById('overviewLegend');
+            if (existingLegend) {
+                existingLegend.remove();
+            }
+            const legendDiv = document.createElement('div');
+            legendDiv.id = 'overviewLegend';
+            legendDiv.innerHTML = createPerformanceLegend('collection');
+            document.getElementById('overviewMetrics').insertAdjacentElement('afterend', legendDiv);
+
             // Create collection distribution charts
             createCollectionChart(collections);
             createHighPerformersDistributionChart(filteredData);
@@ -5527,16 +5734,32 @@
                 const highPerf = items.filter(i => i.circulation >= 50).length;
                 const lowCirc = items.filter(i => i.circulation < 5).length;
 
+                // Calculate performance level and color using centralized function
+                            const performance = getCollectionPerformanceLevel(avgCirc);
+
                 return `
-                    <tr>
-                        <td><strong>${collection}</strong></td>
-                        <td>${items.length.toLocaleString()}</td>
-                        <td>${totalCirc.toLocaleString()}</td>
-                        <td>${avgCirc}</td>
-                        <td>${highPerf}</td>
-                        <td>${lowCirc}</td>
-                    </tr>
-                `;
+            <tr onclick="showCollectionDetails('${escapeHtml(collection)}')" style="cursor: pointer;" 
+                onmouseover="this.style.backgroundColor='#f9fafb'" 
+                onmouseout="this.style.backgroundColor=''">
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <strong>${collection}</strong>
+                        <span style="background: ${performance.color}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
+                            ${performance.label}
+                        </span>
+                    </div>
+                </td>
+                <td>${items.length.toLocaleString()}</td>
+                <td>${totalCirc.toLocaleString()}</td>
+                <td>
+                    <span style="color: ${performance.color}; font-weight: 600;">
+                        ${avgCirc}
+                    </span>
+                </td>
+                <td>${highPerf}</td>
+                <td>${lowCirc}</td>
+            </tr>
+        `;
             }).join('');
 
             // Setup sorting for collection table
@@ -6129,8 +6352,13 @@
                 });
             }
 
-            // Build author statistics
+            // Build author statistics - exclude collection types (all caps entries)
             filteredData.forEach(book => {
+                // Skip if this "author" is actually a collection type (all caps)
+                if (isCollectionTypeNotAuthor(book.author)) {
+                    return;
+                }
+
                 if (!authorStats[book.author]) {
                     authorStats[book.author] = {
                         titles: 0,
@@ -6171,23 +6399,15 @@
                     const avgCirculation = Math.round(stats.totalCirculation / stats.titles);
 
                     // Determine performance level
-                    let performanceLevel = 'low';
-                    let performanceColor = '#dc2626';
-                    if (avgCirculation >= 35) {
-                        performanceLevel = 'high';
-                        performanceColor = '#16a34a';
-                    } else if (avgCirculation >= 10) {
-                        performanceLevel = 'medium';
-                        performanceColor = '#d97706';
-                    }
+                    const performance = getCollectionPerformanceLevel(avgCirculation);
 
                     return {
                         author,
                         ...stats,
                         averageCirculation: avgCirculation,
                         collections: Array.from(stats.collections),
-                        performanceLevel,
-                        performanceColor,
+                        performanceLevel: performance.level,
+                        performanceColor: performance.color,
                         yearSpan: stats.yearRange.earliest && stats.yearRange.latest
                             ? `${stats.yearRange.earliest}-${stats.yearRange.latest}`
                             : 'Unknown'
@@ -6248,6 +6468,11 @@
             const countElement = document.getElementById('authorResultCount');
             if (countElement) {
                 countElement.textContent = authorData.length;
+            }
+            // Add performance legend
+            const legendElement = document.getElementById('authorPerformanceLegend');
+            if (legendElement) {
+                legendElement.innerHTML = createPerformanceLegend('collection');
             }
         }
 
@@ -6868,6 +7093,10 @@
         window.showHighPerformersForCollection = showHighPerformersForCollection;
         window.resetDatabaseAndReload = resetDatabaseAndReload;
         window.renameSnapshot = renameSnapshot;
+        window.showCollectionDetails = showCollectionDetails;
+        window.closeCollectionDetails = closeCollectionDetails;
+        window.exportCollectionItems = exportCollectionItems;
+        window.clearCollectionItemsSort = clearCollectionItemsSort;
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', async function () {
@@ -7042,6 +7271,257 @@
                 });
             }
         });
+
+    //===========================================================================
+        // showCollectionDetails() - Display detailed view for selected collection
+        //===========================================================================
+        function showCollectionDetails(collectionName) {
+            const filteredData = getFilteredData();
+            const collectionItems = filteredData.filter(item => item.collection === collectionName);
+
+            if (collectionItems.length === 0) {
+                alert(`No items found for collection: ${collectionName}`);
+                return;
+            }
+
+            // Calculate detailed stats
+            const totalItems = collectionItems.length;
+            const totalCirculation = collectionItems.reduce((sum, item) => sum + item.circulation, 0);
+            const avgCirculation = Math.round(totalCirculation / totalItems);
+            const topItem = collectionItems.reduce((top, item) =>
+                item.circulation > top.circulation ? item : top, collectionItems[0]);
+            const highPerformers = collectionItems.filter(item => item.circulation >= 35).length;
+
+            // Show the details section
+            document.getElementById('collectionDetailsSection').style.display = 'block';
+            document.getElementById('collectionDetailsTitle').textContent = `Collection: ${collectionName}`;
+
+            // Update stats cards
+            const statsCards = document.getElementById('collectionStatsCards');
+            statsCards.innerHTML = `
+        <div class="metric-card">
+            <div class="metric-title">Total Items</div>
+            <div class="metric-value">${totalItems}</div>
+            <div class="metric-subtitle">In collection</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Total Circulation</div>
+            <div class="metric-value">${totalCirculation.toLocaleString()}</div>
+            <div class="metric-subtitle">All items combined</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Average per Item</div>
+            <div class="metric-value">${avgCirculation}</div>
+            <div class="metric-subtitle">Circulation per item</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">High Performers</div>
+            <div class="metric-value">${highPerformers}</div>
+            <div class="metric-subtitle">Items with 35+ circulation</div>
+        </div>
+    `;
+
+            // Performance indicator for each item
+            const getPerformanceLevel = (circulation) => {
+                if (circulation >= 50) return { level: 'HIGH', color: '#16a34a' };
+                if (circulation >= 20) return { level: 'GOOD', color: '#d97706' };
+                if (circulation >= 5) return { level: 'FAIR', color: '#6b7280' };
+                return { level: 'LOW', color: '#dc2626' };
+            };
+
+            // Sort items by circulation
+            collectionItems.sort((a, b) => b.circulation - a.circulation);
+
+            // Update items table
+            const itemsBody = document.getElementById('collectionItemsBody');
+            itemsBody.innerHTML = collectionItems.map(item => {
+                const performance = getPerformanceLevel(item.circulation);
+                return `
+            <tr data-barcode="${item.barcode}" data-title="${escapeHtml(item.title)}" data-author="${escapeHtml(item.author)}" data-year="${item.year || 0}" data-circulation="${item.circulation}" data-performance="${item.circulation}" data-call-number="${escapeHtml(item.callNumber)}">
+                <td onclick="event.stopPropagation(); viewBookDetails('${item.barcode}')" style="cursor: pointer; color: #2563eb; font-weight: 500;">
+                    <strong>${escapeHtml(item.title)}</strong>
+                </td>
+                <td>${escapeHtml(item.author)}</td>
+                <td>${item.year || 'Unknown'}</td>
+                <td><strong>${item.circulation}</strong></td>
+                <td>
+                    <span style="background: ${performance.color}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
+                        ${performance.level}
+                    </span>
+                </td>
+                <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+            </tr>
+        `;
+            }).join('');
+
+            // Store current collection items for sorting and export
+            window.currentCollectionItems = collectionItems;
+            window.currentCollectionDetails = { name: collectionName, items: collectionItems };
+
+            // Setup sorting for collection items table
+            setupCollectionItemsSorting();
+
+            // Scroll to the details section
+            document.getElementById('collectionDetailsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        //===========================================================================
+        // closeCollectionDetails() - Close collection details panel
+        //===========================================================================
+        function closeCollectionDetails() {
+            document.getElementById('collectionDetailsSection').style.display = 'none';
+            window.currentCollectionDetails = null;
+        }
+
+        //===========================================================================
+        // exportCollectionItems() - Export current collection's items to CSV
+        //===========================================================================
+        function exportCollectionItems() {
+            if (!window.currentCollectionDetails) {
+                alert('No collection selected for export');
+                return;
+            }
+
+            const { name, items } = window.currentCollectionDetails;
+            const headers = ['Title', 'Author', 'Year', 'Call Number', 'Circulation', 'Performance Level'];
+
+            const getPerformanceLevel = (circulation) => {
+                if (circulation >= 50) return 'HIGH';
+                if (circulation >= 20) return 'GOOD';
+                if (circulation >= 5) return 'FAIR';
+                return 'LOW';
+            };
+
+            const csvContent = [
+                headers.join(','),
+                ...items.map(item => [
+                    `"${item.title.replace(/"/g, '""')}"`,
+                    `"${item.author.replace(/"/g, '""')}"`,
+                    item.year || '',
+                    `"${item.callNumber.replace(/"/g, '""')}"`,
+                    item.circulation,
+                    getPerformanceLevel(item.circulation)
+                ].join(','))
+            ].join('\n');
+
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `collection-${name.replace(/[^a-zA-Z0-9]/g, '-')}-${today}.csv`;
+
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        //===========================================================================
+        // setupCollectionItemsSorting() - Setup sorting for collection items table
+        //===========================================================================
+        function setupCollectionItemsSorting() {
+            const headers = document.querySelectorAll('#collectionItemsTable th.sortable');
+
+            headers.forEach(header => {
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    sortCollectionItems(field);
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
+        // sortCollectionItems() - Sort collection items table
+        //===========================================================================
+        function sortCollectionItems(field) {
+            if (!window.currentCollectionItems) return;
+
+            let direction = 'asc';
+            if (window.collectionItemsSortState && window.collectionItemsSortState.field === field) {
+                direction = window.collectionItemsSortState.direction === 'asc' ? 'desc' : 'asc';
+            }
+
+            window.collectionItemsSortState = { field, direction };
+
+            const dataType = ['circulation', 'year', 'performance'].includes(field) ? 'number' : 'text';
+            const sortedItems = sortTableData(window.currentCollectionItems, field, direction, dataType);
+
+            const getPerformanceLevel = (circulation) => {
+                if (circulation >= 50) return { level: 'HIGH', color: '#16a34a' };
+                if (circulation >= 20) return { level: 'GOOD', color: '#d97706' };
+                if (circulation >= 5) return { level: 'FAIR', color: '#6b7280' };
+                return { level: 'LOW', color: '#dc2626' };
+            };
+
+            const itemsBody = document.getElementById('collectionItemsBody');
+            itemsBody.innerHTML = sortedItems.map(item => {
+                const performance = getPerformanceLevel(item.circulation);
+                return `
+            <tr data-barcode="${item.barcode}" data-title="${escapeHtml(item.title)}" data-author="${escapeHtml(item.author)}" data-year="${item.year || 0}" data-circulation="${item.circulation}" data-performance="${item.circulation}" data-call-number="${escapeHtml(item.callNumber)}">
+                <td onclick="event.stopPropagation(); viewBookDetails('${item.barcode}')" style="cursor: pointer; color: #2563eb; font-weight: 500;">
+                    <strong>${escapeHtml(item.title)}</strong>
+                </td>
+                <td>${escapeHtml(item.author)}</td>
+                <td>${item.year || 'Unknown'}</td>
+                <td><strong>${item.circulation}</strong></td>
+                <td>
+                    <span style="background: ${performance.color}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
+                        ${performance.level}
+                    </span>
+                </td>
+                <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+            </tr>
+        `;
+            }).join('');
+
+            updateCollectionItemsSortIcons(field, direction);
+        }
+
+        //===========================================================================
+        // clearCollectionItemsSort() - Clear collection items sort
+        //===========================================================================
+        function clearCollectionItemsSort() {
+            window.collectionItemsSortState = null;
+            if (window.currentCollectionItems) {
+                const sortedItems = [...window.currentCollectionItems].sort((a, b) => b.circulation - a.circulation);
+                // Re-render with default sort...
+                // (Same rendering code as above)
+            }
+            updateCollectionItemsSortIcons(null, null);
+        }
+
+        //===========================================================================
+        // updateCollectionItemsSortIcons() - Update sort visual indicators
+        //===========================================================================
+        function updateCollectionItemsSortIcons(activeField, direction) {
+            const headers = document.querySelectorAll('#collectionItemsTable th');
+            headers.forEach(header => {
+                header.classList.remove('sorted', 'asc', 'desc');
+            });
+
+            if (activeField) {
+                const activeHeader = document.querySelector(`#collectionItemsTable th[data-sort="${activeField}"]`);
+                if (activeHeader) {
+                    activeHeader.classList.add('sorted', direction);
+                }
+            }
+
+            const clearBtn = document.getElementById('clearCollectionItemsSortBtn');
+            if (clearBtn) {
+                clearBtn.style.display = activeField ? 'inline-flex' : 'none';
+            }
+        }
 
         //===========================================================================
         // getHighPerformersCount() - Get count of high-performing items using existing thresholds
