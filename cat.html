@@ -4484,6 +4484,14 @@
             });
 
             console.log('Final mappings:', mappings);
+            // Debug: Check if itemType was detected
+            if (mappings.itemType !== undefined) {
+                console.log('✅ Item Type column detected at index:', mappings.itemType);
+            } else {
+                console.log('❌ Item Type column NOT detected');
+                console.log('Available headers:', headers);
+                console.log('Looking for patterns matching: /^item\\s*type$/i');
+            }
             return mappings;
         }
 
@@ -4491,19 +4499,30 @@
         // createBookFromFields() - Convert CSV fields to book object
         //===========================================================================
         function createBookFromFields(fields, mappings, rowIndex) {
-            return {
-                barcode: getColumnValue(fields, mappings.barcode) || `unknown-${rowIndex}`,
-                author: cleanText(getColumnValue(fields, mappings.author) || ''),
-                title: cleanText(getColumnValue(fields, mappings.title) || ''),
-                year: getColumnValue(fields, mappings.year) || '',
-                collection: getColumnValue(fields, mappings.collection) || 'Unknown',
-                callNumber: getColumnValue(fields, mappings.callNumber) || '',
-                circulation: parseInt(getColumnValue(fields, mappings.circulation)) || 0,
-                status: getColumnValue(fields, mappings.status) || '',
-                itemCreated: getColumnValue(fields, mappings.itemCreated) || '',
-                lastActivity: getColumnValue(fields, mappings.lastActivity) || ''
-            };
-        }
+                const book = {
+                    barcode: getColumnValue(fields, mappings.barcode) || `unknown-${rowIndex}`,
+                    author: cleanText(getColumnValue(fields, mappings.author) || ''),
+                    title: cleanText(getColumnValue(fields, mappings.title) || ''),
+                    year: getColumnValue(fields, mappings.year) || '',
+                    collection: getColumnValue(fields, mappings.collection) || 'Unknown',
+                    callNumber: getColumnValue(fields, mappings.callNumber) || '',
+                    circulation: parseInt(getColumnValue(fields, mappings.circulation)) || 0,
+                    status: getColumnValue(fields, mappings.status) || '',
+                    itemCreated: getColumnValue(fields, mappings.itemCreated) || '',
+                    lastActivity: getColumnValue(fields, mappings.lastActivity) || '',
+                    itemType: getColumnValue(fields, mappings.itemType) || ''
+                };
+
+                // Debug: Log first few items with their itemType
+                if (rowIndex <= 5) {
+                    console.log(`Row ${rowIndex} itemType:`, book.itemType, 'from field index:', mappings.itemType);
+                    if (mappings.itemType !== undefined) {
+                        console.log(`Raw field value:`, fields[mappings.itemType]);
+                    }
+                }
+
+                return book;
+            }
 
         //===========================================================================
         // getColumnValue() - Safely get value from fields array at column index
@@ -4606,6 +4625,49 @@
             if (!text) return '';
             return text.replace(/[.,]\s*$/, '').replace(/\s*\/\s*$/, '').trim();
         }
+
+        //===========================================================================
+        // isNewItem() - Check if item is marked as new book
+        //===========================================================================
+        function isNewItem(item) {
+            return item.itemType && item.itemType.toUpperCase() === 'BOOK-FLT-N';
+        }
+
+        //===========================================================================
+        // analyzeNewItems() - Analyze performance of new items
+        //===========================================================================
+        function analyzeNewItems(data) {
+                const newItems = data.filter(isNewItem);
+
+                if (newItems.length === 0) {
+                    return {
+                        count: 0,
+                        totalCirculation: 0,
+                        averageCirculation: 0,
+                        topPerformer: null,
+                        collections: [],
+                        percentageOfCollection: 0
+                    };
+                }
+
+                const totalCirculation = newItems.reduce((sum, item) => sum + (item.circulation || 0), 0);
+                const averageCirculation = Math.round(totalCirculation / newItems.length);
+                const topPerformer = newItems.reduce((top, item) =>
+                    (item.circulation || 0) > (top.circulation || 0) ? item : top
+                );
+                const collections = [...new Set(newItems.map(item => item.collection))];
+                const percentageOfCollection = Math.round((newItems.length / data.length) * 100);
+
+                return {
+                    count: newItems.length,
+                    totalCirculation,
+                    averageCirculation,
+                    topPerformer,
+                    collections,
+                    percentageOfCollection,
+                    items: newItems
+                };
+            }
 
         //===========================================================================
         // getItemAge() - Calculate age of item in years with better error handling
@@ -5742,30 +5804,12 @@
             switch (tabName) {
                 case 'overview':
                     loadOverviewData();
-                    // Restore high performers view if this was automatic navigation
-                    if (window.rememberedHighPerformersPosition && window.automaticNavigation) {
-                        setTimeout(() => {
-                            showHighPerformers();
-                            // Clear the flags after restoring
-                            window.automaticNavigation = false;
-                            window.rememberedHighPerformersPosition = null;
-                        }, 100);
-                    }
                     break;
                 case 'weeding':
                     loadWeedingData();
                     break;
                 case 'authors':
                     loadAuthorData();
-                    // Restore author details ONLY if this was automatic navigation
-                    if (window.rememberedAuthor && window.automaticNavigation) {
-                        setTimeout(() => {
-                            showAuthorDetails(window.rememberedAuthor);
-                            // Clear the flags after restoring
-                            window.automaticNavigation = false;
-                            window.rememberedAuthor = null;
-                        }, 100);
-                    }
                     break;
                 case 'snapshots':
                     loadSnapshotsData();
@@ -6117,6 +6161,18 @@
                     <div class="metric-value">${getHighPerformersCount(filteredData)}</div>
                     <div class="metric-subtitle">Click to view high-performing items</div>
                 </div>
+                
+                <div class="metric-card" onclick="showNewItems()" style="cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f0fdf4'; this.style.borderColor='#16a34a';" onmouseout="this.style.backgroundColor=''; this.style.borderColor='';">
+                    <div class="metric-title">New Items</div>
+                    <div class="metric-value">${analyzeNewItems(filteredData).count}</div>
+                    <div class="metric-subtitle">Click to view new acquisitions</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-title">New Items Performance</div>
+                    <div class="metric-value">${analyzeNewItems(filteredData).averageCirculation}</div>
+                    <div class="metric-subtitle">Avg circulation per new item</div>
+                </div>
             `;
 
             // Add performance legend (remove existing first)
@@ -6185,6 +6241,217 @@
                 setupTableSortEventListeners();
             }, 100);
         }
+
+        //===========================================================================
+        // showNewItems() - Display new items analysis section
+        //===========================================================================
+        function showNewItems() {
+            const filteredData = getFilteredData();
+            const newItemsAnalysis = analyzeNewItems(filteredData);
+
+            if (newItemsAnalysis.count === 0) {
+                alert('No new items (BOOK-FLT-N) found in the current collection.');
+                return;
+            }
+
+            // Show the new items section
+            let newItemsSection = document.getElementById('newItemsSection');
+            if (!newItemsSection) {
+                // Create the section if it doesn't exist
+                newItemsSection = document.createElement('div');
+                newItemsSection.id = 'newItemsSection';
+                newItemsSection.className = 'analysis-section';
+                newItemsSection.style.marginTop = '1rem';
+
+                // Insert after collection table
+                const collectionTable = document.getElementById('collectionDetailsSection');
+                const parent = collectionTable ? collectionTable.parentNode : document.getElementById('overviewTab');
+                parent.appendChild(newItemsSection);
+            }
+
+            // Sort new items by circulation (highest first)
+            const sortedNewItems = [...newItemsAnalysis.items].sort((a, b) => (b.circulation || 0) - (a.circulation || 0));
+
+            newItemsSection.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <h3>New Items Analysis (${newItemsAnalysis.count} items)</h3>
+                        <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-size: 0.875rem;">
+                            Items marked as "BOOK-FLT-N" representing new acquisitions
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-secondary" onclick="exportNewItems()">📊 Export to Excel</button>
+                        <button class="btn btn-secondary" onclick="closeNewItems()">✕ Close</button>
+                    </div>
+                </div>
+                
+                <!-- New Items Stats -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #16a34a;">
+                        <div style="font-weight: bold; color: #16a34a;">Total New Items</div>
+                        <div style="font-size: 1.5rem; font-weight: bold;">${newItemsAnalysis.count}</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">${newItemsAnalysis.percentageOfCollection}% of collection</div>
+                    </div>
+                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #0284c7;">
+                        <div style="font-weight: bold; color: #0284c7;">Total Circulation</div>
+                        <div style="font-size: 1.5rem; font-weight: bold;">${newItemsAnalysis.totalCirculation}</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">All new items combined</div>
+                    </div>
+                    <div style="background: #fffbeb; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #d97706;">
+                        <div style="font-weight: bold; color: #d97706;">Average Performance</div>
+                        <div style="font-size: 1.5rem; font-weight: bold;">${newItemsAnalysis.averageCirculation}</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">Circulations per new item</div>
+                    </div>
+                    <div style="background: #fef2f2; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #dc2626;">
+                        <div style="font-weight: bold; color: #dc2626;">Top Performer</div>
+                        <div style="font-size: 1.5rem; font-weight: bold;">${newItemsAnalysis.topPerformer.circulation}</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">${newItemsAnalysis.topPerformer.title.substring(0, 25)}...</div>
+                    </div>
+                </div>
+                
+                <!-- New Items Table -->
+                <table class="analysis-table sortable-table" id="newItemsTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="title" data-type="text">
+                                Title
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="author" data-type="text">
+                                Author
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="year" data-type="number">
+                                Year
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="circulation" data-type="number">
+                                Circulation
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="collection" data-type="text">
+                                Collection
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="callNumber" data-type="text">
+                                Call Number
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="branch" data-type="text">
+                                Branch
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="newItemsTableBody">
+                        ${sortedNewItems.map(item => `
+                            <tr data-barcode="${item.barcode}" onclick="viewBookDetailsFromNewItems('${item.barcode}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                                <td><strong>${escapeHtml(item.title)}</strong></td>
+                                <td>${escapeHtml(item.author)}</td>
+                                <td>${item.year || 'Unknown'}</td>
+                                <td style="font-weight: bold; color: ${item.circulation >= 10 ? '#16a34a' : item.circulation >= 5 ? '#d97706' : '#dc2626'};">${item.circulation}</td>
+                                <td>${escapeHtml(item.collection)}</td>
+                                <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+                                <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            // Store current new items for export
+            window.currentNewItems = sortedNewItems;
+
+            // Show the section
+            newItemsSection.style.display = 'block';
+
+            // Scroll to the section
+            newItemsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        //===========================================================================
+        // closeNewItems() - Close new items section
+        //===========================================================================
+        function closeNewItems() {
+            const newItemsSection = document.getElementById('newItemsSection');
+            if (newItemsSection) {
+                newItemsSection.style.display = 'none';
+            }
+        }
+
+        //===========================================================================
+        // exportNewItems() - Export new items to Excel
+        //===========================================================================
+        function exportNewItems() {
+            if (!window.currentNewItems || window.currentNewItems.length === 0) {
+                alert('No new items to export');
+                return;
+            }
+
+            const headers = ['Title', 'Author', 'Circulation', 'Collection', 'Call Number', 'Year', 'Branch', 'Item Type'];
+
+            const data = window.currentNewItems.map(item => [
+                item.title || '',
+                item.author || '',
+                item.circulation || 0,
+                item.collection || '',
+                item.callNumber || '',
+                item.year || '',
+                item.branch || '',
+                item.itemType || ''
+            ]);
+
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `new-items-analysis-${today}.xlsx`;
+
+            createExcelFile(data, headers, filename, 'New Items');
+        }
+
+        //===========================================================================
+        // viewBookDetailsFromNewItems() - Navigate to Search tab from new items
+        //===========================================================================
+        function viewBookDetailsFromNewItems(barcode) {
+
+            // Switch to search tab
+            switchToSearchTab();
+
+            // Small delay to ensure tab is loaded
+            setTimeout(() => {
+                // Select the book
+                selectBook(barcode);
+
+                // Search for the book to make it visible
+                const book = libraryData.find(b => b.barcode === barcode);
+                if (book) {
+                    const searchInput = document.getElementById('searchInput');
+                    searchInput.value = book.title;
+
+                    // Trigger search
+                    const results = performSearch(book.title);
+                    displaySearchResults(results);
+
+                    // Select the specific book in the results
+                    setTimeout(() => {
+                        selectBookFromSearchResults(barcode);
+                    }, 100);
+                }
+            }, 100);
+        }    
 
         //===========================================================================
         // createCollectionChart() - Create visual chart of collection distribution
@@ -7091,6 +7358,9 @@
             setTimeout(() => {
                 setupTableSortEventListeners();
             }, 100);
+
+            // Setup disclosure arrows
+            setupDisclosureArrows();
         }
 
         //===========================================================================
@@ -8766,6 +9036,10 @@
         window.renameSnapshot = renameSnapshot;
         window.showCollectionDetails = showCollectionDetails;
         window.closeCollectionDetails = closeCollectionDetails;
+        window.showNewItems = showNewItems;
+        window.closeNewItems = closeNewItems;
+        window.exportNewItems = exportNewItems;
+        window.viewBookDetailsFromNewItems = viewBookDetailsFromNewItems;
         window.exportCollectionItems = exportCollectionItems;
         window.clearCollectionItemsSort = clearCollectionItemsSort;
         window.showInsightDetail = showInsightDetail;
@@ -9360,9 +9634,6 @@
         // viewBookDetailsFromHighPerformers() - Navigate to Search tab and show book details
         //===========================================================================
         function viewBookDetailsFromHighPerformers(barcode) {
-            // Remember the high performers state for potential return
-            window.rememberedHighPerformersPosition = true;
-            window.automaticNavigation = true;
 
             // Switch to search tab
             switchToSearchTab();
@@ -9604,21 +9875,31 @@
             // setupDisclosureArrows() - Ensure all disclosure arrows work
             //===========================================================================
             function setupDisclosureArrows() {
-                const details = document.querySelectorAll('details');
+                    const details = document.querySelectorAll('details');
 
-                details.forEach(detail => {
-                    detail.addEventListener('toggle', function () {
-                        const arrow = this.querySelector('summary .disclosure-arrow');
+                    details.forEach(detail => {
+                        // Initialize arrow position based on current open state
+                        const arrow = detail.querySelector('summary .disclosure-arrow');
                         if (arrow) {
-                            if (this.open) {
+                            if (detail.open) {
                                 arrow.style.transform = 'rotate(90deg)';
                             } else {
                                 arrow.style.transform = 'rotate(0deg)';
                             }
                         }
+
+                        detail.addEventListener('toggle', function () {
+                            const arrow = this.querySelector('summary .disclosure-arrow');
+                            if (arrow) {
+                                if (this.open) {
+                                    arrow.style.transform = 'rotate(90deg)';
+                                } else {
+                                    arrow.style.transform = 'rotate(0deg)';
+                                }
+                            }
+                        });
                     });
-                });
-            }
+                }
 
     </script>
 </body>
