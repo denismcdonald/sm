@@ -2415,13 +2415,15 @@
 
        // Store sorting state for each table
         let tableSortStates = {
-            search: { field: null, direction: 'asc' },
-            collection: { field: null, direction: 'asc' },
-            weeding: { field: null, direction: 'asc' },
-            author: { field: null, direction: 'asc' },
-            comparison: { field: null, direction: 'asc' },
-            highPerformers: { field: null, direction: 'asc' }
-        };
+                search: { field: null, direction: 'asc' },
+                collection: { field: null, direction: 'asc' },
+                weeding: { field: null, direction: 'asc' },
+                author: { field: null, direction: 'asc' },
+                comparison: { field: null, direction: 'asc' },
+                highPerformers: { field: null, direction: 'asc' },
+                grubby: { field: null, direction: 'asc' },
+                newItems: { field: null, direction: 'asc' }
+            };
 
         //===========================================================================
         // EXCLUDED-SAMPLES PAGINATION CONFIGURATION
@@ -2724,6 +2726,14 @@
                     selector = '#highPerformersTable th';
                     clearBtnId = 'clearHighPerformersSortBtn';
                     break;
+                case 'grubby':
+                    selector = '#grubbyTable th';
+                    clearBtnId = 'clearGrubbySortBtn';
+                    break;
+                case 'newItems':
+                    selector = '#newItemsTable th';
+                    clearBtnId = 'clearNewItemsSortBtn';
+                    break;
                 default:
                     return;
             }
@@ -2833,6 +2843,12 @@
                 case 'highPerformers':
                     sortHighPerformersTable(field, newDirection);
                     break;
+                case 'grubby':
+                    sortGrubbyTable(field, newDirection);
+                    break;
+                case 'newItems':
+                    sortNewItemsTable(field, newDirection);
+                    break;    
             }
         }
 
@@ -6380,6 +6396,9 @@
             // Show the section
             newItemsSection.style.display = 'block';
 
+            // Setup sorting for new items table
+            setupNewItemsTableSorting();
+
             // Scroll to the section
             newItemsSection.scrollIntoView({ behavior: 'smooth' });
         }
@@ -6983,6 +7002,9 @@
         function showGrubbyItems() {
             // Show the section
             document.getElementById('grubbyItemsSection').style.display = 'block';
+
+            // Setup sorting for grubby items table
+            setupGrubbyItemsTableSorting();
 
             // Scroll to the section
             document.getElementById('grubbyItemsSection').scrollIntoView({ behavior: 'smooth' });
@@ -9694,6 +9716,52 @@
         }
 
         //===========================================================================
+        // setupGrubbyItemsTableSorting() - Setup sorting for grubby items table
+        //===========================================================================
+        function setupGrubbyItemsTableSorting() {
+            const headers = document.querySelectorAll('#grubbyTable th.sortable');
+
+            headers.forEach(header => {
+                // Remove existing listeners by cloning
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                // Add new click listener
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    handleHeaderClick(field, 'grubby');
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
+        // setupNewItemsTableSorting() - Setup sorting for new items table
+        //===========================================================================
+        function setupNewItemsTableSorting() {
+            const headers = document.querySelectorAll('#newItemsTable th.sortable');
+
+            headers.forEach(header => {
+                // Remove existing listeners by cloning
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                // Add new click listener
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    handleHeaderClick(field, 'newItems');
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
         // setupHighPerformersTableSorting() - Setup sorting for high performers table
         //===========================================================================
         function setupHighPerformersTableSorting() {
@@ -9715,6 +9783,69 @@
 
                 newHeader.style.cursor = 'pointer';
             });
+        }
+
+    //===========================================================================
+        // sortGrubbyTable() - Sort grubby items table
+        //===========================================================================
+        function sortGrubbyTable(field, direction) {
+            if (!grubbyItemsData) return;
+
+            // Update sort state
+            tableSortStates.grubby = { field, direction };
+
+            // Sort the data
+            const dataType = ['circulation', 'year'].includes(field) ? 'number' : 'text';
+            const sortedData = sortTableData(grubbyItemsData, field, direction, dataType);
+
+            // Re-render table
+            const tableBody = document.getElementById('grubbyTableBody');
+            tableBody.innerHTML = sortedData.map(item => {
+                const yearDisplay = item.year || 'Unknown';
+                return `
+            <tr data-barcode="${item.barcode}" style="cursor: pointer;">
+                <td><strong>${escapeHtml(item.title)}</strong></td>
+                <td>${escapeHtml(item.author)}</td>
+                <td style="font-weight: bold; color: #16a34a;">${item.circulation}</td>
+                <td>${escapeHtml(yearDisplay)}</td>
+                <td>${escapeHtml(item.collection)}</td>
+                <td><code>${escapeHtml(item.callNumber)}</code></td>
+                <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+            </tr>
+        `;
+            }).join('');
+
+            updateSortIcons('grubby');
+        }
+
+        //===========================================================================
+        // sortNewItemsTable() - Sort new items table
+        //===========================================================================
+        function sortNewItemsTable(field, direction) {
+            if (!window.currentNewItems) return;
+
+            // Update sort state
+            tableSortStates.newItems = { field, direction };
+
+            // Sort the data
+            const dataType = ['circulation', 'year'].includes(field) ? 'number' : 'text';
+            const sortedData = sortTableData(window.currentNewItems, field, direction, dataType);
+
+            // Re-render table
+            const tableBody = document.getElementById('newItemsTableBody');
+            tableBody.innerHTML = sortedData.map(item => `
+        <tr data-barcode="${item.barcode}" onclick="viewBookDetailsFromNewItems('${item.barcode}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+            <td><strong>${escapeHtml(item.title)}</strong></td>
+            <td>${escapeHtml(item.author)}</td>
+            <td>${item.year || 'Unknown'}</td>
+            <td style="font-weight: bold; color: ${item.circulation >= 10 ? '#16a34a' : item.circulation >= 5 ? '#d97706' : '#dc2626'};">${item.circulation}</td>
+            <td>${escapeHtml(item.collection)}</td>
+            <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+            <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+        </tr>
+    `).join('');
+
+            updateSortIcons('newItems');
         }
 
         //===========================================================================
