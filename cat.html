@@ -67,6 +67,10 @@
             background: white;
             border-bottom: 1px solid #e5e7eb;
             padding: 0 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .tab-container {
@@ -5866,6 +5870,11 @@
                     loadSnapshotsData();
                     break;
             }
+
+            // Scroll to top after content loads to avoid layout shift issues
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 100);
         }
 
         //===========================================================================
@@ -6435,7 +6444,7 @@
             setupNewItemsTableSorting();
 
             // Scroll to the section
-            newItemsSection.scrollIntoView({ behavior: 'smooth' });
+            scrollToSection('newItemsSection');
         }
 
         //===========================================================================
@@ -7042,7 +7051,7 @@
             setupGrubbyItemsTableSorting();
 
             // Scroll to the section
-            document.getElementById('grubbyItemsSection').scrollIntoView({ behavior: 'smooth' });
+            scrollToSection('grubbyItemsSection');
         }
 
         //===========================================================================
@@ -8304,7 +8313,7 @@
             setupInsightTableSorting(sectionId);
 
             // Scroll to the section
-            detailSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            scrollToSection(sectionId);
         }
 
         //===========================================================================
@@ -8550,8 +8559,8 @@
             // Setup sorting for author titles table
             setupAuthorTitlesSorting();
 
-            // Scroll to the details section
-            document.getElementById('authorDetailsSection').scrollIntoView({ behavior: 'smooth' });
+            // Scroll to the section with offset for sticky navigation
+            scrollToSection('authorDetailsSection');
         }
 
         //===========================================================================
@@ -9130,6 +9139,23 @@
                 }
             }
 
+            //===========================================================================
+            // scrollToSection() - Scroll to section accounting for sticky navigation
+            //===========================================================================
+            function scrollToSection(elementId) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    const navHeight = document.querySelector('.tab-navigation').offsetHeight;
+                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - navHeight - 20; // 20px extra padding
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
         // Make functions global for remaining onclick handlers (tabs and manual mapping)
         window.showTab = showTab;
         window.applyManualMapping = applyManualMapping;
@@ -9188,6 +9214,7 @@
         window.saveAsPreset = saveAsPreset;
         window.loadPreset = loadPreset;
         window.setupDisclosureArrows = setupDisclosureArrows;
+        window.scrollToSection = scrollToSection;
         window.showAuthorOtherTitles = showAuthorOtherTitles;
         window.toggleAuthorOtherTitles = toggleAuthorOtherTitles;
         window.viewAuthorPerformance = viewAuthorPerformance;
@@ -9475,7 +9502,7 @@
             setupCollectionItemsSorting();
 
             // Scroll to the details section
-            document.getElementById('collectionDetailsSection').scrollIntoView({ behavior: 'smooth' });
+            scrollToSection('collectionDetailsSection');
         }
 
         //===========================================================================
@@ -9699,10 +9726,7 @@
             setupHighPerformersTableSorting();
 
             // Scroll to the section
-            document.getElementById('highPerformersSection').scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            scrollToSection('highPerformersSection');
         }
 
         //===========================================================================
@@ -9765,10 +9789,7 @@
                 setupHighPerformersTableSorting();
 
                 // Scroll to the section
-                document.getElementById('highPerformersSection').scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                scrollToSection('highPerformersSection');
             }
 
         //===========================================================================
@@ -9802,21 +9823,20 @@
                         setTimeout(() => {
                             const bookDetailsPanel = document.getElementById('bookDetails');
                             if (bookDetailsPanel && bookDetailsPanel.style.display !== 'none') {
-                                // Calculate the position to scroll to (2rem above the panel)
+                                // Calculate the position to scroll to (accounting for sticky navigation)
                                 const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                                const navHeight = document.querySelector('.tab-navigation').offsetHeight;
                                 const panelRect = bookDetailsPanel.getBoundingClientRect();
                                 const panelTop = panelRect.top + window.pageYOffset;
-                                const targetPosition = panelTop - (2 * remInPixels);
+                                const targetPosition = panelTop - navHeight - (2 * remInPixels);
 
                                 window.scrollTo({
-                                    top: Math.max(0, targetPosition), // Don't scroll above the top of the page
-                                    behavior: 'smooth'
+                                    top: Math.max(0, targetPosition) // Don't scroll above the top of the page
                                 });
                             } else {
                                 // If book details aren't visible yet, scroll to top of page
                                 window.scrollTo({
-                                    top: 0,
-                                    behavior: 'smooth'
+                                    top: 0
                                 });
                             }
                         }, 200);
