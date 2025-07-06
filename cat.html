@@ -1079,7 +1079,7 @@
                     Search
                 </button>
                 <button class="tab-btn" onclick="showTab('overview')">
-                    Vitalstatistix
+                    Collection Overview
                 </button>
                 <button class="tab-btn" onclick="showTab('weeding')">
                     Weed Whacker
@@ -1552,6 +1552,15 @@
                             <option value="15">15+ years old</option>
                         </select>
                     </div>
+                    <div class="filter-group">
+                        <label>Grubby Items Threshold: <span id="grubbyThresholdValue">75</span>+ circulations</label>
+                        <input type="range" id="grubbyThreshold" min="25" max="200" value="75" step="5" style="width: 100%;"
+                            oninput="updateGrubbyThreshold()">
+                        <div style="font-size: 0.75rem; color: #6b7280; display: flex; justify-content: space-between;">
+                            <span>25</span>
+                            <span>200</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="dashboard-grid" id="weedingMetrics"></div>
@@ -1563,6 +1572,133 @@
                         <canvas id="circulationChart" width="400" height="200"></canvas>
                     </div>
                 </div>
+
+                <!-- Age vs Circulation Analysis -->
+                <div class="analysis-section">
+                    <details id="ageCirculationDetails">
+                        <summary
+                            style="cursor: pointer; font-weight: bold; color: #374151; display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; list-style: none;">
+                            <span style="display: flex; align-items: center;">
+                                <span
+                                    style="margin-right: 0.5rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block;"
+                                    class="disclosure-arrow">▶</span>
+                                📊 Age vs Circulation Analysis
+                            </span>
+                            <span style="font-size: 0.875rem; color: #6b7280; font-weight: normal;">
+                                Visual decision matrix for weeding
+                            </span>
+                        </summary>
+                
+                        <div style="margin-top: 1rem;">
+                            <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                                Items in the bottom-right quadrant (old + low circulation) are prime weeding candidates.
+                                Items in the top-right (old + high circulation) are classics worth keeping.
+                            </p>
+                
+                            <div style="max-width: 900px; margin: 0 auto;">
+                                <div style="height: 400px; position: relative;">
+                                    <canvas id="ageCirculationChart"></canvas>
+                                </div>
+                
+                                <div
+                                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; font-size: 0.75rem; color: #6b7280;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 12px; height: 12px; background: #dc2626; border-radius: 50%;"></div>
+                                        <span><strong>Weeding Candidates:</strong> Low circulation, meets current criteria</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 12px; height: 12px; background: #16a34a; border-radius: 50%;"></div>
+                                        <span><strong>Grubby Items:</strong> High circulation, may need replacement</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 12px; height: 12px; background: #2563eb; border-radius: 50%;"></div>
+                                        <span><strong>Good Performers:</strong> Decent circulation, worth keeping</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 12px; height: 12px; background: #9ca3af; border-radius: 50%;"></div>
+                                        <span><strong>Others:</strong> Sample of remaining items</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
+            <!-- Grubby Items Analysis -->
+            <div class="analysis-section" id="grubbyItemsSection" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h3>Grubby Items (Popular Items Needing Attention)</h3>
+                        <button id="clearGrubbySortBtn" class="btn btn-secondary clear-sort-btn" onclick="clearTableSort('grubby')"
+                            style="display: none;">
+                            Clear Sort
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-secondary" onclick="closeGrubbyItems()">✕ Close</button>
+                        <button id="exportGrubbyBtn" class="btn btn-secondary" onclick="exportGrubbyItems()">
+                            📊 Export to Excel
+                        </button>
+                    </div>
+                </div>
+                <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                    Items with high circulation that may need replacement due to wear from heavy use.
+                </p>
+                <table class="analysis-table sortable-table" id="grubbyTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="title" data-type="text">
+                                Title
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="author" data-type="text">
+                                Author
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="circulation" data-type="number">
+                                Circulation
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="year" data-type="number">
+                                Year
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="collection" data-type="text">
+                                Collection
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="callNumber" data-type="text">
+                                Call Number
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="branch" data-type="text">
+                                Branch
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="grubbyTableBody"></tbody>
+                </table>
+                <div id="grubbyLoadMoreContainer" style="text-align: center; padding: 1rem; display: none;">
+                    <button id="grubbyLoadMoreBtn" class="btn btn-secondary" onclick="loadMoreGrubby()">
+                        Load 100 more items
+                    </button>
+                </div>
+            </div>
 
                 <div class="analysis-section">
                     <div
@@ -1684,7 +1820,7 @@
 
                 <!-- Author Insights Panel -->
                 <div class="analysis-section">
-                    <details id="authorInsightsPanel">
+                    <details id="authorInsightsPanel" open>
                         <summary
                             style="cursor: pointer; font-weight: bold; color: #374151; display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; list-style: none;">
                             <span style="display: flex; align-items: center;">
@@ -1872,13 +2008,16 @@
                 <div id="authorPerformanceLegend"></div>
 
                 <div class="analysis-section">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <h3>Author Performance Analysis (<span id="authorResultCount">0</span> authors)</h3>
-                        <button id="clearAuthorSortBtn" class="btn btn-secondary clear-sort-btn"
-                            onclick="clearTableSort('author')">
-                            Clear Sort
-                        </button>
+                        <div style="display: flex; gap: 1rem;">
+                            <button id="exportAuthorAnalysisBtn" class="btn btn-secondary" onclick="exportAuthorAnalysis()">
+                                📊 Export to Excel
+                            </button>
+                            <button id="clearAuthorSortBtn" class="btn btn-secondary clear-sort-btn" onclick="clearTableSort('author')">
+                                Clear Sort
+                            </button>
+                        </div>
                     </div>
                     <table class="analysis-table sortable-table" id="authorTable">
                         <thead>
@@ -2946,7 +3085,8 @@
             const tableConfigs = [
                 { selector: '#collectionTable th.sortable', type: 'collection' },
                 { selector: '#weedingTable th.sortable', type: 'weeding' },
-                { selector: '#authorTable th.sortable', type: 'author' }
+                { selector: '#authorTable th.sortable', type: 'author' },
+                { selector: '#grubbyTable th.sortable', type: 'grubby' }
             ];
 
             tableConfigs.forEach(config => {
@@ -5323,6 +5463,7 @@
                         break;
                     case 'weedingTab':
                         updateWeedingAnalysis();
+                        updateAgeCirculationChart();
                         break;
                     case 'authorsTab':
                         updateAuthorAnalysis();
@@ -5986,7 +6127,15 @@
             const legendDiv = document.createElement('div');
             legendDiv.id = 'overviewLegend';
             legendDiv.innerHTML = createPerformanceLegend('collection');
-            document.getElementById('overviewMetrics').insertAdjacentElement('afterend', legendDiv);
+            // Find the Collection Analysis section and insert legend after it
+            const collectionAnalysisSection = document.querySelector('.analysis-section h3');
+            if (collectionAnalysisSection && collectionAnalysisSection.textContent === 'Collection Analysis') {
+                const analysisSection = collectionAnalysisSection.closest('.analysis-section');
+                analysisSection.insertAdjacentElement('afterend', legendDiv);
+            } else {
+                // Fallback to original position if section not found
+                document.getElementById('overviewMetrics').insertAdjacentElement('afterend', legendDiv);
+            }
 
             // Create collection distribution charts
             createCollectionChart(collections);
@@ -6375,6 +6524,10 @@
 
             const totalCandidates = candidates.length;
             const neverCirculated = candidates.filter(c => c.circulation === 0).length;
+            // Calculate grubby items
+            const grubbyThreshold = parseInt(document.getElementById('grubbyThreshold').value);
+            const grubbyItems = filteredData.filter(item => item.circulation >= grubbyThreshold);
+            const grubbyCount = grubbyItems.length;
             const veryOld = candidates.filter(c => getItemAge(c.year) >= 15).length;
 
             // Update metrics display
@@ -6402,6 +6555,12 @@
                     <div class="metric-value">${Math.round((totalCandidates / filteredData.length) * 100)}%</div>
                     <div class="metric-subtitle">Of total collection</div>
                 </div>
+
+                <div class="metric-card" onclick="showGrubbyItems()" style="cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f0f9ff'; this.style.borderColor='#2563eb';" onmouseout="this.style.backgroundColor=''; this.style.borderColor='';">
+                    <div class="metric-title">Grubby Items</div>
+                    <div class="metric-value">${grubbyCount.toLocaleString()}</div>
+                    <div class="metric-subtitle">Click to view high-use items</div>
+                </div>
             `;
 
             // Create circulation distribution chart
@@ -6413,6 +6572,18 @@
             weedingOffset = 0;
             renderWeedingPage();
 
+            // — Setup grubby items —
+            // Reuse grubbyThreshold and grubbyItems from metrics calculation above
+            const filteredGrubbyItems = grubbyItems.filter(item =>
+                (!collectionFilter || item.collection === collectionFilter)
+            );
+
+            // Sort by circulation (highest first)
+            grubbyItems.sort((a, b) => b.circulation - a.circulation);
+
+            grubbyItemsData = filteredGrubbyItems;
+            grubbyOffset = 0;
+            renderGrubbyPage();
 
             console.log('Weeding analysis complete'); // Debug log
         }
@@ -6530,6 +6701,345 @@
                     }
                 }
             });
+        }
+
+        //===========================================================================
+        // Grubby Items Pagination Configuration
+        //===========================================================================
+        const GRUBBY_PAGE_SIZE = 100;
+        let grubbyItemsData = [];
+        let grubbyOffset = 0;
+
+        //===========================================================================
+        // showGrubbyItems() - Show and scroll to grubby items section
+        //===========================================================================
+        function showGrubbyItems() {
+            // Show the section
+            document.getElementById('grubbyItemsSection').style.display = 'block';
+
+            // Scroll to the section
+            document.getElementById('grubbyItemsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        //===========================================================================
+        // renderGrubbyPage() - Render grubby items with pagination
+        //===========================================================================
+        function renderGrubbyPage() {
+            const tableBody = document.getElementById('grubbyTableBody');
+
+            if (grubbyOffset === 0) {
+                tableBody.innerHTML = '';
+            }
+
+            const slice = grubbyItemsData.slice(grubbyOffset, grubbyOffset + GRUBBY_PAGE_SIZE);
+
+            slice.forEach(item => {
+                const yearDisplay = item.year || 'Unknown';
+
+                const row = document.createElement('tr');
+                row.setAttribute('data-barcode', item.barcode);
+                row.style.cursor = 'pointer';
+                row.innerHTML = `
+            <td><strong>${escapeHtml(item.title)}</strong></td>
+            <td>${escapeHtml(item.author)}</td>
+            <td style="font-weight: bold; color: #16a34a;">${item.circulation}</td>
+            <td>${escapeHtml(yearDisplay)}</td>
+            <td>${escapeHtml(item.collection)}</td>
+            <td><code>${escapeHtml(item.callNumber)}</code></td>
+            <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+        `;
+
+                row.addEventListener('click', () => selectBookFromTable(item.barcode));
+                tableBody.appendChild(row);
+            });
+
+            grubbyOffset += slice.length;
+            updateGrubbyLoadMoreButton();
+        }
+
+        //===========================================================================
+        // updateGrubbyLoadMoreButton() - Update load more button for grubby items
+        //===========================================================================
+        function updateGrubbyLoadMoreButton() {
+            const container = document.getElementById('grubbyLoadMoreContainer');
+            const btn = document.getElementById('grubbyLoadMoreBtn');
+            const remaining = grubbyItemsData.length - grubbyOffset;
+
+            if (remaining > 0) {
+                container.style.display = 'block';
+                const nextBatch = Math.min(GRUBBY_PAGE_SIZE, remaining);
+                btn.textContent = `Load ${nextBatch} more items (${remaining} remaining)`;
+                btn.disabled = false;
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        //===========================================================================
+        // loadMoreGrubby() - Load more grubby items
+        //===========================================================================
+        function loadMoreGrubby() {
+            renderGrubbyPage();
+        }
+
+        //===========================================================================
+        // updateAgeCirculationChart() - Update chart if section is open
+        //===========================================================================
+        function updateAgeCirculationChart() {
+            const detailsElement = document.getElementById('ageCirculationDetails');
+            if (detailsElement && detailsElement.open) {
+                // Section is open, recreate the chart with new data
+                createAgeCirculationChart();
+            } else {
+                // Section is closed, just reset the flag so it recreates when opened
+                window.ageCirculationChartCreated = false;
+            }
+        }
+
+        //===========================================================================
+        // createAgeCirculationChart() - Create age vs circulation scatter plot
+        //===========================================================================
+        function createAgeCirculationChart() {
+            const canvas = document.getElementById('ageCirculationChart');
+            if (!canvas) return;
+
+            // Check if Chart.js is available
+            if (typeof Chart === 'undefined') {
+                canvas.parentElement.innerHTML = `
+            <div style="height: 180px; display: flex; align-items: center; justify-content: center; text-align: center; color: #6b7280; font-size: 0.875rem;">
+                📊 Charts require Chart.js<br>
+                <span style="font-size: 0.75rem;">Age vs circulation analysis would appear here</span>
+            </div>
+        `;
+                return;
+            }
+
+            // Destroy existing chart
+            if (window.ageCirculationChartInstance) {
+                window.ageCirculationChartInstance.destroy();
+            }
+
+            const filteredData = getFilteredData();
+            const circulationThreshold = parseInt(document.getElementById('circulationThreshold').value);
+            const collectionFilter = document.getElementById('weedingCollectionFilter').value;
+            const ageFilter = document.getElementById('ageFilter').value;
+            const grubbyThreshold = parseInt(document.getElementById('grubbyThreshold').value);
+
+            // Apply current filters to get the same data as tables
+            let chartData = filteredData.filter(item => {
+                const matchesCollection = !collectionFilter || item.collection === collectionFilter;
+                return matchesCollection;
+            });
+
+            // Prepare data points with categories
+            const dataPoints = chartData.map(item => {
+                const age = getItemAge(item.year);
+                const circulation = item.circulation;
+
+                // Determine category
+                let category = 'others';
+                let color = 'rgba(156, 163, 175, 0.6)'; // Gray
+
+                // Check if it's a weeding candidate
+                const lowCirculation = circulationThreshold === 0
+                    ? circulation === 0
+                    : circulation < circulationThreshold;
+                const meetsAgeFilter = ageFilter === 'none' || age >= parseInt(ageFilter);
+
+                if (lowCirculation && meetsAgeFilter) {
+                    category = 'weeding';
+                    color = 'rgba(220, 38, 38, 0.7)'; // Red
+                } else if (circulation >= grubbyThreshold) {
+                    category = 'grubby';
+                    color = 'rgba(34, 197, 94, 0.7)'; // Green
+                } else if (circulation >= 15) {
+                    category = 'good';
+                    color = 'rgba(37, 99, 235, 0.6)'; // Blue
+                }
+
+                return {
+                    x: age,
+                    y: circulation,
+                    title: item.title,
+                    author: item.author,
+                    category: category,
+                    color: color,
+                    barcode: item.barcode
+                };
+            }).filter(point => point.x > 0); // Only include items with valid ages
+
+            // Smart sampling if too many points
+            let sampledPoints = dataPoints;
+            if (dataPoints.length > 500) {
+                // Always include weeding candidates and grubby items
+                const priority = dataPoints.filter(p => p.category === 'weeding' || p.category === 'grubby');
+                const others = dataPoints.filter(p => p.category !== 'weeding' && p.category !== 'grubby');
+
+                // Sample from others to reach 500 total
+                const remainingSlots = 500 - priority.length;
+                const sampledOthers = others
+                    .sort(() => 0.5 - Math.random()) // Shuffle
+                    .slice(0, remainingSlots);
+
+                sampledPoints = [...priority, ...sampledOthers];
+            }
+
+            // Group by category for datasets
+            const categories = {
+                weeding: { label: 'Weeding Candidates', color: 'rgba(220, 38, 38, 0.7)', border: '#dc2626' },
+                grubby: { label: 'Grubby Items', color: 'rgba(34, 197, 94, 0.7)', border: '#16a34a' },
+                good: { label: 'Good Performers', color: 'rgba(37, 99, 235, 0.6)', border: '#2563eb' },
+                others: { label: 'Others', color: 'rgba(156, 163, 175, 0.4)', border: '#9ca3af' }
+            };
+
+            const datasets = Object.keys(categories).map(categoryKey => {
+                const categoryPoints = sampledPoints.filter(p => p.category === categoryKey);
+                const config = categories[categoryKey];
+
+                return {
+                    label: config.label,
+                    data: categoryPoints.map(p => ({
+                        x: p.x,
+                        y: p.y,
+                        r: categoryKey === 'weeding' || categoryKey === 'grubby' ? 5 : 3,
+                        title: p.title,
+                        author: p.author,
+                        barcode: p.barcode
+                    })),
+                    backgroundColor: config.color,
+                    borderColor: config.border,
+                    borderWidth: 1
+                };
+            }).filter(dataset => dataset.data.length > 0);
+
+            const ctx = canvas.getContext('2d');
+            window.ageCirculationChartInstance = new Chart(ctx, {
+                type: 'bubble',
+                data: { datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: { size: 10 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const point = context.raw;
+                                    return `${point.title.substring(0, 40)}${point.title.length > 40 ? '...' : ''} - ${point.author.substring(0, 20)}${point.author.length > 20 ? '...' : ''}: ${context.parsed.x} years old, ${context.parsed.y} circulations`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Age (Years Since Publication)',
+                                font: { size: 11 }
+                            },
+                            ticks: { font: { size: 9 } },
+                            min: 0
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Total Circulation',
+                                font: { size: 11 }
+                            },
+                            ticks: { font: { size: 9 } },
+                            min: 0
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const datasetIndex = elements[0].datasetIndex;
+                            const dataIndex = elements[0].index;
+                            const point = datasets[datasetIndex].data[dataIndex];
+                            if (point.barcode) {
+                                // Switch to search tab and show book details
+                                showTab('search');
+                                setTimeout(() => {
+                                    selectBook(point.barcode);
+
+                                    // Search for the book to make it visible
+                                    const searchInput = document.getElementById('searchInput');
+                                    searchInput.value = point.title;
+                                    const results = performSearch(point.title);
+                                    displaySearchResults(results);
+
+                                    setTimeout(() => {
+                                        selectBookFromSearchResults(point.barcode);
+                                    }, 100);
+                                }, 100);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        //===========================================================================
+        // closeGrubbyItems() - Close grubby items section
+        //===========================================================================
+        function closeGrubbyItems() {
+            document.getElementById('grubbyItemsSection').style.display = 'none';
+        }
+
+        //===========================================================================
+        // updateGrubbyThreshold() - Update threshold display and refresh analysis
+        //===========================================================================
+        function updateGrubbyThreshold() {
+                // Update the display value
+                const threshold = document.getElementById('grubbyThreshold').value;
+                document.getElementById('grubbyThresholdValue').textContent = threshold;
+
+                // Refresh the analysis
+                updateWeedingAnalysis();
+
+                // Update chart if open
+                updateAgeCirculationChart();
+            }
+
+        //===========================================================================
+        // exportGrubbyItems() - Export grubby items to Excel
+        //===========================================================================
+        function exportGrubbyItems() {
+            if (!grubbyItemsData || grubbyItemsData.length === 0) {
+                alert('No grubby items to export');
+                return;
+            }
+
+            const headers = ['Title', 'Author', 'Circulation', 'Year', 'Collection', 'Call Number', 'Branch'];
+
+            const data = grubbyItemsData.map(item => [
+                item.title || '',
+                item.author || '',
+                item.circulation || 0,
+                item.year || '',
+                item.collection || '',
+                item.callNumber || '',
+                item.branch || ''
+            ]);
+
+            const grubbyThreshold = document.getElementById('grubbyThreshold').value;
+            const collectionFilter = document.getElementById('weedingCollectionFilter').value;
+            const today = new Date().toISOString().split('T')[0];
+
+            let filename = `grubby-items-${today}`;
+            if (collectionFilter) {
+                filename += `-${collectionFilter.toLowerCase().replace(/\s+/g, '-')}`;
+            }
+            filename += `-${grubbyThreshold}plus-circulations.xlsx`;
+
+            createExcelFile(data, headers, filename, 'Grubby Items');
         }
 
         //===========================================================================
@@ -7952,6 +8462,47 @@
         }
 
         //===========================================================================
+        // exportAuthorAnalysis() - Export author performance analysis to Excel
+        //===========================================================================
+        function exportAuthorAnalysis() {
+            if (!window.currentAuthorData || window.currentAuthorData.length === 0) {
+                alert('No author data to export');
+                return;
+            }
+
+            const headers = ['Author', 'Titles in Collection', 'Total Circulation', 'Average per Title', 'Collections', 'Top Performing Title', 'Top Title Circulation', 'Performance Level'];
+
+            const data = window.currentAuthorData.map(author => [
+                author.author || '',
+                author.titles || 0,
+                author.totalCirculation || 0,
+                author.averageCirculation || 0,
+                author.collections.join(', ') || '',
+                author.topTitle.title || '',
+                author.topTitle.circulation || 0,
+                author.performanceLevel.toUpperCase() || ''
+            ]);
+
+            // Generate filename with current filters
+            const minTitles = document.getElementById('authorMinTitles').value;
+            const performanceFilter = document.getElementById('authorPerformanceFilter').value;
+            const collectionFilter = document.getElementById('authorCollectionFilter').value;
+
+            const today = new Date().toISOString().split('T')[0];
+            let filename = `author-analysis-${today}`;
+
+            if (performanceFilter) {
+                filename += `-${performanceFilter}`;
+            }
+            if (collectionFilter) {
+                filename += `-${collectionFilter.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')}`;
+            }
+            filename += `-${minTitles}plus-titles.xlsx`;
+
+            createExcelFile(data, headers, filename, 'Author Analysis');
+        }
+
+        //===========================================================================
         // exportAuthorTitles() - Export current author's titles to Excel
         //===========================================================================
         function exportAuthorTitles() {
@@ -8191,10 +8742,18 @@
         window.clearComparisonSort = clearComparisonSort;
         window.loadMoreResults = loadMoreResults;
         window.exportExcludedItems = exportExcludedItems;
+        window.showGrubbyItems = showGrubbyItems;
+        window.exportGrubbyItems = exportGrubbyItems;
+        window.loadMoreGrubby = loadMoreGrubby;
+        window.closeGrubbyItems = closeGrubbyItems;
+        window.createAgeCirculationChart = createAgeCirculationChart;
+        window.updateAgeCirculationChart = updateAgeCirculationChart;
+        window.updateGrubbyThreshold = updateGrubbyThreshold;
         window.deletePreviousCollection = deletePreviousCollection;
         window.showAuthorDetails = showAuthorDetails;
         window.closeAuthorDetails = closeAuthorDetails;
         window.exportAuthorTitles = exportAuthorTitles;
+        window.exportAuthorAnalysis = exportAuthorAnalysis;
         window.clearAuthorTitlesSort = clearAuthorTitlesSort;
         window.viewBookDetails = viewBookDetails;
         window.scrollToTop = scrollToTop;
@@ -8355,16 +8914,32 @@
             document.getElementById('circulationThreshold').addEventListener('change', () => {
                 console.log('Circulation threshold changed'); // Debug log
                 updateWeedingAnalysis();
+                updateAgeCirculationChart();
             });
 
             document.getElementById('weedingCollectionFilter').addEventListener('change', () => {
                 console.log('Collection filter changed'); // Debug log
                 updateWeedingAnalysis();
+                updateAgeCirculationChart();
             });
 
             document.getElementById('ageFilter').addEventListener('change', () => {
                 console.log('Age filter changed'); // Debug log
                 updateWeedingAnalysis();
+                updateAgeCirculationChart();
+            });
+
+            // Grubby threshold slider listener (using 'input' for real-time updates)
+            document.getElementById('grubbyThreshold').addEventListener('input', updateGrubbyThreshold);
+            // Lazy load age vs circulation chart when section is opened
+            document.getElementById('ageCirculationDetails').addEventListener('toggle', function () {
+                if (this.open && !window.ageCirculationChartCreated) {
+                    // Small delay to ensure the section is fully expanded
+                    setTimeout(() => {
+                        createAgeCirculationChart();
+                        window.ageCirculationChartCreated = true;
+                    }, 100);
+                }
             });
 
             document.getElementById('authorMinTitles').addEventListener('change', updateAuthorAnalysis);
