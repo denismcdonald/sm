@@ -8,6 +8,7 @@
     <!-- External Libraries with fallbacks -->
     <script src="https://unpkg.com/chart.js@3.9.1/dist/chart.min.js"
         onerror="console.log('Chart.js failed to load from unpkg, trying jsdelivr'); this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js'"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -719,6 +720,47 @@
             cursor: pointer;
         }
 
+        /* Author Insights Responsive Design */
+        @media (max-width: 1024px) {
+            #authorInsightCards {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            #authorInsightCards {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Insight cards styling */
+        .insight-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .insight-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .insight-card.positive {
+            border-left: 4px solid #16a34a;
+        }
+
+        .insight-card.warning {
+            border-left: 4px solid #d97706;
+        }
+
+        .insight-card.neutral {
+            border-left: 4px solid #6b7280;
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -935,11 +977,6 @@
             font-size: 0.75rem;
             padding: 0.25rem 0.5rem;
             margin-left: 1rem;
-        }
-
-        /* Disclosure arrow animation */
-        details[open] .disclosure-arrow {
-            transform: rotate(90deg);
         }
 
         /* Scroll to Top Button */
@@ -1357,7 +1394,7 @@
                                 </button>
                             </div>
                             <button id="exportCollectionBtn" class="btn btn-secondary" onclick="exportCollectionItems()">
-                                📄 Export Collection Report
+                                📊 Export to Excel
                             </button>
                         </div>
                         <table class="analysis-table sortable-table" id="collectionItemsTable">
@@ -1426,7 +1463,7 @@
                     <div style="display: flex; gap: 1rem;">
                         <button class="btn btn-secondary" onclick="closeHighPerformers()">✕ Close</button>
                         <button id="exportHighPerformersBtn" class="btn btn-secondary" onclick="exportHighPerformers()">
-                            📄 Export to CSV
+                            📊 Export to Excel
                         </button>
                     </div>
                 </div>
@@ -1541,7 +1578,7 @@
 
 
                         <button id="exportWeedingBtn" class="btn btn-secondary">
-                            📄 Export to CSV
+                            📊 Export to Excel
                         </button>
                     </div>
                     <table class="analysis-table sortable-table" id="weedingTable">
@@ -1643,6 +1680,192 @@
                             <option value="">All Collections</option>
                         </select>
                     </div>
+                </div>
+
+                <!-- Author Insights Panel -->
+                <div class="analysis-section">
+                    <details id="authorInsightsPanel">
+                        <summary
+                            style="cursor: pointer; font-weight: bold; color: #374151; display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; list-style: none;">
+                            <span style="display: flex; align-items: center;">
+                                <span
+                                    style="margin-right: 0.5rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block;"
+                                    class="disclosure-arrow">▶</span>
+                                📊 Author Insights
+                            </span>
+                            <span id="insightsPreview" style="font-size: 0.875rem; color: #6b7280; font-weight: normal;">
+                                <!-- Preview text will be inserted here -->
+                            </span>
+                        </summary>
+                
+                        <div id="authorInsightsContent" style="margin-top: 1rem;">
+                            <!-- Top row: Insight cards -->
+                            <div id="authorInsightCards"
+                                style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                                <!-- Cards will be populated by JavaScript -->
+                            </div>
+                        
+                        <!-- Configuration Panel -->
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem;">
+                            <details>
+                                <summary
+                                    style="cursor: pointer; font-weight: 600; color: #374151; list-style: none; display: flex; align-items: center;">
+                                    <span style="margin-right: 0.5rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block;"
+                                        class="disclosure-arrow">▶</span>
+                                    ⚙️ Configure Analysis Thresholds
+                                </summary>
+                        
+                                <div
+                                    style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                                    <!-- Hidden Gems Thresholds -->
+                                    <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #16a34a;">
+                                        <h5 style="margin: 0 0 0.75rem 0; color: #16a34a;">🟢 Hidden Gems Criteria</h5>
+                        
+                                        <div style="margin-bottom: 0.75rem;">
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                Max titles in collection: <span id="hiddenGemsMaxTitlesValue">3</span>
+                                            </label>
+                                            <input type="range" id="hiddenGemsMaxTitles" min="1" max="10" value="3" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Authors with this many titles or fewer</div>
+                                        </div>
+                        
+                                        <div>
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                Min average circulation: <span id="hiddenGemsMinCircValue">20</span>
+                                            </label>
+                                            <input type="range" id="hiddenGemsMinCirc" min="5" max="50" value="20" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Minimum performance to be considered</div>
+                                        </div>
+                                    </div>
+                        
+                                    <!-- Top Performers Threshold -->
+                                    <div style="background: #eff6ff; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #2563eb;">
+                                        <h5 style="margin: 0 0 0.75rem 0; color: #2563eb;">🔵 Top Performers Criteria</h5>
+                        
+                                        <div style="margin-bottom: 0.75rem;">
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                Min average circulation: <span id="topPerformersMinCircValue">30</span>
+                                            </label>
+                                            <input type="range" id="topPerformersMinCirc" min="10" max="60" value="30" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Threshold for exceptional performance</div>
+                                        </div>
+                        
+                                        <div>
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                Max to show: <span id="topPerformersLimitValue">15</span>
+                                            </label>
+                                            <input type="range" id="topPerformersLimit" min="5" max="30" value="15" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Limit display to top performers</div>
+                                        </div>
+                                    </div>
+                        
+                                    <!-- Shelf Space Concerns -->
+                                    <div style="background: #fef2f2; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #dc2626;">
+                                        <h5 style="margin: 0 0 0.75rem 0; color: #dc2626;">🔴 Shelf Space Concerns</h5>
+                        
+                                        <div style="margin-bottom: 0.75rem;">
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                Min titles in collection: <span id="shelfHogsMinTitlesValue">5</span>
+                                            </label>
+                                            <input type="range" id="shelfHogsMinTitles" min="3" max="15" value="5" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Authors taking significant shelf space</div>
+                                        </div>
+                        
+                                        <div>
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                Max average circulation: <span id="shelfHogsMaxCircValue">15</span>
+                                            </label>
+                                            <input type="range" id="shelfHogsMaxCirc" min="5" max="25" value="15" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Upper limit for concern threshold</div>
+                                        </div>
+                                    </div>
+                        
+                                    <!-- Other Authors -->
+                                    <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #6b7280;">
+                                        <h5 style="margin: 0 0 0.75rem 0; color: #6b7280;">⚪ Other Notable Authors</h5>
+                                    
+                                        <div style="margin-bottom: 0.75rem;">
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                Min average circulation: <span id="othersMinCircValue">15</span>
+                                            </label>
+                                            <input type="range" id="othersMinCirc" min="5" max="30" value="15" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Include decent performers</div>
+                                        </div>
+                                    
+                                        <div style="margin-bottom: 0.75rem;">
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                OR min titles in collection: <span id="othersMinTitlesValue">8</span>
+                                            </label>
+                                            <input type="range" id="othersMinTitles" min="3" max="15" value="8" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Include authors with significant presence</div>
+                                        </div>
+                                    
+                                        <div>
+                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                Max to display: <span id="othersLimitValue">30</span>
+                                            </label>
+                                            <input type="range" id="othersLimit" min="5" max="50" value="30" style="width: 100%;"
+                                                oninput="updateThresholds()">
+                                            <div style="font-size: 0.75rem; color: #6b7280;">Limit dots to avoid clutter</div>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;">
+                                    <button class="btn btn-secondary" onclick="resetToDefaults()" style="font-size: 0.875rem;">
+                                        🔄 Reset to Defaults
+                                    </button>
+                                    <button class="btn btn-primary" onclick="saveAsPreset()" style="font-size: 0.875rem;">
+                                        💾 Save as Preset
+                                    </button>
+                                    <select id="presetSelector" onchange="loadPreset()"
+                                        style="padding: 0.5rem; border-radius: 0.25rem; border: 1px solid #d1d5db;">
+                                        <option value="">Load Preset...</option>
+                                        <option value="conservative">Conservative (Low Thresholds)</option>
+                                        <option value="aggressive">Aggressive (High Thresholds)</option>
+                                        <option value="balanced">Balanced (Medium Thresholds)</option>
+                                    </select>
+                                </div>
+                            </details>
+                        </div>
+
+                            <!-- Bottom row: Scatter plot (full width) -->
+                            <div style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <div>
+                                        <h4 style="margin: 0; font-size: 1rem; color: #374151;">Author Efficiency Visualization</h4>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #6b7280;">
+                                            Click any point to view author details • Bubble size = total circulation
+                                        </p>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <button id="scatterFilterBtn" class="btn btn-secondary"
+                                            style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" onclick="toggleScatterFilter()">
+                                            📊 Show All Authors
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="height: 400px; position: relative;">
+                                    <canvas id="authorScatterChart"></canvas>
+                                </div>
+                                <div
+                                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; font-size: 0.75rem; color: #6b7280;">
+                                    <div>🟢 <strong>Hidden Gems:</strong> High performance, few titles</div>
+                                    <div>🔵 <strong>High Performers:</strong> Excellent circulation rates</div>
+                                    <div>🔴 <strong>Shelf Hogs:</strong> Many titles, low performance</div>
+                                    <div>⚪ <strong>Others:</strong> Sample of remaining authors</div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
                 </div>
 
                 <!-- Performance Legend -->
@@ -3845,7 +4068,7 @@
         }
 
         //===========================================================================
-        // exportSnapshotDiff() - Export added/removed items to CSV
+        // exportSnapshotDiff() - Export added/removed items to Excel
         //===========================================================================
         async function exportSnapshotDiff(type, snapshot1Id, snapshot2Id) {
             try {
@@ -3862,43 +4085,28 @@
                     return;
                 }
 
-                const headers = ['Title', 'Author', 'Year', 'Call Number', 'Collection', 'Circulation'];
+                const headers = ['Title', 'Author', 'Year', 'Call Number', 'Collection', 'Circulation', 'Branch'];
 
-                const csvContent = [
-                    headers.join(','),
-                    ...items.map(item => [
-                        `"${(item.title || '').replace(/"/g, '""')}"`,
-                        `"${(item.author || '').replace(/"/g, '""')}"`,
-                        item.year || '',
-                        `"${(item.callNumber || '').replace(/"/g, '""')}"`,
-                        `"${(item.collection || '').replace(/"/g, '""')}"`,
-                        item.circulation || 0
-                    ].join(','))
-                ].join('\n');
+                const data = items.map(item => [
+                    item.title || '',
+                    item.author || '',
+                    item.year || '',
+                    item.callNumber || '',
+                    item.collection || '',
+                    item.circulation || 0,
+                    item.branch || ''
+                ]);
 
-                // Create and trigger download
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
+                const today = new Date().toISOString().split('T')[0];
+                const filename = `${type}-items-${today}-${snapshot1.name}-vs-${snapshot2.name}.xlsx`;
 
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute('href', url);
-
-                    const today = new Date().toISOString().split('T')[0];
-                    const filename = `${type}-items-${today}-${snapshot1.name}-vs-${snapshot2.name}.csv`;
-
-                    link.setAttribute('download', filename);
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }
+                createExcelFile(data, headers, filename, `${type.charAt(0).toUpperCase() + type.slice(1)} Items`);
 
             } catch (error) {
                 console.error('Error exporting snapshot diff:', error);
                 alert('Error exporting data: ' + error.message);
             }
-        }
+        }    
 
         //===========================================================================
         // updateSnapshotMetrics() - Update snapshot metrics display
@@ -4174,6 +4382,73 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        //===========================================================================
+        // createExcelFile() - Create and download Excel file with formatting and filters
+        //===========================================================================
+        function createExcelFile(data, headers, filename, worksheetName = 'Data') {
+            // Check if SheetJS is available
+            if (typeof XLSX === 'undefined') {
+                console.log('SheetJS not available, falling back to CSV');
+                // Fallback to CSV export
+                const csvContent = [
+                    headers.join(','),
+                    ...data.map(row => row.map(cell => `"${(cell || '').toString().replace(/"/g, '""')}"`).join(','))
+                ].join('\n');
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename.replace('.xlsx', '.csv'));
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                return;
+            }
+
+            // Create workbook and worksheet
+            const wb = XLSX.utils.book_new();
+
+            // Prepare data with headers
+            const wsData = [headers, ...data];
+
+            // Create worksheet
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+            // Set column widths (auto-size)
+            const colWidths = headers.map((header, i) => {
+                const maxLength = Math.max(
+                    header.length,
+                    ...data.map(row => (row[i] || '').toString().length)
+                );
+                return { wch: Math.min(Math.max(maxLength + 2, 10), 50) };
+            });
+            ws['!cols'] = colWidths;
+
+            // Add auto-filter to the data
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            ws['!autofilter'] = { ref: ws['!ref'] };
+
+            // Style the header row
+            for (let col = 0; col < headers.length; col++) {
+                const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
+                if (!ws[cellAddress]) continue;
+
+                ws[cellAddress].s = {
+                    font: { bold: true, color: { rgb: "FFFFFF" } },
+                    fill: { fgColor: { rgb: "2563EB" } },
+                    alignment: { horizontal: "center", vertical: "center" }
+                };
+            }
+
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, worksheetName);
+
+            // Generate and download Excel file
+            XLSX.writeFile(wb, filename);
+        }    
 
         //===========================================================================
         // normalizeApostrophes() - Convert all apostrophe variants to standard apostrophe
@@ -4941,7 +5216,7 @@
 
 
         //===========================================================================
-        // exportExcludedItems() - Export excluded items to CSV
+        // exportExcludedItems() - Export excluded items to Excel
         //===========================================================================
         function exportExcludedItems() {
             if (!excludedSamplesData || excludedSamplesData.length === 0) {
@@ -4951,38 +5226,20 @@
 
             const headers = ['Row', 'Reason', 'Title', 'Author', 'Collection', 'Call Number', 'Branch'];
 
-            // Create CSV content
-            const csvContent = [
-                headers.join(','),
-                ...excludedSamplesData.map(item => [
-                    item.row || '',
-                    `"${(item.reason || '').replace(/"/g, '""')}"`,
-                    `"${(item.title || '').replace(/"/g, '""')}"`,
-                    `"${(item.author || '').replace(/"/g, '""')}"`,
-                    `"${(item.collection || '').replace(/"/g, '""')}"`,
-                    `"${(item.callNumber || '').replace(/"/g, '""')}"`,
-                    `"${(item.branch || '').replace(/"/g, '""')}"`,
-                ].join(','))
-            ].join('\n');
+            const data = excludedSamplesData.map(item => [
+                item.row || '',
+                item.reason || '',
+                item.title || '',
+                item.author || '',
+                item.collection || '',
+                item.callNumber || '',
+                item.branch || ''
+            ]);
 
-            // Create and trigger download
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `excluded-items-${today}.xlsx`;
 
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-
-                // Generate filename with current date
-                const today = new Date().toISOString().split('T')[0];
-                const filename = `excluded-items-${today}.csv`;
-
-                link.setAttribute('download', filename);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+            createExcelFile(data, headers, filename, 'Excluded Items');
         }
 
         //===========================================================================
@@ -5625,7 +5882,7 @@
                             📋 View Excluded Items
                         </span>
                         <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; margin-left: 1rem;" onclick="event.stopPropagation(); exportExcludedItems()">
-                            📄 Export to CSV
+                            📊 Export to Excel
                         </button>
                     </summary>
                     <div style="margin-top:0.5rem; max-height:300px; overflow-y:auto;">
@@ -6276,7 +6533,7 @@
         }
 
         //===========================================================================
-        // exportWeedingCandidates() - Export weeding candidates to CSV
+        // exportWeedingCandidates() - Export weeding candidates to Excel
         //===========================================================================
         function exportWeedingCandidates() {
             if (!window.currentWeedingCandidates || window.currentWeedingCandidates.length === 0) {
@@ -6285,51 +6542,36 @@
             }
 
             const candidates = window.currentWeedingCandidates;
-            const headers = ['Title', 'Author', 'Year', 'Call Number', 'Collection', 'Circulation', 'Age (Years)'];
+            const headers = ['Title', 'Author', 'Year', 'Call Number', 'Collection', 'Circulation', 'Age (Years)', 'Branch'];
 
-            // Create CSV content
-            const csvContent = [
-                headers.join(','),
-                ...candidates.map(item => {
-                    const age = getItemAge(item.year);
-                    const ageDisplay = age > 0 ? age : '';
-                    return [
-                        `"${(item.title || '').replace(/"/g, '""')}"`,
-                        `"${(item.author || '').replace(/"/g, '""')}"`,
-                        item.year || '',
-                        `"${(item.callNumber || '').replace(/"/g, '""')}"`,
-                        `"${(item.collection || '').replace(/"/g, '""')}"`,
-                        item.circulation || 0,
-                        ageDisplay
-                    ].join(',');
-                })
-            ].join('\n');
+            // Create data rows
+            const data = candidates.map(item => {
+                const age = getItemAge(item.year);
+                const ageDisplay = age > 0 ? age : '';
+                return [
+                    item.title || '',
+                    item.author || '',
+                    item.year || '',
+                    item.callNumber || '',
+                    item.collection || '',
+                    item.circulation || 0,
+                    ageDisplay,
+                    item.branch || ''
+                ];
+            });
 
-            // Create and trigger download
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
+            // Generate filename
+            const circulationThreshold = document.getElementById('circulationThreshold').value;
+            const collectionFilter = document.getElementById('weedingCollectionFilter').value;
+            const today = new Date().toISOString().split('T')[0];
 
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-
-                // Generate filename with current date and filters
-                const circulationThreshold = document.getElementById('circulationThreshold').value;
-                const collectionFilter = document.getElementById('weedingCollectionFilter').value;
-                const today = new Date().toISOString().split('T')[0];
-
-                let filename = `weeding-candidates-${today}`;
-                if (collectionFilter) {
-                    filename += `-${collectionFilter.toLowerCase().replace(/\s+/g, '-')}`;
-                }
-                filename += `-under-${circulationThreshold}-circulations.csv`;
-
-                link.setAttribute('download', filename);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+            let filename = `weeding-candidates-${today}`;
+            if (collectionFilter) {
+                filename += `-${collectionFilter.toLowerCase().replace(/\s+/g, '-')}`;
             }
+            filename += `-under-${circulationThreshold}-circulations.xlsx`;
+
+            createExcelFile(data, headers, filename, 'Weeding Candidates');
         }
 
         function loadAuthorData() {
@@ -6476,6 +6718,8 @@
 
             // Store current author data globally for exports
             window.currentAuthorData = authorData;
+            // Update author insights panel
+            updateAuthorInsights();
             // Update result count display
             const countElement = document.getElementById('authorResultCount');
             if (countElement) {
@@ -6486,6 +6730,875 @@
             if (legendElement) {
                 legendElement.innerHTML = createPerformanceLegend('collection');
             }
+        }
+
+        //===========================================================================
+        // generateAuthorInsights() - Generate insights data using configurable thresholds
+        //===========================================================================
+        function generateAuthorInsights(authorData) {
+            if (!authorData || authorData.length === 0) {
+                return {
+                    hiddenGems: [],
+                    shelfHogs: [],
+                    topROI: null,
+                    scatterData: []
+                };
+            }
+
+            // Get threshold values from sliders
+            const hiddenGemsMaxTitles = parseInt(document.getElementById('hiddenGemsMaxTitles')?.value || 3);
+            const hiddenGemsMinCirc = parseInt(document.getElementById('hiddenGemsMinCirc')?.value || 20);
+            const topPerformersMinCirc = parseInt(document.getElementById('topPerformersMinCirc')?.value || 30);
+            const topPerformersLimit = parseInt(document.getElementById('topPerformersLimit')?.value || 15);
+            const shelfHogsMinTitles = parseInt(document.getElementById('shelfHogsMinTitles')?.value || 5);
+            const shelfHogsMaxCirc = parseInt(document.getElementById('shelfHogsMaxCirc')?.value || 15);
+            const othersMinCirc = parseInt(document.getElementById('othersMinCirc')?.value || 15);
+            const othersMinTitles = parseInt(document.getElementById('othersMinTitles')?.value || 8);
+
+            // Hidden Gems: Using configurable thresholds
+            const hiddenGems = authorData.filter(author =>
+                author.titles <= hiddenGemsMaxTitles && author.averageCirculation >= hiddenGemsMinCirc
+            ).sort((a, b) => b.averageCirculation - a.averageCirculation);
+
+            // Shelf Hogs: Using configurable thresholds
+            const shelfHogs = authorData.filter(author =>
+                author.titles >= shelfHogsMinTitles && author.averageCirculation < shelfHogsMaxCirc
+            ).sort((a, b) => b.titles - a.titles);
+
+            // Top ROI: Best efficiency (unchanged)
+            const topROI = authorData.length > 0
+                ? authorData.reduce((best, author) =>
+                    author.averageCirculation > best.averageCirculation ? author : best
+                ) : null;
+
+            // Scatter plot data (unchanged)
+            const scatterData = authorData.map(author => ({
+                x: author.titles,
+                y: author.averageCirculation,
+                author: author.author,
+                totalCirculation: author.totalCirculation,
+                performanceLevel: author.performanceLevel
+            }));
+
+            return {
+                hiddenGems,
+                shelfHogs,
+                topROI,
+                scatterData
+            };
+        }
+
+        //===========================================================================
+        // updateAuthorInsights() - Update the Author Insights panel
+        //===========================================================================
+        function updateAuthorInsights() {
+            if (!window.currentAuthorData) {
+                document.getElementById('insightsPreview').textContent = 'No data available';
+                return;
+            }
+
+            const insights = generateAuthorInsights(window.currentAuthorData);
+
+            // Update preview text
+            const previewText = `${insights.hiddenGems.length} hidden gems • ${insights.shelfHogs.length} shelf space concerns`;
+            document.getElementById('insightsPreview').textContent = previewText;
+
+            // Update insight cards
+            const cardsContainer = document.getElementById('authorInsightCards');
+            cardsContainer.innerHTML = `
+        <div class="insight-card positive" onclick="showInsightDetail('hiddenGems')">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #16a34a;">${insights.hiddenGems.length}</div>
+            <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">Hidden Gems</div>
+            <div style="font-size: 0.75rem; color: #6b7280;">High performance, few titles</div>
+        </div>
+        
+        <div class="insight-card warning" onclick="showInsightDetail('shelfHogs')">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #d97706;">${insights.shelfHogs.length}</div>
+            <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">Shelf Space Concerns</div>
+            <div style="font-size: 0.75rem; color: #6b7280;">Many titles, low performance</div>
+        </div>
+        
+        <div class="insight-card neutral" onclick="showAuthorDetails('${insights.topROI ? insights.topROI.author : ''}')" style="${insights.topROI ? 'cursor: pointer;' : ''}">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #374151;">${insights.topROI ? insights.topROI.averageCirculation : '—'}</div>
+            <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">Best Average</div>
+            <div style="font-size: 0.75rem; color: #6b7280; line-height: 1.2;">${insights.topROI ? `${insights.topROI.author.length > 25 ? insights.topROI.author.substring(0, 22) + '...' : insights.topROI.author}` : 'None'}</div>
+            <div style="font-size: 0.7rem; color: #9ca3af;">circulations per title</div>
+        </div>
+
+        <div class="insight-card neutral">
+            <div style="font-size: 1.25rem; font-weight: bold; color: #374151;">${window.currentAuthorData.length}</div>
+            <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">Authors Analyzed</div>
+            <div style="font-size: 0.75rem; color: #6b7280;">From current tab filters</div>
+        </div>
+    `;
+
+            // Update scatter plot
+            createAuthorScatterPlot(insights.scatterData);
+
+            // Store insights globally for detail views
+            window.currentAuthorInsights = insights;
+        }
+
+        //===========================================================================
+        // createAuthorScatterPlot() - Create filtered, interactive scatter plot
+        //===========================================================================
+        function createAuthorScatterPlot(scatterData) {
+            const canvas = document.getElementById('authorScatterChart');
+            if (!canvas) return;
+
+            // Check if Chart.js is available
+            if (typeof Chart === 'undefined') {
+                canvas.parentElement.innerHTML = `
+            <div style="height: 180px; display: flex; align-items: center; justify-content: center; text-align: center; color: #6b7280; font-size: 0.875rem;">
+                📊 Charts require Chart.js<br>
+                <span style="font-size: 0.75rem;">Showing top ${Math.min(50, scatterData.length)} authors</span>
+            </div>
+        `;
+                return;
+            }
+
+            // Destroy existing chart
+            if (window.authorScatterInstance) {
+                window.authorScatterInstance.destroy();
+            }
+
+            // Filter to most interesting authors to reduce clutter
+            const interestingAuthors = getInterestingAuthors(scatterData);
+
+            const ctx = canvas.getContext('2d');
+
+            // Create datasets with different sizes and colors
+            const datasets = [{
+                label: 'Hidden Gems (High Avg, Few Titles)',
+                data: interestingAuthors.hiddenGems.map(d => ({
+                    x: d.x,
+                    y: d.y,
+                    author: d.author,
+                    r: Math.max(6, Math.min(12, d.totalCirculation / 20)) // Bubble size based on total circulation
+                })),
+                backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                borderColor: '#16a34a',
+                borderWidth: 2
+            }, {
+                label: 'High Performers',
+                data: interestingAuthors.topPerformers.map(d => ({
+                    x: d.x,
+                    y: d.y,
+                    author: d.author,
+                    r: Math.max(4, Math.min(10, d.totalCirculation / 30))
+                })),
+                backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                borderColor: '#2563eb',
+                borderWidth: 1
+            }, {
+                label: 'Shelf Space Concerns',
+                data: interestingAuthors.shelfHogs.map(d => ({
+                    x: d.x,
+                    y: d.y,
+                    author: d.author,
+                    r: Math.max(4, Math.min(8, d.x / 2)) // Size based on number of titles
+                })),
+                backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                borderColor: '#dc2626',
+                borderWidth: 1
+            }];
+
+            // Add sample of other authors (lighter, smaller) - now using configurable limit
+            if (interestingAuthors.others.length > 0) {
+                const othersLimit = parseInt(document.getElementById('othersLimit')?.value || 30);
+                const othersToShow = Math.min(othersLimit, interestingAuthors.others.length);
+
+                datasets.push({
+                    label: `Others (${othersToShow} of ${interestingAuthors.others.length})`,
+                    data: interestingAuthors.others.slice(0, othersLimit).map(d => ({
+                        x: d.x,
+                        y: d.y,
+                        author: d.author,
+                        r: 3
+                    })),
+                    backgroundColor: 'rgba(156, 163, 175, 0.4)',
+                    borderColor: '#9ca3af',
+                    borderWidth: 0
+                });
+            }
+
+            window.authorScatterInstance = new Chart(ctx, {
+                type: 'bubble',
+                data: { datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 10,
+                                font: { size: 9 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const point = context.raw;
+                                    return `${point.author}: ${context.parsed.x} titles, ${context.parsed.y} avg circulation`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Number of Titles',
+                                font: { size: 10 }
+                            },
+                            ticks: {
+                                font: { size: 9 }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Average Circulation per Title',
+                                font: { size: 10 }
+                            },
+                            ticks: {
+                                font: { size: 9 }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const datasetIndex = elements[0].datasetIndex;
+                            const dataIndex = elements[0].index;
+                            const authorName = datasets[datasetIndex].data[dataIndex].author;
+                            showAuthorDetails(authorName);
+                        }
+                    }
+                }
+            });
+        }
+
+        //===========================================================================
+        // getInterestingAuthors() - Filter to most interesting authors using configurable thresholds
+        //===========================================================================
+        function getInterestingAuthors(scatterData) {
+            // Get threshold values from sliders (with fallbacks)
+            const hiddenGemsMaxTitles = parseInt(document.getElementById('hiddenGemsMaxTitles')?.value || 3);
+            const hiddenGemsMinCirc = parseInt(document.getElementById('hiddenGemsMinCirc')?.value || 20);
+            const topPerformersMinCirc = parseInt(document.getElementById('topPerformersMinCirc')?.value || 30);
+            const topPerformersLimit = parseInt(document.getElementById('topPerformersLimit')?.value || 15);
+            const shelfHogsMinTitles = parseInt(document.getElementById('shelfHogsMinTitles')?.value || 5);
+            const shelfHogsMaxCirc = parseInt(document.getElementById('shelfHogsMaxCirc')?.value || 15);
+            const othersMinCirc = parseInt(document.getElementById('othersMinCirc')?.value || 15);
+            const othersMinTitles = parseInt(document.getElementById('othersMinTitles')?.value || 8);
+            const othersLimit = parseInt(document.getElementById('othersLimit')?.value || 30);
+
+            // Hidden gems: Using slider values
+            const hiddenGems = scatterData.filter(d => d.x <= hiddenGemsMaxTitles && d.y >= hiddenGemsMinCirc);
+
+            // Top performers: Using slider values
+            const topPerformers = scatterData
+                .filter(d => d.y >= topPerformersMinCirc && !hiddenGems.includes(d))
+                .sort((a, b) => b.y - a.y)
+                .slice(0, topPerformersLimit);
+
+            // Shelf hogs: Using slider values
+            const shelfHogs = scatterData.filter(d => d.x >= shelfHogsMinTitles && d.y < shelfHogsMaxCirc);
+
+            // Other notable authors: Using slider values
+            const others = scatterData
+                .filter(d => !hiddenGems.includes(d) && !topPerformers.includes(d) && !shelfHogs.includes(d))
+                .filter(d => d.y >= othersMinCirc || d.x >= othersMinTitles)
+                .sort((a, b) => b.totalCirculation - a.totalCirculation);
+
+            return {
+                hiddenGems,
+                topPerformers,
+                shelfHogs,
+                others
+            };
+        }
+
+        //===========================================================================
+        // toggleScatterFilter() - Toggle between filtered and all authors view
+        //===========================================================================
+        function toggleScatterFilter() {
+            if (!window.currentAuthorData) return;
+
+            const btn = document.getElementById('scatterFilterBtn');
+            const isFiltered = btn.textContent.includes('Show All');
+
+            if (isFiltered) {
+                // Show all authors
+                const scatterData = window.currentAuthorData.map(author => ({
+                    x: author.titles,
+                    y: author.averageCirculation,
+                    author: author.author,
+                    totalCirculation: author.totalCirculation,
+                    performanceLevel: author.performanceLevel
+                }));
+                createFullAuthorScatterPlot(scatterData);
+                btn.textContent = '🎯 Show Key Authors';
+            } else {
+                // Show filtered view
+                const insights = generateAuthorInsights(window.currentAuthorData);
+                createAuthorScatterPlot(insights.scatterData);
+                btn.textContent = '📊 Show All Authors';
+            }
+        }
+
+        //===========================================================================
+        // createFullAuthorScatterPlot() - Create scatter plot with all authors
+        //===========================================================================
+        function createFullAuthorScatterPlot(scatterData) {
+            const canvas = document.getElementById('authorScatterChart');
+            if (!canvas) return;
+
+            // Check if Chart.js is available
+            if (typeof Chart === 'undefined') {
+                canvas.parentElement.innerHTML = `
+            <div style="height: 380px; display: flex; align-items: center; justify-content: center; text-align: center; color: #6b7280; font-size: 0.875rem;">
+                📊 Charts require Chart.js<br>
+                <span style="font-size: 0.75rem;">Would show all ${scatterData.length} authors</span>
+            </div>
+        `;
+                return;
+            }
+
+            // Destroy existing chart
+            if (window.authorScatterInstance) {
+                window.authorScatterInstance.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+
+            // Group all authors by performance level with smaller, more transparent dots
+            const datasets = [{
+                label: 'High Performers',
+                data: scatterData.filter(d => d.performanceLevel === 'high').map(d => ({
+                    x: d.x,
+                    y: d.y,
+                    author: d.author,
+                    r: 4
+                })),
+                backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                borderColor: '#16a34a',
+                borderWidth: 1
+            }, {
+                label: 'Medium Performers',
+                data: scatterData.filter(d => d.performanceLevel === 'medium').map(d => ({
+                    x: d.x,
+                    y: d.y,
+                    author: d.author,
+                    r: 3
+                })),
+                backgroundColor: 'rgba(217, 119, 6, 0.5)',
+                borderColor: '#d97706',
+                borderWidth: 1
+            }, {
+                label: 'Low Performers',
+                data: scatterData.filter(d => d.performanceLevel === 'low').map(d => ({
+                    x: d.x,
+                    y: d.y,
+                    author: d.author,
+                    r: 2
+                })),
+                backgroundColor: 'rgba(220, 38, 38, 0.4)',
+                borderColor: '#dc2626',
+                borderWidth: 1
+            }];
+
+            window.authorScatterInstance = new Chart(ctx, {
+                type: 'bubble',
+                data: { datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'point'
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: { size: 11 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const point = context.raw;
+                                    return `${point.author}: ${context.parsed.x} titles, ${context.parsed.y} avg circulation`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Number of Titles in Collection',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Average Circulation per Title',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const datasetIndex = elements[0].datasetIndex;
+                            const dataIndex = elements[0].index;
+                            const authorName = datasets[datasetIndex].data[dataIndex].author;
+                            showAuthorDetails(authorName);
+                        }
+                    }
+                }
+            });
+        }
+
+        //===========================================================================
+        // showInsightDetail() - Show detailed table for specific insight type
+        //===========================================================================
+        function showInsightDetail(insightType) {
+            if (!window.currentAuthorInsights) return;
+
+            const insights = window.currentAuthorInsights;
+            let authors = [];
+            let title = '';
+            let description = '';
+            let sectionId = '';
+
+            switch (insightType) {
+                case 'hiddenGems':
+                    authors = insights.hiddenGems;
+                    title = 'Hidden Gem Authors';
+                    description = 'Authors with high performance but few titles in your collection. Consider expanding these authors.';
+                    sectionId = 'hiddenGemsSection';
+                    break;
+                case 'shelfHogs':
+                    authors = insights.shelfHogs;
+                    title = 'Shelf Space Efficiency Concerns';
+                    description = 'Authors with many titles but low average circulation. Consider weeding underperforming titles.';
+                    sectionId = 'shelfHogsSection';
+                    break;
+            }
+
+            if (authors.length === 0) {
+                // Create a "no results" section instead of alert
+                showInsightSection(sectionId, title, 'No authors meet this criteria in your current filtered results.', []);
+                return;
+            }
+
+            showInsightSection(sectionId, title, description, authors);
+        }
+
+        //===========================================================================
+        // updateThresholds() - Real-time update of analysis based on slider values
+        //===========================================================================
+        function updateThresholds() {
+            // Update display values
+            document.getElementById('hiddenGemsMaxTitlesValue').textContent = document.getElementById('hiddenGemsMaxTitles').value;
+            document.getElementById('hiddenGemsMinCircValue').textContent = document.getElementById('hiddenGemsMinCirc').value;
+            document.getElementById('topPerformersMinCircValue').textContent = document.getElementById('topPerformersMinCirc').value;
+            document.getElementById('topPerformersLimitValue').textContent = document.getElementById('topPerformersLimit').value;
+            document.getElementById('shelfHogsMinTitlesValue').textContent = document.getElementById('shelfHogsMinTitles').value;
+            document.getElementById('shelfHogsMaxCircValue').textContent = document.getElementById('shelfHogsMaxCirc').value;
+            document.getElementById('othersMinCircValue').textContent = document.getElementById('othersMinCirc').value;
+            document.getElementById('othersMinTitlesValue').textContent = document.getElementById('othersMinTitles').value;
+            document.getElementById('othersLimitValue').textContent = document.getElementById('othersLimit').value;
+
+            // Regenerate insights with new thresholds
+            if (window.currentAuthorData) {
+                updateAuthorInsights();
+
+                // Update scatter plot if it's in filtered mode
+                const btn = document.getElementById('scatterFilterBtn');
+                if (btn && btn.textContent.includes('Show All')) {
+                    const insights = generateAuthorInsights(window.currentAuthorData);
+                    createAuthorScatterPlot(insights.scatterData);
+                }
+            }
+        }
+
+        //===========================================================================
+        // resetToDefaults() - Reset all sliders to original values
+        //===========================================================================
+        function resetToDefaults() {
+            document.getElementById('hiddenGemsMaxTitles').value = 3;
+            document.getElementById('hiddenGemsMinCirc').value = 20;
+            document.getElementById('topPerformersMinCirc').value = 30;
+            document.getElementById('topPerformersLimit').value = 15;
+            document.getElementById('shelfHogsMinTitles').value = 5;
+            document.getElementById('shelfHogsMaxCirc').value = 15;
+            document.getElementById('othersMinCirc').value = 15;
+            document.getElementById('othersMinTitles').value = 8;
+            document.getElementById('othersLimit').value = 30;
+
+            updateThresholds();
+        }
+
+        //===========================================================================
+        // saveAsPreset() - Save current settings as a named preset
+        //===========================================================================
+        function saveAsPreset() {
+            const name = prompt('Enter a name for this preset:');
+            if (!name) return;
+
+            const preset = {
+                hiddenGemsMaxTitles: document.getElementById('hiddenGemsMaxTitles').value,
+                hiddenGemsMinCirc: document.getElementById('hiddenGemsMinCirc').value,
+                topPerformersMinCirc: document.getElementById('topPerformersMinCirc').value,
+                topPerformersLimit: document.getElementById('topPerformersLimit').value,
+                shelfHogsMinTitles: document.getElementById('shelfHogsMinTitles').value,
+                shelfHogsMaxCirc: document.getElementById('shelfHogsMaxCirc').value,
+                othersMinCirc: document.getElementById('othersMinCirc').value,
+                othersMinTitles: document.getElementById('othersMinTitles').value
+            };
+
+            // Save to localStorage
+            const presets = JSON.parse(localStorage.getItem('authorAnalysisPresets') || '{}');
+            presets[name] = preset;
+            localStorage.setItem('authorAnalysisPresets', JSON.stringify(presets));
+
+            // Add to dropdown
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            document.getElementById('presetSelector').appendChild(option);
+
+            alert(`Preset "${name}" saved successfully!`);
+        }
+
+        //===========================================================================
+        // loadPreset() - Load predefined or saved preset
+        //===========================================================================
+        function loadPreset() {
+            const selector = document.getElementById('presetSelector');
+            const presetName = selector.value;
+            if (!presetName) return;
+
+            let preset;
+
+            // Built-in presets
+            const builtInPresets = {
+                conservative: {
+                    hiddenGemsMaxTitles: 2, hiddenGemsMinCirc: 15,
+                    topPerformersMinCirc: 25, topPerformersLimit: 20,
+                    shelfHogsMinTitles: 4, shelfHogsMaxCirc: 12,
+                    othersMinCirc: 12, othersMinTitles: 6, othersLimit: 15
+                },
+                aggressive: {
+                    hiddenGemsMaxTitles: 4, hiddenGemsMinCirc: 25,
+                    topPerformersMinCirc: 35, topPerformersLimit: 10,
+                    shelfHogsMinTitles: 6, shelfHogsMaxCirc: 18,
+                    othersMinCirc: 18, othersMinTitles: 10, othersLimit: 25
+                },
+                balanced: {
+                    hiddenGemsMaxTitles: 3, hiddenGemsMinCirc: 20,
+                    topPerformersMinCirc: 30, topPerformersLimit: 15,
+                    shelfHogsMinTitles: 5, shelfHogsMaxCirc: 15,
+                    othersMinCirc: 15, othersMinTitles: 8, othersLimit: 30
+                }
+            };
+
+            if (builtInPresets[presetName]) {
+                preset = builtInPresets[presetName];
+            } else {
+                // User-saved preset
+                const presets = JSON.parse(localStorage.getItem('authorAnalysisPresets') || '{}');
+                preset = presets[presetName];
+            }
+
+            if (preset) {
+                // Apply preset values
+                Object.keys(preset).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) element.value = preset[key];
+                });
+
+                updateThresholds();
+                selector.value = ''; // Reset dropdown
+            }
+        }
+
+        //===========================================================================
+        // showInsightSection() - Display insight details in expandable section
+        //===========================================================================
+        function showInsightSection(sectionId, title, description, authors) {
+            // Remove existing section if it exists
+            const existingSection = document.getElementById(sectionId);
+            if (existingSection) {
+                existingSection.remove();
+            }
+
+            if (authors.length === 0) {
+                // Show just a message for no results
+                const messageSection = document.createElement('div');
+                messageSection.id = sectionId;
+                messageSection.className = 'analysis-section';
+                messageSection.style.marginTop = '1rem';
+                messageSection.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3>${title}</h3>
+                <button class="btn btn-secondary" onclick="document.getElementById('${sectionId}').remove()">✕ Close</button>
+            </div>
+            <p style="text-align: center; color: #6b7280; padding: 2rem;">${description}</p>
+        `;
+
+                // Insert after the author insights panel
+                const insightsPanel = document.getElementById('authorInsightsPanel').parentElement;
+                insightsPanel.parentNode.insertBefore(messageSection, insightsPanel.nextSibling);
+
+                // Scroll to the section
+                messageSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
+            // Create the detailed section
+            const detailSection = document.createElement('div');
+            detailSection.id = sectionId;
+            detailSection.className = 'analysis-section';
+            detailSection.style.marginTop = '1rem';
+
+            detailSection.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+                <h3>${title} (${authors.length} authors)</h3>
+                <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-size: 0.875rem;">${description}</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-secondary" onclick="exportInsightData('${sectionId}')">📊 Export to Excel</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('${sectionId}').remove()">✕ Close</button>
+            </div>
+        </div>
+        
+        <table class="analysis-table sortable-table" id="${sectionId}Table">
+            <thead>
+                <tr>
+                    <th class="sortable" data-sort="author" data-type="text">
+                        Author
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="titles" data-type="number">
+                        Titles
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="averageCirculation" data-type="number">
+                        Avg Circulation
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="totalCirculation" data-type="number">
+                        Total Circulation
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="collections" data-type="text">
+                        Collections
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="recommendation" data-type="text">
+                        Recommendation
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="${sectionId}TableBody">
+                ${authors.map(author => {
+                const recommendation = getAuthorRecommendation(author, sectionId);
+                return `
+                        <tr onclick="showAuthorDetails('${escapeHtml(author.author)}')" style="cursor: pointer;" 
+                            onmouseover="this.style.backgroundColor='#f9fafb'" 
+                            onmouseout="this.style.backgroundColor=''">
+                            <td><strong>${escapeHtml(author.author)}</strong></td>
+                            <td>${author.titles}</td>
+                            <td style="font-weight: bold; color: ${author.performanceColor};">${author.averageCirculation}</td>
+                            <td>${author.totalCirculation.toLocaleString()}</td>
+                            <td style="font-size: 0.875rem;">
+                                ${author.collections.slice(0, 2).join(', ')}
+                                ${author.collections.length > 2 ? ` +${author.collections.length - 2}` : ''}
+                            </td>
+                            <td style="font-size: 0.875rem; color: #374151;">
+                                ${recommendation}
+                            </td>
+                        </tr>
+                    `;
+            }).join('')}
+            </tbody>
+        </table>
+    `;
+
+            // Store data for export
+            window[sectionId + 'Data'] = authors;
+
+            // Insert after the author insights panel
+            const insightsPanel = document.getElementById('authorInsightsPanel').parentElement;
+            insightsPanel.parentNode.insertBefore(detailSection, insightsPanel.nextSibling);
+
+            // Setup sorting
+            setupInsightTableSorting(sectionId);
+
+            // Scroll to the section
+            detailSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        //===========================================================================
+        // getAuthorRecommendation() - Get recommendation text for author
+        //===========================================================================
+        function getAuthorRecommendation(author, sectionType) {
+            if (sectionType === 'hiddenGemsSection') {
+                if (author.averageCirculation >= 40) {
+                    return 'High priority: Consider buying 3-5 more titles';
+                } else if (author.averageCirculation >= 25) {
+                    return 'Consider expanding: Buy 2-3 more titles';
+                } else {
+                    return 'Monitor performance, consider 1-2 more titles';
+                }
+            } else if (sectionType === 'shelfHogsSection') {
+                const efficiency = author.totalCirculation / author.titles;
+                if (efficiency < 5) {
+                    return 'Consider weeding lowest performers';
+                } else if (efficiency < 8) {
+                    return 'Review collection, weed selectively';
+                } else {
+                    return 'Monitor collection, some titles may be saveable';
+                }
+            }
+            return '';
+        }
+
+        //===========================================================================
+        // setupInsightTableSorting() - Setup sorting for insight tables
+        //===========================================================================
+        function setupInsightTableSorting(sectionId) {
+            const headers = document.querySelectorAll(`#${sectionId}Table th.sortable`);
+
+            headers.forEach(header => {
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    const dataType = this.getAttribute('data-type');
+                    sortInsightTable(sectionId, field, dataType);
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
+        // sortInsightTable() - Sort insight table
+        //===========================================================================
+        function sortInsightTable(sectionId, field, dataType) {
+            const table = document.getElementById(sectionId + 'Table');
+            const tbody = document.getElementById(sectionId + 'TableBody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Determine sort direction
+            let direction = 'asc';
+            const currentSorted = table.querySelector('th.sorted');
+            if (currentSorted && currentSorted.getAttribute('data-sort') === field) {
+                direction = currentSorted.classList.contains('asc') ? 'desc' : 'asc';
+            }
+
+            // Clear existing sort classes
+            table.querySelectorAll('th').forEach(th => th.classList.remove('sorted', 'asc', 'desc'));
+
+            // Add sort classes to current column
+            const currentHeader = table.querySelector(`th[data-sort="${field}"]`);
+            currentHeader.classList.add('sorted', direction);
+
+            // Sort rows
+            rows.sort((a, b) => {
+                const aValue = a.getAttribute(`data-${field}`) || a.cells[getColumnIndex(field)].textContent;
+                const bValue = b.getAttribute(`data-${field}`) || b.cells[getColumnIndex(field)].textContent;
+
+                let comparison = 0;
+                if (dataType === 'number') {
+                    comparison = parseFloat(aValue) - parseFloat(bValue);
+                } else {
+                    comparison = aValue.localeCompare(bValue);
+                }
+
+                return direction === 'desc' ? -comparison : comparison;
+            });
+
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        //===========================================================================
+        // getColumnIndex() - Get column index for sorting
+        //===========================================================================
+        function getColumnIndex(field) {
+            const fieldMap = {
+                'author': 0,
+                'titles': 1,
+                'averageCirculation': 2,
+                'totalCirculation': 3,
+                'collections': 4,
+                'recommendation': 5
+            };
+            return fieldMap[field] || 0;
+        }
+
+        //===========================================================================
+        // exportInsightData() - Export insight table to Excel
+        //===========================================================================
+        function exportInsightData(sectionId) {
+            const data = window[sectionId + 'Data'];
+            if (!data || data.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            const headers = ['Author', 'Titles', 'Average Circulation', 'Total Circulation', 'Collections', 'Recommendation'];
+
+            const exportData = data.map(author => [
+                author.author,
+                author.titles,
+                author.averageCirculation,
+                author.totalCirculation,
+                author.collections.join(', '),
+                getAuthorRecommendation(author, sectionId)
+            ]);
+
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `${sectionId.replace('Section', '')}-analysis-${today}.xlsx`;
+            const worksheetName = sectionId === 'hiddenGemsSection' ? 'Hidden Gems' : 'Shelf Space Analysis';
+
+            createExcelFile(exportData, headers, filename, worksheetName);
         }
 
         //===========================================================================
@@ -6839,7 +7952,7 @@
         }
 
         //===========================================================================
-        // exportAuthorTitles() - Export current author's titles to CSV
+        // exportAuthorTitles() - Export current author's titles to Excel
         //===========================================================================
         function exportAuthorTitles() {
             if (!window.currentAuthorDetails) {
@@ -6857,34 +7970,21 @@
                 return 'LOW';
             };
 
-            const csvContent = [
-                headers.join(','),
-                ...books.map(book => [
-                    `"${book.title.replace(/"/g, '""')}"`,
-                    `"${book.author.replace(/"/g, '""')}"`,
-                    book.year || '',
-                    `"${book.collection.replace(/"/g, '""')}"`,
-                    `"${book.callNumber.replace(/"/g, '""')}"`,
-                    book.circulation,
-                    getPerformanceLevel(book.circulation)
-                ].join(','))
-            ].join('\n');
-
-            // Create and download file
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
+            const data = books.map(book => [
+                book.title,
+                book.author,
+                book.year || '',
+                book.collection,
+                book.callNumber,
+                book.circulation,
+                getPerformanceLevel(book.circulation)
+            ]);
 
             const today = new Date().toISOString().split('T')[0];
-            const filename = `author-report-${name.replace(/[^a-zA-Z0-9]/g, '-')}-${today}.csv`;
+            const filename = `author-report-${name.replace(/[^a-zA-Z0-9]/g, '-')}-${today}.xlsx`;
 
-            link.setAttribute('download', filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+            createExcelFile(data, headers, filename, `${name} - Titles`);
+        }    
 
         function selectBookFromTable(barcode) {
             showTab('search');
@@ -7109,11 +8209,22 @@
         window.closeCollectionDetails = closeCollectionDetails;
         window.exportCollectionItems = exportCollectionItems;
         window.clearCollectionItemsSort = clearCollectionItemsSort;
+        window.showInsightDetail = showInsightDetail;
+        window.exportInsightData = exportInsightData;
+        window.toggleScatterFilter = toggleScatterFilter;
+        window.updateThresholds = updateThresholds;
+        window.resetToDefaults = resetToDefaults;
+        window.saveAsPreset = saveAsPreset;
+        window.loadPreset = loadPreset;
+        window.setupDisclosureArrows = setupDisclosureArrows;
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', async function () {
             // Ensure upload section is visible by default
             document.getElementById('uploadSection').style.display = 'block';
+
+            // Setup disclosure arrows
+            setupDisclosureArrows();
 
             // Initialize IndexedDB
             try {
@@ -7326,10 +8437,10 @@
             <div class="metric-value">${avgCirculation}</div>
             <div class="metric-subtitle">Circulation per item</div>
         </div>
-        <div class="metric-card">
+        <div class="metric-card" onclick="showHighPerformersForCollection('${escapeHtml(collectionName)}')" style="cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f0f9ff'; this.style.borderColor='#2563eb';" onmouseout="this.style.backgroundColor=''; this.style.borderColor='';">
             <div class="metric-title">High Performers</div>
             <div class="metric-value">${highPerformers}</div>
-            <div class="metric-subtitle">Items with 35+ circulation</div>
+            <div class="metric-subtitle">Click to view high-performing items</div>
         </div>
     `;
 
@@ -7386,7 +8497,7 @@
         }
 
         //===========================================================================
-        // exportCollectionItems() - Export current collection's items to CSV
+        // exportCollectionItems() - Export current collection's items to Excel
         //===========================================================================
         function exportCollectionItems() {
             if (!window.currentCollectionDetails) {
@@ -7404,32 +8515,21 @@
                 return 'LOW';
             };
 
-            const csvContent = [
-                headers.join(','),
-                ...items.map(item => [
-                    `"${item.title.replace(/"/g, '""')}"`,
-                    `"${item.author.replace(/"/g, '""')}"`,
-                    item.year || '',
-                    `"${item.callNumber.replace(/"/g, '""')}"`,
-                    item.circulation,
-                    getPerformanceLevel(item.circulation)
-                ].join(','))
-            ].join('\n');
+            // Create data rows
+            const data = items.map(item => [
+                item.title || '',
+                item.author || '',
+                item.year || '',
+                item.callNumber || '',
+                item.circulation,
+                getPerformanceLevel(item.circulation)
+            ]);
 
-            // Create and download file
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-
+            // Generate filename
             const today = new Date().toISOString().split('T')[0];
-            const filename = `collection-${name.replace(/[^a-zA-Z0-9]/g, '-')}-${today}.csv`;
+            const filename = `collection-${name.replace(/[^a-zA-Z0-9]/g, '-')}-${today}.xlsx`;
 
-            link.setAttribute('download', filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            createExcelFile(data, headers, filename, `${name} Collection`);
         }
 
         //===========================================================================
@@ -7804,52 +8904,39 @@
         }
 
         //===========================================================================
-        // exportHighPerformers() - Export high performers to CSV
+        // exportHighPerformers() - Export high performers to Excel
         //===========================================================================
         function exportHighPerformers() {
-                if (!window.currentHighPerformers || window.currentHighPerformers.length === 0) {
-                    alert('No high performers to export');
-                    return;
-                }
-
-                const headers = ['Title', 'Author', 'Circulation', 'Collection', 'Call Number', 'Year', 'Branch'];
-
-                const csvContent = [
-                    headers.join(','),
-                    ...window.currentHighPerformers.map(item => [
-                        `"${(item.title || '').replace(/"/g, '""')}"`,
-                        `"${(item.author || '').replace(/"/g, '""')}"`,
-                        item.circulation || 0,
-                        `"${(item.collection || '').replace(/"/g, '""')}"`,
-                        `"${(item.callNumber || '').replace(/"/g, '""')}"`,
-                        item.year || '',
-                        `"${(item.branch || '').replace(/"/g, '""')}"`,
-                    ].join(','))
-                ].join('\n');
-
-                // Create and trigger download
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-
-                // Generate filename with collection filter if applicable
-                const today = new Date().toISOString().split('T')[0];
-                const threshold = getHighPerformanceThreshold();
-                let filename = `high-performers-${threshold}plus-${today}`;
-
-                if (window.currentHighPerformersCollection) {
-                    const collectionSafe = window.currentHighPerformersCollection.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
-                    filename += `-${collectionSafe}`;
-                }
-                filename += '.csv';
-
-                link.setAttribute('download', filename);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+            if (!window.currentHighPerformers || window.currentHighPerformers.length === 0) {
+                alert('No high performers to export');
+                return;
             }
+
+            const headers = ['Title', 'Author', 'Circulation', 'Collection', 'Call Number', 'Year', 'Branch'];
+
+            const data = window.currentHighPerformers.map(item => [
+                item.title || '',
+                item.author || '',
+                item.circulation || 0,
+                item.collection || '',
+                item.callNumber || '',
+                item.year || '',
+                item.branch || ''
+            ]);
+
+            // Generate filename
+            const today = new Date().toISOString().split('T')[0];
+            const threshold = getHighPerformanceThreshold();
+            let filename = `high-performers-${threshold}plus-${today}`;
+
+            if (window.currentHighPerformersCollection) {
+                const collectionSafe = window.currentHighPerformersCollection.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
+                filename += `-${collectionSafe}`;
+            }
+            filename += '.xlsx';
+
+            createExcelFile(data, headers, filename, 'High Performers');
+        }    
 
             //===========================================================================
             // resetDatabaseAndReload() - Reset database and reload page
@@ -7936,6 +9023,26 @@
                 }
 
                 statusDiv.style.display = 'block';
+            }
+
+            //===========================================================================
+            // setupDisclosureArrows() - Ensure all disclosure arrows work
+            //===========================================================================
+            function setupDisclosureArrows() {
+                const details = document.querySelectorAll('details');
+
+                details.forEach(detail => {
+                    detail.addEventListener('toggle', function () {
+                        const arrow = this.querySelector('summary .disclosure-arrow');
+                        if (arrow) {
+                            if (this.open) {
+                                arrow.style.transform = 'rotate(90deg)';
+                            } else {
+                                arrow.style.transform = 'rotate(0deg)';
+                            }
+                        }
+                    });
+                });
             }
 
     </script>
