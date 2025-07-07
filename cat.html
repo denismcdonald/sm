@@ -8,7 +8,7 @@
     <!-- External Libraries with fallbacks -->
     <script src="https://unpkg.com/chart.js@3.9.1/dist/chart.min.js"
         onerror="console.log('Chart.js failed to load from unpkg, trying jsdelivr'); this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js'"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -475,7 +475,7 @@
             color: #16a34a;
         }
 
-       #currentCollectionStatus:hover {
+        #currentCollectionStatus:hover {
             border-color: #666 !important;
         }
 
@@ -749,7 +749,7 @@
 
         .insight-card:hover {
             border-color: #2563eb;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .insight-card.positive {
@@ -1070,8 +1070,8 @@
                 <span id="collectionName" style="font-weight: 600;"></span>
                 <span id="collectionStats" style="margin-left: 0.5rem; opacity: 0.8;"></span>
             </div>
-            </div>
         </div>
+    </div>
     </div>
 
     <!-- Tab Navigation -->
@@ -1287,38 +1287,42 @@
                         </div>
                     </div>
                 </div>
-            
-            <!-- Author's Other Titles Section -->
-            <div id="authorOtherTitlesSection"
-                style="display: none; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-                <div class="panel">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h4 id="authorOtherTitlesHeader">Other titles by this author</h4>
-                            <button class="btn btn-primary" id="viewAuthorPerformanceBtn" onclick="viewAuthorPerformance()"
-                                style="font-size: 0.75rem; padding: 0.25rem 0.75rem; margin-left: 1rem;">📊 View Performance</button>
+
+                <!-- Author's Other Titles Section -->
+                <div id="authorOtherTitlesSection"
+                    style="display: none; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                    <div class="panel">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h4 id="authorOtherTitlesHeader">Other titles by this author</h4>
+                                <button class="btn btn-primary" id="viewAuthorPerformanceBtn"
+                                    onclick="viewAuthorPerformance()"
+                                    style="font-size: 0.75rem; padding: 0.25rem 0.75rem; margin-left: 1rem;">📊 View
+                                    Performance</button>
+                            </div>
+                            <button class="btn btn-secondary" id="toggleAuthorTitlesBtn"
+                                onclick="toggleAuthorOtherTitles()"
+                                style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">▼ Collapse</button>
                         </div>
-                        <button class="btn btn-secondary" id="toggleAuthorTitlesBtn" onclick="toggleAuthorOtherTitles()"
-                            style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">▼ Collapse</button>
-                    </div>
-                    <div class="results-container" style="max-height: 20rem;">
-                        <table class="search-results-table" id="authorOtherTitlesTable">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Author</th>
-                                    <th>Year</th>
-                                    <th>Circulation</th>
-                                    <th>Collection</th>
-                                    <th>Branch</th>
-                                </tr>
-                            </thead>
-                            <tbody id="authorOtherTitlesBody">
-                            </tbody>
-                        </table>
+                        <div class="results-container" style="max-height: 20rem;">
+                            <table class="search-results-table" id="authorOtherTitlesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Year</th>
+                                        <th>Circulation</th>
+                                        <th>Collection</th>
+                                        <th>Branch</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="authorOtherTitlesBody">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
 
             <!-- Collection Overview Tab -->
@@ -1328,7 +1332,8 @@
                 <!-- Collection Distribution Charts -->
                 <div class="analysis-section">
                     <h3>Collection Analysis</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto;">
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto;">
                         <div style="text-align: center;">
                             <h4 style="margin-bottom: 1rem; color: #374151;">Total Collection Distribution</h4>
                             <div style="height: 300px;">
@@ -1408,19 +1413,21 @@
                 </div>
                 <!-- Collection Details Panel -->
                 <div class="analysis-section" id="collectionDetailsSection" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <h3 id="collectionDetailsTitle">Collection Details</h3>
                         <button class="btn btn-secondary" onclick="closeCollectionDetails()">✕ Close</button>
                     </div>
-                
+
                     <div id="collectionDetailsContent">
                         <!-- Collection stats cards -->
                         <div id="collectionStatsCards"
                             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
                         </div>
-                
+
                         <!-- Collection's items table -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                             <div style="display: flex; align-items: center; gap: 1rem;">
                                 <h4>Items in This Collection</h4>
                                 <button id="clearCollectionItemsSortBtn" class="btn btn-secondary clear-sort-btn"
@@ -1428,7 +1435,8 @@
                                     Clear Sort
                                 </button>
                             </div>
-                            <button id="exportCollectionBtn" class="btn btn-secondary" onclick="exportCollectionItems()">
+                            <button id="exportCollectionBtn" class="btn btn-secondary"
+                                onclick="exportCollectionItems()">
                                 📊 Export to Excel
                             </button>
                         </div>
@@ -1438,42 +1446,48 @@
                                     <th class="sortable" data-sort="title" data-type="text">
                                         Title
                                         <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 15l7-7 7 7">
                                             </path>
                                         </svg>
                                     </th>
                                     <th class="sortable" data-sort="author" data-type="text">
                                         Author
                                         <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 15l7-7 7 7">
                                             </path>
                                         </svg>
                                     </th>
                                     <th class="sortable" data-sort="year" data-type="number">
                                         Year
                                         <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 15l7-7 7 7">
                                             </path>
                                         </svg>
                                     </th>
                                     <th class="sortable" data-sort="circulation" data-type="number">
                                         Circulation
                                         <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 15l7-7 7 7">
                                             </path>
                                         </svg>
                                     </th>
                                     <th class="sortable" data-sort="performance" data-type="number">
                                         Performance
                                         <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 15l7-7 7 7">
                                             </path>
                                         </svg>
                                     </th>
                                     <th class="sortable" data-sort="callNumber" data-type="text">
                                         Call Number
                                         <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 15l7-7 7 7">
                                             </path>
                                         </svg>
                                     </th>
@@ -1589,8 +1603,8 @@
                     </div>
                     <div class="filter-group">
                         <label>Grubby Items Threshold: <span id="grubbyThresholdValue">75</span>+ circulations</label>
-                        <input type="range" id="grubbyThreshold" min="25" max="200" value="75" step="5" style="width: 100%;"
-                            oninput="updateGrubbyThreshold()">
+                        <input type="range" id="grubbyThreshold" min="25" max="200" value="75" step="5"
+                            style="width: 100%;" oninput="updateGrubbyThreshold()">
                         <div style="font-size: 0.75rem; color: #6b7280; display: flex; justify-content: space-between;">
                             <span>25</span>
                             <span>200</span>
@@ -1623,34 +1637,44 @@
                                 Visual decision matrix for weeding
                             </span>
                         </summary>
-                
+
                         <div style="margin-top: 1rem;">
                             <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
                                 Items in the bottom-right quadrant (old + low circulation) are prime weeding candidates.
                                 Items in the top-right (old + high circulation) are classics worth keeping.
                             </p>
-                
+
                             <div style="max-width: 900px; margin: 0 auto;">
                                 <div style="height: 400px; position: relative;">
                                     <canvas id="ageCirculationChart"></canvas>
                                 </div>
-                
+
                                 <div
                                     style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; font-size: 0.75rem; color: #6b7280;">
                                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <div style="width: 12px; height: 12px; background: #dc2626; border-radius: 50%;"></div>
-                                        <span><strong>Weeding Candidates:</strong> Low circulation, meets current criteria</span>
+                                        <div
+                                            style="width: 12px; height: 12px; background: #dc2626; border-radius: 50%;">
+                                        </div>
+                                        <span><strong>Weeding Candidates:</strong> Low circulation, meets current
+                                            criteria</span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <div style="width: 12px; height: 12px; background: #16a34a; border-radius: 50%;"></div>
-                                        <span><strong>Grubby Items:</strong> High circulation, may need replacement</span>
+                                        <div
+                                            style="width: 12px; height: 12px; background: #16a34a; border-radius: 50%;">
+                                        </div>
+                                        <span><strong>Grubby Items:</strong> High circulation, may need
+                                            replacement</span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <div style="width: 12px; height: 12px; background: #2563eb; border-radius: 50%;"></div>
+                                        <div
+                                            style="width: 12px; height: 12px; background: #2563eb; border-radius: 50%;">
+                                        </div>
                                         <span><strong>Good Performers:</strong> Decent circulation, worth keeping</span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <div style="width: 12px; height: 12px; background: #9ca3af; border-radius: 50%;"></div>
+                                        <div
+                                            style="width: 12px; height: 12px; background: #9ca3af; border-radius: 50%;">
+                                        </div>
                                         <span><strong>Others:</strong> Sample of remaining items</span>
                                     </div>
                                 </div>
@@ -1659,81 +1683,89 @@
                     </details>
                 </div>
 
-            <!-- Grubby Items Analysis -->
-            <div class="analysis-section" id="grubbyItemsSection" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <h3>Grubby Items (Popular Items Needing Attention)</h3>
-                        <button id="clearGrubbySortBtn" class="btn btn-secondary clear-sort-btn" onclick="clearTableSort('grubby')"
-                            style="display: none;">
-                            Clear Sort
-                        </button>
+                <!-- Grubby Items Analysis -->
+                <div class="analysis-section" id="grubbyItemsSection" style="display: none;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <h3>Grubby Items (Popular Items Needing Attention)</h3>
+                            <button id="clearGrubbySortBtn" class="btn btn-secondary clear-sort-btn"
+                                onclick="clearTableSort('grubby')" style="display: none;">
+                                Clear Sort
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-secondary" onclick="closeGrubbyItems()">✕ Close</button>
+                            <button id="exportGrubbyBtn" class="btn btn-secondary" onclick="exportGrubbyItems()">
+                                📊 Export to Excel
+                            </button>
+                        </div>
                     </div>
-                    <div style="display: flex; gap: 1rem;">
-                        <button class="btn btn-secondary" onclick="closeGrubbyItems()">✕ Close</button>
-                        <button id="exportGrubbyBtn" class="btn btn-secondary" onclick="exportGrubbyItems()">
-                            📊 Export to Excel
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                        Items with high circulation that may need replacement due to wear from heavy use.
+                    </p>
+                    <table class="analysis-table sortable-table" id="grubbyTable">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="title" data-type="text">
+                                    Title
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="author" data-type="text">
+                                    Author
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="circulation" data-type="number">
+                                    Circulation
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="year" data-type="number">
+                                    Year
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="collection" data-type="text">
+                                    Collection
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="callNumber" data-type="text">
+                                    Call Number
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="branch" data-type="text">
+                                    Branch
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="grubbyTableBody"></tbody>
+                    </table>
+                    <div id="grubbyLoadMoreContainer" style="text-align: center; padding: 1rem; display: none;">
+                        <button id="grubbyLoadMoreBtn" class="btn btn-secondary" onclick="loadMoreGrubby()">
+                            Load 100 more items
                         </button>
                     </div>
                 </div>
-                <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
-                    Items with high circulation that may need replacement due to wear from heavy use.
-                </p>
-                <table class="analysis-table sortable-table" id="grubbyTable">
-                    <thead>
-                        <tr>
-                            <th class="sortable" data-sort="title" data-type="text">
-                                Title
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="author" data-type="text">
-                                Author
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="circulation" data-type="number">
-                                Circulation
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="year" data-type="number">
-                                Year
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="collection" data-type="text">
-                                Collection
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="callNumber" data-type="text">
-                                Call Number
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="branch" data-type="text">
-                                Branch
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="grubbyTableBody"></tbody>
-                </table>
-                <div id="grubbyLoadMoreContainer" style="text-align: center; padding: 1rem; display: none;">
-                    <button id="grubbyLoadMoreBtn" class="btn btn-secondary" onclick="loadMoreGrubby()">
-                        Load 100 more items
-                    </button>
-                </div>
-            </div>
 
                 <div class="analysis-section">
                     <div
@@ -1864,162 +1896,201 @@
                                     class="disclosure-arrow">▶</span>
                                 📊 Author Insights
                             </span>
-                            <span id="insightsPreview" style="font-size: 0.875rem; color: #6b7280; font-weight: normal;">
+                            <span id="insightsPreview"
+                                style="font-size: 0.875rem; color: #6b7280; font-weight: normal;">
                                 <!-- Preview text will be inserted here -->
                             </span>
                         </summary>
-                
+
                         <div id="authorInsightsContent" style="margin-top: 1rem;">
                             <!-- Top row: Insight cards -->
                             <div id="authorInsightCards"
                                 style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
                                 <!-- Cards will be populated by JavaScript -->
                             </div>
-                        
-                        <!-- Configuration Panel -->
-                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem;">
-                            <details>
-                                <summary
-                                    style="cursor: pointer; font-weight: 600; color: #374151; list-style: none; display: flex; align-items: center;">
-                                    <span style="margin-right: 0.5rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block;"
-                                        class="disclosure-arrow">▶</span>
-                                    ⚙️ Configure Analysis Thresholds
-                                </summary>
-                        
-                                <div
-                                    style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
-                                    <!-- Hidden Gems Thresholds -->
-                                    <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #16a34a;">
-                                        <h5 style="margin: 0 0 0.75rem 0; color: #16a34a;">🟢 Hidden Gems Criteria</h5>
-                        
-                                        <div style="margin-bottom: 0.75rem;">
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                Max titles in collection: <span id="hiddenGemsMaxTitlesValue">3</span>
-                                            </label>
-                                            <input type="range" id="hiddenGemsMaxTitles" min="1" max="10" value="3" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Authors with this many titles or fewer</div>
+
+                            <!-- Configuration Panel -->
+                            <div
+                                style="background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem;">
+                                <details>
+                                    <summary
+                                        style="cursor: pointer; font-weight: 600; color: #374151; list-style: none; display: flex; align-items: center;">
+                                        <span
+                                            style="margin-right: 0.5rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block;"
+                                            class="disclosure-arrow">▶</span>
+                                        ⚙️ Configure Analysis Thresholds
+                                    </summary>
+
+                                    <div
+                                        style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                                        <!-- Hidden Gems Thresholds -->
+                                        <div
+                                            style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #16a34a;">
+                                            <h5 style="margin: 0 0 0.75rem 0; color: #16a34a;">🟢 Hidden Gems Criteria
+                                            </h5>
+
+                                            <div style="margin-bottom: 0.75rem;">
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    Max titles in collection: <span
+                                                        id="hiddenGemsMaxTitlesValue">3</span>
+                                                </label>
+                                                <input type="range" id="hiddenGemsMaxTitles" min="1" max="10" value="3"
+                                                    style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Authors with this many
+                                                    titles or fewer</div>
+                                            </div>
+
+                                            <div>
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    Min average circulation: <span id="hiddenGemsMinCircValue">20</span>
+                                                </label>
+                                                <input type="range" id="hiddenGemsMinCirc" min="5" max="50" value="20"
+                                                    style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Minimum performance to
+                                                    be considered</div>
+                                            </div>
                                         </div>
-                        
-                                        <div>
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                Min average circulation: <span id="hiddenGemsMinCircValue">20</span>
-                                            </label>
-                                            <input type="range" id="hiddenGemsMinCirc" min="5" max="50" value="20" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Minimum performance to be considered</div>
+
+                                        <!-- Top Performers Threshold -->
+                                        <div
+                                            style="background: #eff6ff; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #2563eb;">
+                                            <h5 style="margin: 0 0 0.75rem 0; color: #2563eb;">🔵 Top Performers
+                                                Criteria</h5>
+
+                                            <div style="margin-bottom: 0.75rem;">
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    Min average circulation: <span
+                                                        id="topPerformersMinCircValue">30</span>
+                                                </label>
+                                                <input type="range" id="topPerformersMinCirc" min="10" max="60"
+                                                    value="30" style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Threshold for
+                                                    exceptional performance</div>
+                                            </div>
+
+                                            <div>
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    Max to show: <span id="topPerformersLimitValue">15</span>
+                                                </label>
+                                                <input type="range" id="topPerformersLimit" min="5" max="30" value="15"
+                                                    style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Limit display to top
+                                                    performers</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Shelf Space Concerns -->
+                                        <div
+                                            style="background: #fef2f2; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #dc2626;">
+                                            <h5 style="margin: 0 0 0.75rem 0; color: #dc2626;">🔴 Shelf Space Concerns
+                                            </h5>
+
+                                            <div style="margin-bottom: 0.75rem;">
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    Min titles in collection: <span
+                                                        id="shelfHogsMinTitlesValue">5</span>
+                                                </label>
+                                                <input type="range" id="shelfHogsMinTitles" min="3" max="15" value="5"
+                                                    style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Authors taking
+                                                    significant shelf space</div>
+                                            </div>
+
+                                            <div>
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    Max average circulation: <span id="shelfHogsMaxCircValue">15</span>
+                                                </label>
+                                                <input type="range" id="shelfHogsMaxCirc" min="5" max="25" value="15"
+                                                    style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Upper limit for concern
+                                                    threshold</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Other Authors -->
+                                        <div
+                                            style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #6b7280;">
+                                            <h5 style="margin: 0 0 0.75rem 0; color: #6b7280;">⚪ Other Notable Authors
+                                            </h5>
+
+                                            <div style="margin-bottom: 0.75rem;">
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    Min average circulation: <span id="othersMinCircValue">15</span>
+                                                </label>
+                                                <input type="range" id="othersMinCirc" min="5" max="30" value="15"
+                                                    style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Include decent
+                                                    performers</div>
+                                            </div>
+
+                                            <div style="margin-bottom: 0.75rem;">
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    OR min titles in collection: <span
+                                                        id="othersMinTitlesValue">8</span>
+                                                </label>
+                                                <input type="range" id="othersMinTitles" min="3" max="15" value="8"
+                                                    style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Include authors with
+                                                    significant presence</div>
+                                            </div>
+
+                                            <div>
+                                                <label
+                                                    style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
+                                                    Max to display: <span id="othersLimitValue">30</span>
+                                                </label>
+                                                <input type="range" id="othersLimit" min="5" max="50" value="30"
+                                                    style="width: 100%;" oninput="updateThresholds()">
+                                                <div style="font-size: 0.75rem; color: #6b7280;">Limit dots to avoid
+                                                    clutter</div>
+                                            </div>
                                         </div>
                                     </div>
-                        
-                                    <!-- Top Performers Threshold -->
-                                    <div style="background: #eff6ff; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #2563eb;">
-                                        <h5 style="margin: 0 0 0.75rem 0; color: #2563eb;">🔵 Top Performers Criteria</h5>
-                        
-                                        <div style="margin-bottom: 0.75rem;">
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                Min average circulation: <span id="topPerformersMinCircValue">30</span>
-                                            </label>
-                                            <input type="range" id="topPerformersMinCirc" min="10" max="60" value="30" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Threshold for exceptional performance</div>
-                                        </div>
-                        
-                                        <div>
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                Max to show: <span id="topPerformersLimitValue">15</span>
-                                            </label>
-                                            <input type="range" id="topPerformersLimit" min="5" max="30" value="15" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Limit display to top performers</div>
-                                        </div>
+
+                                    <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;">
+                                        <button class="btn btn-secondary" onclick="resetToDefaults()"
+                                            style="font-size: 0.875rem;">
+                                            🔄 Reset to Defaults
+                                        </button>
+                                        <button class="btn btn-primary" onclick="saveAsPreset()"
+                                            style="font-size: 0.875rem;">
+                                            💾 Save as Preset
+                                        </button>
+                                        <select id="presetSelector" onchange="loadPreset()"
+                                            style="padding: 0.5rem; border-radius: 0.25rem; border: 1px solid #d1d5db;">
+                                            <option value="">Load Preset...</option>
+                                            <option value="conservative">Conservative (Low Thresholds)</option>
+                                            <option value="aggressive">Aggressive (High Thresholds)</option>
+                                            <option value="balanced">Balanced (Medium Thresholds)</option>
+                                        </select>
                                     </div>
-                        
-                                    <!-- Shelf Space Concerns -->
-                                    <div style="background: #fef2f2; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #dc2626;">
-                                        <h5 style="margin: 0 0 0.75rem 0; color: #dc2626;">🔴 Shelf Space Concerns</h5>
-                        
-                                        <div style="margin-bottom: 0.75rem;">
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                Min titles in collection: <span id="shelfHogsMinTitlesValue">5</span>
-                                            </label>
-                                            <input type="range" id="shelfHogsMinTitles" min="3" max="15" value="5" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Authors taking significant shelf space</div>
-                                        </div>
-                        
-                                        <div>
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                Max average circulation: <span id="shelfHogsMaxCircValue">15</span>
-                                            </label>
-                                            <input type="range" id="shelfHogsMaxCirc" min="5" max="25" value="15" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Upper limit for concern threshold</div>
-                                        </div>
-                                    </div>
-                        
-                                    <!-- Other Authors -->
-                                    <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #6b7280;">
-                                        <h5 style="margin: 0 0 0.75rem 0; color: #6b7280;">⚪ Other Notable Authors</h5>
-                                    
-                                        <div style="margin-bottom: 0.75rem;">
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                Min average circulation: <span id="othersMinCircValue">15</span>
-                                            </label>
-                                            <input type="range" id="othersMinCirc" min="5" max="30" value="15" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Include decent performers</div>
-                                        </div>
-                                    
-                                        <div style="margin-bottom: 0.75rem;">
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                OR min titles in collection: <span id="othersMinTitlesValue">8</span>
-                                            </label>
-                                            <input type="range" id="othersMinTitles" min="3" max="15" value="8" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Include authors with significant presence</div>
-                                        </div>
-                                    
-                                        <div>
-                                            <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">
-                                                Max to display: <span id="othersLimitValue">30</span>
-                                            </label>
-                                            <input type="range" id="othersLimit" min="5" max="50" value="30" style="width: 100%;"
-                                                oninput="updateThresholds()">
-                                            <div style="font-size: 0.75rem; color: #6b7280;">Limit dots to avoid clutter</div>
-                                        </div>
-                                    </div>
-                                </div>
-                        
-                                <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;">
-                                    <button class="btn btn-secondary" onclick="resetToDefaults()" style="font-size: 0.875rem;">
-                                        🔄 Reset to Defaults
-                                    </button>
-                                    <button class="btn btn-primary" onclick="saveAsPreset()" style="font-size: 0.875rem;">
-                                        💾 Save as Preset
-                                    </button>
-                                    <select id="presetSelector" onchange="loadPreset()"
-                                        style="padding: 0.5rem; border-radius: 0.25rem; border: 1px solid #d1d5db;">
-                                        <option value="">Load Preset...</option>
-                                        <option value="conservative">Conservative (Low Thresholds)</option>
-                                        <option value="aggressive">Aggressive (High Thresholds)</option>
-                                        <option value="balanced">Balanced (Medium Thresholds)</option>
-                                    </select>
-                                </div>
-                            </details>
-                        </div>
+                                </details>
+                            </div>
 
                             <!-- Bottom row: Scatter plot (full width) -->
-                            <div style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.5rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div
+                                style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.5rem;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                                     <div>
-                                        <h4 style="margin: 0; font-size: 1rem; color: #374151;">Author Efficiency Visualization</h4>
+                                        <h4 style="margin: 0; font-size: 1rem; color: #374151;">Author Efficiency
+                                            Visualization</h4>
                                         <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #6b7280;">
                                             Click any point to view author details • Bubble size = total circulation
                                         </p>
                                     </div>
                                     <div style="display: flex; gap: 0.5rem; align-items: center;">
                                         <button id="scatterFilterBtn" class="btn btn-secondary"
-                                            style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" onclick="toggleScatterFilter()">
+                                            style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"
+                                            onclick="toggleScatterFilter()">
                                             📊 Show All Authors
                                         </button>
                                     </div>
@@ -2043,13 +2114,16 @@
                 <div id="authorPerformanceLegend"></div>
 
                 <div class="analysis-section">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <h3>Author Performance Analysis (<span id="authorResultCount">0</span> authors)</h3>
                         <div style="display: flex; gap: 1rem;">
-                            <button id="exportAuthorAnalysisBtn" class="btn btn-secondary" onclick="exportAuthorAnalysis()">
+                            <button id="exportAuthorAnalysisBtn" class="btn btn-secondary"
+                                onclick="exportAuthorAnalysis()">
                                 📊 Export to Excel
                             </button>
-                            <button id="clearAuthorSortBtn" class="btn btn-secondary clear-sort-btn" onclick="clearTableSort('author')">
+                            <button id="clearAuthorSortBtn" class="btn btn-secondary clear-sort-btn"
+                                onclick="clearTableSort('author')">
                                 Clear Sort
                             </button>
                         </div>
@@ -2268,74 +2342,10 @@
             </div>
         </div>
     </div>
-    <!-- Snapshots Tab -->
-    <div id="snapshotsTab" class="tab-content hidden">
-        <div class="dashboard-grid" id="snapshotMetrics"></div>
 
-        <!-- Current Collection Info -->
-        <div class="analysis-section" id="currentCollectionInfo" style="display: none;">
-            <h3>Currently Loaded Collection</h3>
-            <div id="currentCollectionDetails"></div>
-            <button class="btn btn-secondary" id="viewParsingDetailsBtn" onclick="showCurrentParsingDetails()"
-                style="margin-top: 1rem;">
-                📋 View Parsing Details
-            </button>
-            <div id="currentParsingDetails" style="display: none; margin-top: 1rem;"></div>
-        </div>
-
-        <!-- Save Current Collection as Snapshot -->
-        <div class="analysis-section">
-            <h3>Save Current Collection</h3>
-            <div style="display: flex; gap: 1rem; align-items: end; margin-bottom: 1rem;">
-                <div class="filter-group">
-                    <label>Snapshot Name</label>
-                    <input type="text" id="snapshotName" placeholder="e.g., Monthly-Jan-2025" style="width: 300px;">
-                </div>
-                <button id="saveSnapshotBtn" class="btn btn-primary" onclick="saveCurrentSnapshot()">
-                    💾 Save Snapshot
-                </button>
-            </div>
-            <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1.5rem;">
-                Snapshots are saved locally in your browser and persist across sessions. You can compare snapshots
-                to track collection changes over time.
-            </p>
-        </div>
-
-        <!-- Saved Snapshots -->
-        <div class="analysis-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h3>Saved Snapshots</h3>
-                <!-- <button id="loadSnapshotBtn" class="btn btn-secondary" onclick="loadSelectedSnapshot()">
-                    📁 Load Selected
-                </button> -->
-            </div>
-            <div id="snapshotsList"></div>
-        </div>
-
-        <!-- Snapshot Comparison -->
-        <div class="analysis-section" id="comparisonSection" style="display: none;">
-            <h3>Compare Snapshots</h3>
-            <div style="display: flex; gap: 1rem; align-items: end; margin-bottom: 1rem;">
-                <div class="filter-group">
-                    <label>First Snapshot</label>
-                    <select id="compareSnapshot1">
-                        <option value="">Select snapshot...</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Second Snapshot</label>
-                    <select id="compareSnapshot2">
-                        <option value="">Select snapshot...</option>
-                    </select>
-                </div>
-                <button id="compareBtn" class="btn btn-primary" onclick="compareSnapshots()">
-                    📊 Compare
-                </button>
-            </div>
-            <div id="comparisonResults"></div>
-        </div>
     </div>
-    </div>
+
+    
 
     <!-- Snapshots Tab -->
     <div id="snapshotsTab" class="tab-content hidden">
@@ -2370,7 +2380,8 @@
             </p>
             <div id="databaseStatus" style="margin-bottom: 1rem;"></div>
             <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
-                <button id="resetDatabaseBtn" class="btn btn-danger" onclick="resetDatabaseAndReload()" style="display: none;">
+                <button id="resetDatabaseBtn" class="btn btn-danger" onclick="resetDatabaseAndReload()"
+                    style="display: none;">
                     🔄 Reset Database
                 </button>
                 <span id="resetDatabaseInfo" style="font-size: 0.875rem; color: #6b7280; display: none;">
@@ -2381,12 +2392,16 @@
 
         <!-- Saved Snapshots -->
         <div class="analysis-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h3>Saved Snapshots</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; width: 100%;">
+                    <h3>Saved Snapshots</h3>
+                    <button id="deleteAllSnapshotsBtn" class="btn btn-danger" onclick="deleteAllSnapshots()"
+                        style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                        🗑️ Delete All
+                    </button>
+                    </div>
                 <!-- <button id="loadSnapshotBtn" class="btn btn-secondary" onclick="loadSelectedSnapshot()">
                     📁 Load Selected
                 </button> -->
-            </div>
             <div id="snapshotsList"></div>
         </div>
 
@@ -2412,6 +2427,137 @@
             </div>
             <div id="comparisonResults"></div>
         </div>
+        <!-- Added Items Analysis -->
+        <div class="analysis-section" id="addedItemsSection" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div>
+                    <h3>Added Items (<span id="addedItemsCount">0</span> items)</h3>
+                    <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-size: 0.875rem;">
+                        Items that appear in the second snapshot but not in the first
+                    </p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary" onclick="exportAddedItems()">📊 Export to Excel</button>
+                    <button class="btn btn-secondary" onclick="closeAddedItems()">✕ Close</button>
+                </div>
+            </div>
+        
+            <table class="analysis-table sortable-table" id="addedItemsTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="title" data-type="text">
+                            Title
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="author" data-type="text">
+                            Author
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="year" data-type="number">
+                            Year
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="circulation" data-type="number">
+                            Circulation
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="collection" data-type="text">
+                            Collection
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="callNumber" data-type="text">
+                            Call Number
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="branch" data-type="text">
+                            Branch
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="addedItemsTableBody"></tbody>
+            </table>
+        </div>
+        
+        <!-- Removed Items Analysis -->
+        <div class="analysis-section" id="removedItemsSection" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div>
+                    <h3>Removed Items (<span id="removedItemsCount">0</span> items)</h3>
+                    <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-size: 0.875rem;">
+                        Items that appear in the first snapshot but not in the second
+                    </p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary" onclick="exportRemovedItems()">📊 Export to Excel</button>
+                    <button class="btn btn-secondary" onclick="closeRemovedItems()">✕ Close</button>
+                </div>
+            </div>
+        
+            <table class="analysis-table sortable-table" id="removedItemsTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="title" data-type="text">
+                            Title
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="author" data-type="text">
+                            Author
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="year" data-type="number">
+                            Year
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="circulation" data-type="number">
+                            Circulation
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="collection" data-type="text">
+                            Collection
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="callNumber" data-type="text">
+                            Call Number
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                        <th class="sortable" data-sort="branch" data-type="text">
+                            Branch
+                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                            </svg>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="removedItemsTableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Scroll to Top Button -->
@@ -2431,10 +2577,10 @@
         let fuseInstance = null; // Fuse.js search instance
         let db = null; // IndexedDB database
         // Create stable database instance identifier that persists across page loads
-            window.dbInstance = window.dbInstance || localStorage.getItem('collectionToolDbInstance') || 'main';
-            if (window.dbInstance !== 'main') {
-                localStorage.setItem('collectionToolDbInstance', window.dbInstance);
-            }
+        window.dbInstance = window.dbInstance || localStorage.getItem('collectionToolDbInstance') || 'main';
+        if (window.dbInstance !== 'main') {
+            localStorage.setItem('collectionToolDbInstance', window.dbInstance);
+        }
         let selectedSnapshot = null; // For single snapshot selection
         let currentSnapshotId = null; // Track currently loaded snapshot
         let searchResults = []; // Store current search results
@@ -2448,17 +2594,17 @@
         let displayedResultsCount = 0; // Track how many results are currently displayed
         const RESULTS_PER_PAGE = 50; // Number of results to show per page
 
-       // Store sorting state for each table
+        // Store sorting state for each table
         let tableSortStates = {
-                search: { field: null, direction: 'asc' },
-                collection: { field: null, direction: 'asc' },
-                weeding: { field: null, direction: 'asc' },
-                author: { field: null, direction: 'asc' },
-                comparison: { field: null, direction: 'asc' },
-                highPerformers: { field: null, direction: 'asc' },
-                grubby: { field: null, direction: 'asc' },
-                newItems: { field: null, direction: 'asc' }
-            };
+            search: { field: null, direction: 'asc' },
+            collection: { field: null, direction: 'asc' },
+            weeding: { field: null, direction: 'asc' },
+            author: { field: null, direction: 'asc' },
+            comparison: { field: null, direction: 'asc' },
+            highPerformers: { field: null, direction: 'asc' },
+            grubby: { field: null, direction: 'asc' },
+            newItems: { field: null, direction: 'asc' }
+        };
 
         //===========================================================================
         // EXCLUDED-SAMPLES PAGINATION CONFIGURATION
@@ -2541,34 +2687,34 @@
         }
 
         //===========================================================================
-            // resetDatabase() - Reset corrupted database
-            //===========================================================================
-            async function resetDatabase() {
-                try {
-                    if (db) {
-                        db.close();
-                        db = null;
-                    }
-
-                    const dbName = 'CollectionSnapshots_' + (window.dbInstance || 'main');
-                    const deleteRequest = indexedDB.deleteDatabase(dbName);
-
-                    return new Promise((resolve, reject) => {
-                        deleteRequest.onsuccess = () => {
-                            console.log('Database reset successfully');
-                            resolve();
-                        };
-
-                        deleteRequest.onerror = () => {
-                            console.error('Failed to reset database:', deleteRequest.error);
-                            reject(deleteRequest.error);
-                        };
-                    });
-                } catch (error) {
-                    console.error('Error resetting database:', error);
-                    throw error;
+        // resetDatabase() - Reset corrupted database
+        //===========================================================================
+        async function resetDatabase() {
+            try {
+                if (db) {
+                    db.close();
+                    db = null;
                 }
+
+                const dbName = 'CollectionSnapshots_' + (window.dbInstance || 'main');
+                const deleteRequest = indexedDB.deleteDatabase(dbName);
+
+                return new Promise((resolve, reject) => {
+                    deleteRequest.onsuccess = () => {
+                        console.log('Database reset successfully');
+                        resolve();
+                    };
+
+                    deleteRequest.onerror = () => {
+                        console.error('Failed to reset database:', deleteRequest.error);
+                        reject(deleteRequest.error);
+                    };
+                });
+            } catch (error) {
+                console.error('Error resetting database:', error);
+                throw error;
             }
+        }
 
         //===========================================================================
         // Weeding Candidates table configuration to load 100 more items
@@ -2883,7 +3029,7 @@
                     break;
                 case 'newItems':
                     sortNewItemsTable(field, newDirection);
-                    break;    
+                    break;
             }
         }
 
@@ -3313,94 +3459,94 @@
         //===========================================================================
 
         //===========================================================================
-            // initializeDB() - Initialize IndexedDB with error recovery
-            //===========================================================================
-            function initializeDB() {
-                return new Promise((resolve, reject) => {
-                    // Add timestamp to database name to avoid conflicts between different instances
-                    const dbName = 'CollectionSnapshots_' + (window.dbInstance || 'main');
+        // initializeDB() - Initialize IndexedDB with error recovery
+        //===========================================================================
+        function initializeDB() {
+            return new Promise((resolve, reject) => {
+                // Add timestamp to database name to avoid conflicts between different instances
+                const dbName = 'CollectionSnapshots_' + (window.dbInstance || 'main');
 
-                    const request = indexedDB.open(dbName, 1);
+                const request = indexedDB.open(dbName, 1);
 
-                    request.onerror = () => {
-                        console.error('Error opening IndexedDB:', request.error);
+                request.onerror = () => {
+                    console.error('Error opening IndexedDB:', request.error);
 
-                        // Try to recover by deleting the corrupted database
-                        if (request.error && request.error.name !== 'VersionError') {
-                            console.log('Attempting to recover by clearing corrupted database...');
-                            const deleteRequest = indexedDB.deleteDatabase(dbName);
+                    // Try to recover by deleting the corrupted database
+                    if (request.error && request.error.name !== 'VersionError') {
+                        console.log('Attempting to recover by clearing corrupted database...');
+                        const deleteRequest = indexedDB.deleteDatabase(dbName);
 
-                            deleteRequest.onsuccess = () => {
-                                console.log('Corrupted database deleted, trying again...');
-                                // Try again with a fresh database
-                                const retryRequest = indexedDB.open(dbName, 1);
+                        deleteRequest.onsuccess = () => {
+                            console.log('Corrupted database deleted, trying again...');
+                            // Try again with a fresh database
+                            const retryRequest = indexedDB.open(dbName, 1);
 
-                                retryRequest.onsuccess = () => {
-                                    db = retryRequest.result;
-                                    console.log('IndexedDB recovered successfully');
-                                    resolve(db);
-                                };
-
-                                retryRequest.onerror = () => {
-                                    console.error('Recovery failed:', retryRequest.error);
-                                    reject(retryRequest.error);
-                                };
-
-                                retryRequest.onupgradeneeded = (event) => {
-                                    const recoveredDb = event.target.result;
-                                    createObjectStore(recoveredDb);
-                                };
+                            retryRequest.onsuccess = () => {
+                                db = retryRequest.result;
+                                console.log('IndexedDB recovered successfully');
+                                resolve(db);
                             };
 
-                            deleteRequest.onerror = () => {
-                                console.error('Failed to delete corrupted database:', deleteRequest.error);
-                                reject(request.error);
+                            retryRequest.onerror = () => {
+                                console.error('Recovery failed:', retryRequest.error);
+                                reject(retryRequest.error);
                             };
-                        } else {
+
+                            retryRequest.onupgradeneeded = (event) => {
+                                const recoveredDb = event.target.result;
+                                createObjectStore(recoveredDb);
+                            };
+                        };
+
+                        deleteRequest.onerror = () => {
+                            console.error('Failed to delete corrupted database:', deleteRequest.error);
                             reject(request.error);
-                        }
-                    };
+                        };
+                    } else {
+                        reject(request.error);
+                    }
+                };
 
-                    request.onsuccess = () => {
-                        db = request.result;
-                        console.log('IndexedDB initialized successfully');
-                        resolve(db);
-                    };
+                request.onsuccess = () => {
+                    db = request.result;
+                    console.log('IndexedDB initialized successfully');
+                    resolve(db);
+                };
 
-                    request.onupgradeneeded = (event) => {
-                        db = event.target.result;
-                        createObjectStore(db);
-                        console.log('IndexedDB schema created/upgraded');
-                    };
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    createObjectStore(db);
+                    console.log('IndexedDB schema created/upgraded');
+                };
 
-                    // Handle database blocking (when another tab has it open)
-                    request.onblocked = () => {
-                        console.warn('IndexedDB blocked by another tab. Please close other tabs with this application.');
-                        // Don't reject immediately, wait a bit for other tabs to close
-                        setTimeout(() => {
-                            reject(new Error('Database blocked by another tab. Please close other tabs with this application and refresh.'));
-                        }, 5000);
-                    };
+                // Handle database blocking (when another tab has it open)
+                request.onblocked = () => {
+                    console.warn('IndexedDB blocked by another tab. Please close other tabs with this application.');
+                    // Don't reject immediately, wait a bit for other tabs to close
+                    setTimeout(() => {
+                        reject(new Error('Database blocked by another tab. Please close other tabs with this application and refresh.'));
+                    }, 5000);
+                };
+            });
+        }
+
+        //===========================================================================
+        // createObjectStore() - Helper function to create the object store
+        //===========================================================================
+        function createObjectStore(database) {
+            // Create object store for snapshots
+            if (!database.objectStoreNames.contains('snapshots')) {
+                const store = database.createObjectStore('snapshots', {
+                    keyPath: 'id',
+                    autoIncrement: false
                 });
-            }
 
-            //===========================================================================
-            // createObjectStore() - Helper function to create the object store
-            //===========================================================================
-            function createObjectStore(database) {
-                // Create object store for snapshots
-                if (!database.objectStoreNames.contains('snapshots')) {
-                    const store = database.createObjectStore('snapshots', {
-                        keyPath: 'id',
-                        autoIncrement: false
-                    });
-
-                    // Create indexes for better querying
-                    store.createIndex('name', 'name', { unique: false });
-                    store.createIndex('timestamp', 'timestamp', { unique: false });
-                    store.createIndex('itemCount', 'itemCount', { unique: false });
-                }
+                // Create indexes for better querying
+                store.createIndex('name', 'name', { unique: false });
+                store.createIndex('timestamp', 'timestamp', { unique: false });
+                store.createIndex('itemCount', 'itemCount', { unique: false });
             }
+        }
 
         //===========================================================================
         // saveSnapshot() - Save collection snapshot to IndexedDB
@@ -3759,7 +3905,7 @@
                 // Update header status
                 updateCurrentCollectionStatus();
 
-               // Refresh the snapshots list with a small delay to ensure currentSnapshotId is set
+                // Refresh the snapshots list with a small delay to ensure currentSnapshotId is set
                 setTimeout(() => {
                     refreshSnapshotsList();
                     updateSnapshotMetrics();
@@ -3890,7 +4036,7 @@
 
             // Refresh the display to show selection
             refreshSnapshotsList();
-        }   
+        }
 
         //===========================================================================
         // loadSelectedSnapshot() - Load the selected snapshot
@@ -3902,7 +4048,7 @@
             }
 
             loadSnapshotById(selectedSnapshot);
-        }    
+        }
 
         //===========================================================================
         // deleteSnapshotById() - Delete snapshot with confirmation
@@ -3985,6 +4131,10 @@
                 // Perform comparison
                 const comparison = generateSnapshotComparison(snapshot1, snapshot2);
                 displayComparisonResults(comparison, snapshot1, snapshot2);
+                // Scroll to comparison results
+                setTimeout(() => {
+                    scrollToSection('comparisonSection');
+                }, 100);
 
             } catch (error) {
                 console.error('Error comparing snapshots:', error);
@@ -4074,6 +4224,8 @@
         // displayComparisonResults() - Display snapshot comparison results
         //===========================================================================
         function displayComparisonResults(comparison, snapshot1, snapshot2) {
+            // Store comparison data globally for detailed views
+            window.lastComparisonData = comparison;
             const resultsDiv = document.getElementById('comparisonResults');
 
             const getChangeClass = (change) => {
@@ -4114,23 +4266,23 @@
                             </div>
                         </div>
                         
-                        <div class="comparison-metric ${getChangeClass(comparison.items.added.length - comparison.items.removed.length)}">
+                        <div class="comparison-metric ${getChangeClass(comparison.items.added.length - comparison.items.removed.length)}" onclick="showComparisonAddedItems()" style="cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f0fdf4'; this.style.borderColor='#16a34a';" onmouseout="this.style.backgroundColor=''; this.style.borderColor='';">
                             <h5>Items Added</h5>
                             <div style="font-size: 1.5rem; font-weight: bold; color: #16a34a;">
                                 +${comparison.items.added.length.toLocaleString()}
                             </div>
                             <div style="font-size: 0.875rem; color: #6b7280;">
-                                New items in collection
+                                Click to view added items
                             </div>
                         </div>
                         
-                        <div class="comparison-metric ${getChangeClass(comparison.items.removed.length > 0 ? -comparison.items.removed.length : 0)}">
+                        <div class="comparison-metric ${getChangeClass(comparison.items.removed.length > 0 ? -comparison.items.removed.length : 0)}" onclick="showComparisonRemovedItems()" style="cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#fef2f2'; this.style.borderColor='#dc2626';" onmouseout="this.style.backgroundColor=''; this.style.borderColor='';">
                             <h5>Items Removed</h5>
                             <div style="font-size: 1.5rem; font-weight: bold; color: #dc2626;">
                                 -${comparison.items.removed.length.toLocaleString()}
                             </div>
                             <div style="font-size: 0.875rem; color: #6b7280;">
-                                Items no longer in collection
+                                Click to view removed items
                             </div>
                         </div>
                     </div>
@@ -4297,7 +4449,7 @@
                 console.error('Error exporting snapshot diff:', error);
                 alert('Error exporting data: ' + error.message);
             }
-        }    
+        }
 
         //===========================================================================
         // updateSnapshotMetrics() - Update snapshot metrics display
@@ -4446,33 +4598,33 @@
         function parseCSVLine(line) {
             const fields = [];
             let i = 0;
-        
+
             // Remove any leading/trailing quotes from the entire line first
             line = line.trim();
-            
+
             // Special handling for header lines that are entirely quoted
             if (line.startsWith('"') && line.endsWith('"') && line.includes('Item Barcode')) {
                 // This is a header line in the format: "Item Barcode,""Catalog Author"",""Catalog Title""..."
                 const innerContent = line.slice(1, -1); // Remove outer quotes
                 const rawFields = innerContent.split(',');
-                
+
                 return rawFields.map(field => {
                     // Remove internal double quotes and trim
                     return field.replace(/^""/, '').replace(/""$/, '').trim();
                 });
             }
-        
+
             // Handle data lines: first field may have quote, rest in ""quotes""
             while (i < line.length) {
                 let current = '';
-        
+
                 // Skip whitespace
                 while (i < line.length && line[i] === ' ') {
                     i++;
                 }
-        
+
                 if (i >= line.length) break;
-        
+
                 if (line[i] === '"' && i + 1 < line.length && line[i + 1] === '"') {
                     // This is a ""quoted field""
                     i += 2; // Skip the opening ""
@@ -4491,17 +4643,17 @@
                         i++;
                     }
                 }
-        
+
                 // Clean up any remaining quotes from the field
                 current = current.replace(/^"/, '').replace(/"$/, '').trim();
                 fields.push(current);
-        
+
                 // Skip the comma
                 if (i < line.length && line[i] === ',') {
                     i++;
                 }
             }
-        
+
             return fields;
         }
 
@@ -4516,7 +4668,7 @@
             });
             console.log('=== END DEBUG ===');
         }
-        
+
         function detectColumns(headers) {
             const mappings = {};
 
@@ -4567,30 +4719,30 @@
         // createBookFromFields() - Convert CSV fields to book object
         //===========================================================================
         function createBookFromFields(fields, mappings, rowIndex) {
-                const book = {
-                    barcode: getColumnValue(fields, mappings.barcode) || `unknown-${rowIndex}`,
-                    author: cleanText(getColumnValue(fields, mappings.author) || ''),
-                    title: cleanText(getColumnValue(fields, mappings.title) || ''),
-                    year: getColumnValue(fields, mappings.year) || '',
-                    collection: getColumnValue(fields, mappings.collection) || 'Unknown',
-                    callNumber: getColumnValue(fields, mappings.callNumber) || '',
-                    circulation: parseInt(getColumnValue(fields, mappings.circulation)) || 0,
-                    status: getColumnValue(fields, mappings.status) || '',
-                    itemCreated: getColumnValue(fields, mappings.itemCreated) || '',
-                    lastActivity: getColumnValue(fields, mappings.lastActivity) || '',
-                    itemType: getColumnValue(fields, mappings.itemType) || ''
-                };
+            const book = {
+                barcode: getColumnValue(fields, mappings.barcode) || `unknown-${rowIndex}`,
+                author: cleanText(getColumnValue(fields, mappings.author) || ''),
+                title: cleanText(getColumnValue(fields, mappings.title) || ''),
+                year: getColumnValue(fields, mappings.year) || '',
+                collection: getColumnValue(fields, mappings.collection) || 'Unknown',
+                callNumber: getColumnValue(fields, mappings.callNumber) || '',
+                circulation: parseInt(getColumnValue(fields, mappings.circulation)) || 0,
+                status: getColumnValue(fields, mappings.status) || '',
+                itemCreated: getColumnValue(fields, mappings.itemCreated) || '',
+                lastActivity: getColumnValue(fields, mappings.lastActivity) || '',
+                itemType: getColumnValue(fields, mappings.itemType) || ''
+            };
 
-                // Debug: Log first few items with their itemType
-                if (rowIndex <= 5) {
-                    console.log(`Row ${rowIndex} itemType:`, book.itemType, 'from field index:', mappings.itemType);
-                    if (mappings.itemType !== undefined) {
-                        console.log(`Raw field value:`, fields[mappings.itemType]);
-                    }
+            // Debug: Log first few items with their itemType
+            if (rowIndex <= 5) {
+                console.log(`Row ${rowIndex} itemType:`, book.itemType, 'from field index:', mappings.itemType);
+                if (mappings.itemType !== undefined) {
+                    console.log(`Raw field value:`, fields[mappings.itemType]);
                 }
-
-                return book;
             }
+
+            return book;
+        }
 
         //===========================================================================
         // getColumnValue() - Safely get value from fields array at column index
@@ -4675,7 +4827,7 @@
 
             // Generate and download Excel file
             XLSX.writeFile(wb, filename);
-        }    
+        }
 
         //===========================================================================
         // normalizeApostrophes() - Convert all apostrophe variants to standard apostrophe
@@ -4705,37 +4857,37 @@
         // analyzeNewItems() - Analyze performance of new items
         //===========================================================================
         function analyzeNewItems(data) {
-                const newItems = data.filter(isNewItem);
+            const newItems = data.filter(isNewItem);
 
-                if (newItems.length === 0) {
-                    return {
-                        count: 0,
-                        totalCirculation: 0,
-                        averageCirculation: 0,
-                        topPerformer: null,
-                        collections: [],
-                        percentageOfCollection: 0
-                    };
-                }
-
-                const totalCirculation = newItems.reduce((sum, item) => sum + (item.circulation || 0), 0);
-                const averageCirculation = Math.round(totalCirculation / newItems.length);
-                const topPerformer = newItems.reduce((top, item) =>
-                    (item.circulation || 0) > (top.circulation || 0) ? item : top
-                );
-                const collections = [...new Set(newItems.map(item => item.collection))];
-                const percentageOfCollection = Math.round((newItems.length / data.length) * 100);
-
+            if (newItems.length === 0) {
                 return {
-                    count: newItems.length,
-                    totalCirculation,
-                    averageCirculation,
-                    topPerformer,
-                    collections,
-                    percentageOfCollection,
-                    items: newItems
+                    count: 0,
+                    totalCirculation: 0,
+                    averageCirculation: 0,
+                    topPerformer: null,
+                    collections: [],
+                    percentageOfCollection: 0
                 };
             }
+
+            const totalCirculation = newItems.reduce((sum, item) => sum + (item.circulation || 0), 0);
+            const averageCirculation = Math.round(totalCirculation / newItems.length);
+            const topPerformer = newItems.reduce((top, item) =>
+                (item.circulation || 0) > (top.circulation || 0) ? item : top
+            );
+            const collections = [...new Set(newItems.map(item => item.collection))];
+            const percentageOfCollection = Math.round((newItems.length / data.length) * 100);
+
+            return {
+                count: newItems.length,
+                totalCirculation,
+                averageCirculation,
+                topPerformer,
+                collections,
+                percentageOfCollection,
+                items: newItems
+            };
+        }
 
         //===========================================================================
         // getItemAge() - Calculate age of item in years with better error handling
@@ -4781,11 +4933,11 @@
 
         function showParsingResults(stats) {
 
-                // — Remove any previous panel —
-                const old = document.getElementById('parsingResults');
-                if (old) old.remove();
+            // — Remove any previous panel —
+            const old = document.getElementById('parsingResults');
+            if (old) old.remove();
 
-                // — Compute counts & get container —
+            // — Compute counts & get container —
             const excludedCount = stats.totalRows - stats.validItems - stats.emptyLines;
             const uploadStatus = document.getElementById('uploadStatus');
 
@@ -4816,7 +4968,7 @@
                 renderExcludedSamples();
             }
 
-         
+
         }
 
 
@@ -4977,7 +5129,7 @@
             const data = [];
             let currentBranch = 'Unknown Branch';
             let columnMappings = null;
-        
+
             // Track exclusions for detailed reporting
             const exclusionStats = {
                 totalRows: 0,
@@ -4988,60 +5140,60 @@
                 validItems: 0,
                 excludedSamples: []
             };
-        
+
             if (lines.length < 2) {
                 throw new Error('CSV file appears to be empty or invalid');
             }
-        
+
             // Parse the file line by line
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
-        
+
                 // Skip empty lines
                 if (!line) {
                     continue;
                 }
-        
+
                 // Skip "All items GL" line
                 if (line.toLowerCase().includes('all items')) {
                     console.log('Skipping "All items" line:', line);
                     continue;
                 }
-        
+
                 // Check for branch divider lines
                 if (line.startsWith('Page by:')) {
                     console.log('Found Page by line, skipping');
                     continue;
                 }
-        
+
                 if (line.startsWith('Item Library Desc:')) {
                     // Extract branch name
                     currentBranch = line.replace('Item Library Desc:', '').trim();
                     console.log('Detected branch:', currentBranch);
                     continue;
                 }
-        
+
                 // Check if this is a header line (contains Item Barcode and is quoted)
                 if (line.startsWith('"') && line.includes('Item Barcode') && line.includes('Catalog')) {
                     console.log('Found header line:', line);
-                    
+
                     // Parse the special quoted header format
                     const innerContent = line.slice(1, -1); // Remove outer quotes
                     const headers = innerContent.split(',').map(field => {
                         return field.replace(/^""/, '').replace(/""$/, '').trim();
                     });
-                    
+
                     console.log('Parsed headers:', headers);
                     debugHeaders(headers);
-        
+
                     // Auto-detect columns
                     columnMappings = detectColumns(headers);
                     console.log('Column mappings:', columnMappings);
-        
+
                     // Check if we found essential columns
                     const requiredFields = ['title'];
                     const missingFields = requiredFields.filter(field => columnMappings[field] === undefined);
-        
+
                     if (missingFields.length > 0) {
                         console.log('Missing required fields:', missingFields);
                         showColumnMappingUI(headers, lines);
@@ -5049,11 +5201,11 @@
                     }
                     continue;
                 }
-        
+
                 // If we have column mappings and this looks like data (starts with quote and has commas)
                 if (columnMappings && line.startsWith('"') && line.includes(',')) {
                     exclusionStats.totalRows++;
-                
+
                     // Preprocess line to handle escaped quotes in standard CSV format
                     let processedLine = line;
                     if (line.includes('""') && !line.match(/^".*"$/)) {
@@ -5063,16 +5215,16 @@
                     }
                     const fields = parseCSVLine(processedLine);
                     const book = createBookFromFields(fields, columnMappings, i);
-        
+
                     // Add branch information
                     if (book) {
                         book.branch = currentBranch;
                     }
-        
+
                     // Validation logic
                     let excluded = false;
                     let exclusionReason = '';
-        
+
                     if (!book || !book.title) {
                         exclusionStats.noTitle++;
                         exclusionReason = 'No title';
@@ -5086,7 +5238,7 @@
                         exclusionReason = 'No author (traditional books/fiction only)';
                         excluded = true;
                     }
-        
+
                     if (excluded) {
                         if (exclusionStats.excludedSamples.length < 1000) {
                             exclusionStats.excludedSamples.push({
@@ -5112,11 +5264,11 @@
                     }
                 }
             }
-        
+
             // Show detailed parsing results
             showParsingResults(exclusionStats);
             window.lastParsingStats = exclusionStats;
-        
+
             console.log(`Successfully parsed ${exclusionStats.validItems} valid books from ${exclusionStats.totalRows} rows`);
             return data;
         }
@@ -5177,9 +5329,9 @@
             const allCapsPattern = /^[A-Z][A-Z\-\s]*$/;
 
             return allCapsPattern.test(authorName);
-        }    
+        }
 
-    //===========================================================================
+        //===========================================================================
         // Performance Threshold Configuration - Central source of truth
         //===========================================================================
         function getPerformanceThresholds() {
@@ -5281,7 +5433,7 @@
             </div>
         `;
             }
-        }   
+        }
 
         //===========================================================================
         // showColumnMappingUI() - Show interface for manual column mapping
@@ -5654,43 +5806,43 @@
         }
 
         function performSearch(term) {
-                if (!term || term.length < 2) return [];
+            if (!term || term.length < 2) return [];
 
-                // Use filtered data instead of all libraryData
-                const searchData = getFilteredData();
+            // Use filtered data instead of all libraryData
+            const searchData = getFilteredData();
 
-                // Normalize apostrophes in search term
-                const termLower = normalizeApostrophes(term.toLowerCase());
+            // Normalize apostrophes in search term
+            const termLower = normalizeApostrophes(term.toLowerCase());
 
-                return searchData.filter(book => {
-                    // Normalize apostrophes in all searchable fields
-                    const titleLower = normalizeApostrophes(book.title.toLowerCase());
-                    const callLower = normalizeApostrophes(book.callNumber.toLowerCase());
-                    const authorLower = normalizeApostrophes(book.author.toLowerCase());
+            return searchData.filter(book => {
+                // Normalize apostrophes in all searchable fields
+                const titleLower = normalizeApostrophes(book.title.toLowerCase());
+                const callLower = normalizeApostrophes(book.callNumber.toLowerCase());
+                const authorLower = normalizeApostrophes(book.author.toLowerCase());
 
-                    // 1) match title or call number as before
-                    if (titleLower.includes(termLower) || callLower.includes(termLower)) {
+                // 1) match title or call number as before
+                if (titleLower.includes(termLower) || callLower.includes(termLower)) {
+                    return true;
+                }
+
+                // 2) match the exact author string (with or without comma)
+                const authorNoComma = authorLower.replace(/,/g, '');
+                if (authorLower.includes(termLower) || authorNoComma.includes(termLower)) {
+                    return true;
+                }
+
+                // 3) match reversed "first last" (i.e. Denis Johnson for "Johnson, Denis")
+                if (authorLower.includes(',')) {
+                    const [last, first] = authorLower.split(',').map(s => s.trim());
+                    const reversed = `${first} ${last}`;
+                    if (reversed.includes(termLower)) {
                         return true;
                     }
+                }
 
-                    // 2) match the exact author string (with or without comma)
-                    const authorNoComma = authorLower.replace(/,/g, '');
-                    if (authorLower.includes(termLower) || authorNoComma.includes(termLower)) {
-                        return true;
-                    }
-
-                    // 3) match reversed "first last" (i.e. Denis Johnson for "Johnson, Denis")
-                    if (authorLower.includes(',')) {
-                        const [last, first] = authorLower.split(',').map(s => s.trim());
-                        const reversed = `${first} ${last}`;
-                        if (reversed.includes(termLower)) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                });
-            }
+                return false;
+            });
+        }
 
 
         function displaySearchResults(results) {
@@ -5762,7 +5914,7 @@
                 console.log('Book cover loading failed:', error);
                 // Keep the placeholder icon on error
             });
-            
+
             // Smooth scroll to top so user can see the selected book details
             window.scrollTo({
                 top: 0,
@@ -6311,7 +6463,7 @@
                 const lowCirc = items.filter(i => i.circulation < 5).length;
 
                 // Calculate performance level and color using centralized function
-                            const performance = getCollectionPerformanceLevel(avgCirc);
+                const performance = getCollectionPerformanceLevel(avgCirc);
 
                 return `
             <tr onclick="showCollectionDetails('${escapeHtml(collection)}')" style="cursor: pointer;" 
@@ -6556,7 +6708,7 @@
                     }, 100);
                 }
             }, 100);
-        }    
+        }
 
         //===========================================================================
         // createCollectionChart() - Create visual chart of collection distribution
@@ -6667,15 +6819,15 @@
         }
 
         //===========================================================================
-            // createHighPerformersDistributionChart() - Create visual chart of high-performing items by collection
-            //===========================================================================
-            function createHighPerformersDistributionChart(data) {
-                const ctx = document.getElementById('highPerformersChart');
-                if (!ctx) return;
+        // createHighPerformersDistributionChart() - Create visual chart of high-performing items by collection
+        //===========================================================================
+        function createHighPerformersDistributionChart(data) {
+            const ctx = document.getElementById('highPerformersChart');
+            if (!ctx) return;
 
-                // Check if Chart.js is available
-                if (typeof Chart === 'undefined') {
-                    ctx.parentElement.innerHTML = `
+            // Check if Chart.js is available
+            if (typeof Chart === 'undefined') {
+                ctx.parentElement.innerHTML = `
             <h4 style="margin-bottom: 1rem; color: #374151;">High Performers by Collection</h4>
             <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
                 <p style="margin-bottom: 0.5rem; color: #6b7280; font-size: 0.875rem;">
@@ -6686,112 +6838,112 @@
                 </p>
             </div>
         `;
-                    return;
-                }
+                return;
+            }
 
-                // Destroy existing chart if it exists
-                if (window.highPerformersChartInstance) {
-                    window.highPerformersChartInstance.destroy();
-                }
+            // Destroy existing chart if it exists
+            if (window.highPerformersChartInstance) {
+                window.highPerformersChartInstance.destroy();
+            }
 
-                // Get high performers using the same threshold as the metric card
-                const threshold = getHighPerformanceThreshold();
-                const highPerformers = data.filter(item => item.circulation >= threshold);
+            // Get high performers using the same threshold as the metric card
+            const threshold = getHighPerformanceThreshold();
+            const highPerformers = data.filter(item => item.circulation >= threshold);
 
-                if (highPerformers.length === 0) {
-                    ctx.parentElement.innerHTML = `
+            if (highPerformers.length === 0) {
+                ctx.parentElement.innerHTML = `
             <h4 style="margin-bottom: 1rem; color: #374151;">High Performers by Collection</h4>
             <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; text-align: center;">
                 <p style="color: #6b7280; margin: 0;">No high-performing items found</p>
             </div>
         `;
-                    return;
-                }
-
-                // Group high performers by collection
-                const collections = groupBy(highPerformers, 'collection');
-
-                // Prepare data - top 8 collections by high performer count
-                const sortedCollections = Object.entries(collections)
-                    .sort(([, a], [, b]) => b.length - a.length)
-                    .slice(0, 8);
-
-                const labels = sortedCollections.map(([name]) =>
-                    name.length > 15 ? name.substring(0, 12) + '...' : name
-                );
-                const data_values = sortedCollections.map(([, items]) => items.length);
-
-                // Use a complementary color palette to the main collection chart
-                const backgroundColors = [
-                    '#16a34a', '#22c55e', '#4ade80', '#86efac',
-                    '#bbf7d0', '#dcfce7', '#f0fdf4', '#ecfdf5'
-                ];
-
-                window.highPerformersChartInstance = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: data_values,
-                            backgroundColor: backgroundColors,
-                            borderWidth: 2,
-                            borderColor: '#ffffff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 15,
-                                    usePointStyle: true,
-                                    font: {
-                                        size: 11
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        const label = sortedCollections[context.dataIndex][0];
-                                        const value = context.parsed;
-                                        const total = data_values.reduce((a, b) => a + b, 0);
-                                        const percentage = Math.round((value / total) * 100);
-                                        const totalHighPerformers = highPerformers.length;
-                                        const collectionPercentage = Math.round((value / totalHighPerformers) * 100);
-                                        return `${label}: ${value.toLocaleString()} high performers (${percentage}% of top collections, ${collectionPercentage}% of all high performers)`;
-                                    }
-                                }
-                            }
-                        },
-                        onClick: (event, elements) => {
-                            console.log('Chart clicked!', elements);
-                            if (elements.length > 0) {
-                                const elementIndex = elements[0].index;
-                                console.log('Element index:', elementIndex);
-                                console.log('Available collections:', sortedCollections);
-                                const collectionName = sortedCollections[elementIndex][0]; // Get the full collection name
-                                console.log('Clicking on collection:', collectionName);
-                                showHighPerformersForCollection(collectionName);
-                            } else {
-                                console.log('No elements found in click');
-                            }
-                        },
-                        onHover: (event, elements) => {
-                            event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
-                        }
-                    }
-                });
-                // Debug: Check if chart was created
-                console.log('High performers chart created:', window.highPerformersChartInstance);
-                console.log('Chart canvas element:', ctx);
-                // Test click detection on the canvas directly
-                ctx.addEventListener('click', function (e) {
-                    console.log('Canvas clicked directly!', e);
-                });
+                return;
             }
+
+            // Group high performers by collection
+            const collections = groupBy(highPerformers, 'collection');
+
+            // Prepare data - top 8 collections by high performer count
+            const sortedCollections = Object.entries(collections)
+                .sort(([, a], [, b]) => b.length - a.length)
+                .slice(0, 8);
+
+            const labels = sortedCollections.map(([name]) =>
+                name.length > 15 ? name.substring(0, 12) + '...' : name
+            );
+            const data_values = sortedCollections.map(([, items]) => items.length);
+
+            // Use a complementary color palette to the main collection chart
+            const backgroundColors = [
+                '#16a34a', '#22c55e', '#4ade80', '#86efac',
+                '#bbf7d0', '#dcfce7', '#f0fdf4', '#ecfdf5'
+            ];
+
+            window.highPerformersChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data_values,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const label = sortedCollections[context.dataIndex][0];
+                                    const value = context.parsed;
+                                    const total = data_values.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    const totalHighPerformers = highPerformers.length;
+                                    const collectionPercentage = Math.round((value / totalHighPerformers) * 100);
+                                    return `${label}: ${value.toLocaleString()} high performers (${percentage}% of top collections, ${collectionPercentage}% of all high performers)`;
+                                }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        console.log('Chart clicked!', elements);
+                        if (elements.length > 0) {
+                            const elementIndex = elements[0].index;
+                            console.log('Element index:', elementIndex);
+                            console.log('Available collections:', sortedCollections);
+                            const collectionName = sortedCollections[elementIndex][0]; // Get the full collection name
+                            console.log('Clicking on collection:', collectionName);
+                            showHighPerformersForCollection(collectionName);
+                        } else {
+                            console.log('No elements found in click');
+                        }
+                    },
+                    onHover: (event, elements) => {
+                        event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+                    }
+                }
+            });
+            // Debug: Check if chart was created
+            console.log('High performers chart created:', window.highPerformersChartInstance);
+            console.log('Chart canvas element:', ctx);
+            // Test click detection on the canvas directly
+            ctx.addEventListener('click', function (e) {
+                console.log('Canvas clicked directly!', e);
+            });
+        }
 
         //===========================================================================
         // updateWeedingAnalysis() - FIXED VERSION with better error handling
@@ -7372,16 +7524,16 @@
         // updateGrubbyThreshold() - Update threshold display and refresh analysis
         //===========================================================================
         function updateGrubbyThreshold() {
-                // Update the display value
-                const threshold = document.getElementById('grubbyThreshold').value;
-                document.getElementById('grubbyThresholdValue').textContent = threshold;
+            // Update the display value
+            const threshold = document.getElementById('grubbyThreshold').value;
+            document.getElementById('grubbyThresholdValue').textContent = threshold;
 
-                // Refresh the analysis
-                updateWeedingAnalysis();
+            // Refresh the analysis
+            updateWeedingAnalysis();
 
-                // Update chart if open
-                updateAgeCirculationChart();
-            }
+            // Update chart if open
+            updateAgeCirculationChart();
+        }
 
         //===========================================================================
         // exportGrubbyItems() - Export grubby items to Excel
@@ -8913,7 +9065,7 @@
             const filename = `author-report-${name.replace(/[^a-zA-Z0-9]/g, '-')}-${today}.xlsx`;
 
             createExcelFile(data, headers, filename, `${name} - Titles`);
-        }    
+        }
 
         function selectBookFromTable(barcode) {
             showTab('search');
@@ -8921,18 +9073,18 @@
         }
 
         function handleFile(file) {
-                if (!file.name.toLowerCase().endsWith('.csv')) {
-                    showStatus('Please select a CSV file.', 'error');
-                    return;
-                }
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                showStatus('Please select a CSV file.', 'error');
+                return;
+            }
 
-                // Ensure upload status area is completely clean before processing
-                const uploadStatus = document.getElementById('uploadStatus');
-                uploadStatus.innerHTML = '';
-                uploadStatus.className = '';
+            // Ensure upload status area is completely clean before processing
+            const uploadStatus = document.getElementById('uploadStatus');
+            uploadStatus.innerHTML = '';
+            uploadStatus.className = '';
 
-                // Clear any pending status clearing timers from previous operations
-                clearTimeout(window.statusClearTimer);
+            // Clear any pending status clearing timers from previous operations
+            clearTimeout(window.statusClearTimer);
 
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -9105,25 +9257,25 @@
         //===========================================================================
         function selectBookFromOtherTitles(barcode) {
             currentBook = libraryData.find(book => book.barcode === barcode);
-        
+
             if (!currentBook) {
                 console.log('No book found with barcode:', barcode);
                 return;
             }
-        
+
             // Update book details but DON'T regenerate the "Other titles by" table
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('bookDetails').style.display = 'block';
-        
+
             document.getElementById('detailTitle').textContent = currentBook.title;
             document.getElementById('detailAuthor').textContent = currentBook.author;
             document.getElementById('detailYear').textContent = currentBook.year;
             document.getElementById('detailCollection').textContent = currentBook.collection;
             document.getElementById('detailCallNumber').textContent = currentBook.callNumber;
             document.getElementById('detailCirculation').textContent = `${currentBook.circulation} circulations`;
-        
+
             setupDetailCopyButtons();
-        
+
             // Update book cover
             const coverElement = document.getElementById('bookCover');
             coverElement.innerHTML = `
@@ -9131,7 +9283,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
                 </svg>
             `;
-        
+
             // Load book cover
             fetchBookCover(currentBook.title, currentBook.author).then(coverUrl => {
                 if (coverUrl && currentBook && currentBook.barcode === barcode) {
@@ -9140,7 +9292,7 @@
             }).catch(error => {
                 console.log('Book cover loading failed:', error);
             });
-            
+
             // Smooth scroll to top so user can see the selected book details
             window.scrollTo({
                 top: 0,
@@ -9197,54 +9349,383 @@
             document.getElementById('authorOtherTitlesSection').style.display = 'block';
         }
 
-            //===========================================================================
-            // viewAuthorPerformance() - Switch to Author Performance tab and show detailed analysis
-            //===========================================================================
-            function viewAuthorPerformance() {
-                    if (currentBook && currentBook.author) {
-                        // Switch to authors tab first
-                        showTab('authors');
+        //===========================================================================
+        // viewAuthorPerformance() - Switch to Author Performance tab and show detailed analysis
+        //===========================================================================
+        function viewAuthorPerformance() {
+            if (currentBook && currentBook.author) {
+                // Switch to authors tab first
+                showTab('authors');
 
-                        // Small delay to ensure tab is loaded, then show author details
-                        setTimeout(() => {
-                            showAuthorDetails(currentBook.author);
-                        }, 100);
-                    }
+                // Small delay to ensure tab is loaded, then show author details
+                setTimeout(() => {
+                    showAuthorDetails(currentBook.author);
+                }, 100);
+            }
+        }
+
+    //===========================================================================
+        // showComparisonAddedItems() - Display added items in detailed table
+        //===========================================================================
+        function showComparisonAddedItems() {
+            if (!window.lastComparisonData || !window.lastComparisonData.items.added.length) {
+                alert('No added items to display');
+                return;
+            }
+
+            const addedItems = window.lastComparisonData.items.added;
+
+            // Sort by circulation (highest first)
+            addedItems.sort((a, b) => (b.circulation || 0) - (a.circulation || 0));
+
+            // Update count and populate table
+            document.getElementById('addedItemsCount').textContent = addedItems.length;
+
+            const tableBody = document.getElementById('addedItemsTableBody');
+            tableBody.innerHTML = addedItems.map(item => `
+                <tr data-barcode="${item.barcode}" onclick="viewBookDetailsFromComparison('${item.barcode}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                    <td><strong>${escapeHtml(item.title)}</strong></td>
+                    <td>${escapeHtml(item.author)}</td>
+                    <td>${item.year || 'Unknown'}</td>
+                    <td style="font-weight: bold; color: ${item.circulation >= 10 ? '#16a34a' : item.circulation >= 5 ? '#d97706' : '#dc2626'};">${item.circulation}</td>
+                    <td>${escapeHtml(item.collection)}</td>
+                    <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+                    <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+                </tr>
+            `).join('');
+
+            // Store for export
+            window.currentAddedItems = addedItems;
+
+            // Show the section
+            document.getElementById('addedItemsSection').style.display = 'block';
+
+            // Setup sorting
+            setupAddedItemsTableSorting();
+
+            // Scroll to the section
+            scrollToSection('addedItemsSection');
+        }
+
+        //===========================================================================
+        // showComparisonRemovedItems() - Display removed items in detailed table
+        //===========================================================================
+        function showComparisonRemovedItems() {
+            if (!window.lastComparisonData || !window.lastComparisonData.items.removed.length) {
+                alert('No removed items to display');
+                return;
+            }
+
+            const removedItems = window.lastComparisonData.items.removed;
+
+            // Sort by circulation (highest first)
+            removedItems.sort((a, b) => (b.circulation || 0) - (a.circulation || 0));
+
+            // Update count and populate table
+            document.getElementById('removedItemsCount').textContent = removedItems.length;
+
+            const tableBody = document.getElementById('removedItemsTableBody');
+            tableBody.innerHTML = removedItems.map(item => `
+                <tr data-barcode="${item.barcode}" onclick="viewBookDetailsFromComparison('${item.barcode}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                    <td><strong>${escapeHtml(item.title)}</strong></td>
+                    <td>${escapeHtml(item.author)}</td>
+                    <td>${item.year || 'Unknown'}</td>
+                    <td style="font-weight: bold; color: ${item.circulation >= 10 ? '#16a34a' : item.circulation >= 5 ? '#d97706' : '#dc2626'};">${item.circulation}</td>
+                    <td>${escapeHtml(item.collection)}</td>
+                    <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+                    <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+                </tr>
+            `).join('');
+
+            // Store for export
+            window.currentRemovedItems = removedItems;
+
+            // Show the section
+            document.getElementById('removedItemsSection').style.display = 'block';
+
+            // Setup sorting
+            setupRemovedItemsTableSorting();
+
+            // Scroll to the section
+            scrollToSection('removedItemsSection');
+        }
+
+        //===========================================================================
+        // closeAddedItems() - Close added items section
+        //===========================================================================
+        function closeAddedItems() {
+            document.getElementById('addedItemsSection').style.display = 'none';
+            window.currentAddedItems = null;
+        }
+
+        //===========================================================================
+        // closeRemovedItems() - Close removed items section
+        //===========================================================================
+        function closeRemovedItems() {
+            document.getElementById('removedItemsSection').style.display = 'none';
+            window.currentRemovedItems = null;
+        }
+
+        //===========================================================================
+        // exportAddedItems() - Export added items to Excel
+        //===========================================================================
+        function exportAddedItems() {
+            if (!window.currentAddedItems || window.currentAddedItems.length === 0) {
+                alert('No added items to export');
+                return;
+            }
+
+            const headers = ['Title', 'Author', 'Year', 'Call Number', 'Collection', 'Circulation', 'Branch'];
+
+            const data = window.currentAddedItems.map(item => [
+                item.title || '',
+                item.author || '',
+                item.year || '',
+                item.callNumber || '',
+                item.collection || '',
+                item.circulation || 0,
+                item.branch || ''
+            ]);
+
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `added-items-comparison-${today}.xlsx`;
+
+            createExcelFile(data, headers, filename, 'Added Items');
+        }
+
+        //===========================================================================
+        // exportRemovedItems() - Export removed items to Excel
+        //===========================================================================
+        function exportRemovedItems() {
+            if (!window.currentRemovedItems || window.currentRemovedItems.length === 0) {
+                alert('No removed items to export');
+                return;
+            }
+
+            const headers = ['Title', 'Author', 'Year', 'Call Number', 'Collection', 'Circulation', 'Branch'];
+
+            const data = window.currentRemovedItems.map(item => [
+                item.title || '',
+                item.author || '',
+                item.year || '',
+                item.callNumber || '',
+                item.collection || '',
+                item.circulation || 0,
+                item.branch || ''
+            ]);
+
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `removed-items-comparison-${today}.xlsx`;
+
+            createExcelFile(data, headers, filename, 'Removed Items');
+        }
+
+    //===========================================================================
+        // setupAddedItemsTableSorting() - Setup sorting for added items table
+        //===========================================================================
+        function setupAddedItemsTableSorting() {
+            const headers = document.querySelectorAll('#addedItemsTable th.sortable');
+
+            headers.forEach(header => {
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    const dataType = this.getAttribute('data-type');
+                    sortAddedItemsTable(field, dataType);
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
+        // setupRemovedItemsTableSorting() - Setup sorting for removed items table
+        //===========================================================================
+        function setupRemovedItemsTableSorting() {
+            const headers = document.querySelectorAll('#removedItemsTable th.sortable');
+
+            headers.forEach(header => {
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    const dataType = this.getAttribute('data-type');
+                    sortRemovedItemsTable(field, dataType);
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
+        // sortAddedItemsTable() - Sort added items table
+        //===========================================================================
+        function sortAddedItemsTable(field, dataType = 'text') {
+            if (!window.currentAddedItems) return;
+
+            let direction = 'asc';
+            if (window.addedItemsSortState && window.addedItemsSortState.field === field) {
+                direction = window.addedItemsSortState.direction === 'asc' ? 'desc' : 'asc';
+            }
+
+            window.addedItemsSortState = { field, direction };
+
+            const sortedData = sortTableData(window.currentAddedItems, field, direction, dataType);
+
+            const tableBody = document.getElementById('addedItemsTableBody');
+            tableBody.innerHTML = sortedData.map(item => `
+                <tr data-barcode="${item.barcode}" onclick="viewBookDetailsFromComparison('${item.barcode}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                    <td><strong>${escapeHtml(item.title)}</strong></td>
+                    <td>${escapeHtml(item.author)}</td>
+                    <td>${item.year || 'Unknown'}</td>
+                    <td style="font-weight: bold; color: ${item.circulation >= 10 ? '#16a34a' : item.circulation >= 5 ? '#d97706' : '#dc2626'};">${item.circulation}</td>
+                    <td>${escapeHtml(item.collection)}</td>
+                    <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+                    <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+                </tr>
+            `).join('');
+
+            updateAddedItemsSortIcons(field, direction);
+        }
+
+        //===========================================================================
+        // sortRemovedItemsTable() - Sort removed items table
+        //===========================================================================
+        function sortRemovedItemsTable(field, dataType = 'text') {
+            if (!window.currentRemovedItems) return;
+
+            let direction = 'asc';
+            if (window.removedItemsSortState && window.removedItemsSortState.field === field) {
+                direction = window.removedItemsSortState.direction === 'asc' ? 'desc' : 'asc';
+            }
+
+            window.removedItemsSortState = { field, direction };
+
+            const sortedData = sortTableData(window.currentRemovedItems, field, direction, dataType);
+
+            const tableBody = document.getElementById('removedItemsTableBody');
+            tableBody.innerHTML = sortedData.map(item => `
+                <tr data-barcode="${item.barcode}" onclick="viewBookDetailsFromComparison('${item.barcode}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                    <td><strong>${escapeHtml(item.title)}</strong></td>
+                    <td>${escapeHtml(item.author)}</td>
+                    <td>${item.year || 'Unknown'}</td>
+                    <td style="font-weight: bold; color: ${item.circulation >= 10 ? '#16a34a' : item.circulation >= 5 ? '#d97706' : '#dc2626'};">${item.circulation}</td>
+                    <td>${escapeHtml(item.collection)}</td>
+                    <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+                    <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+                </tr>
+            `).join('');
+
+            updateRemovedItemsSortIcons(field, direction);
+        }
+
+        //===========================================================================
+        // updateAddedItemsSortIcons() - Update sort visual indicators for added items
+        //===========================================================================
+        function updateAddedItemsSortIcons(activeField, direction) {
+            const headers = document.querySelectorAll('#addedItemsTable th');
+            headers.forEach(header => {
+                header.classList.remove('sorted', 'asc', 'desc');
+            });
+
+            if (activeField) {
+                const activeHeader = document.querySelector(`#addedItemsTable th[data-sort="${activeField}"]`);
+                if (activeHeader) {
+                    activeHeader.classList.add('sorted', direction);
                 }
+            }
+        }
 
-            //===========================================================================
-            // toggleAuthorOtherTitles() - Toggle the author's other titles section
-            //===========================================================================
-            function toggleAuthorOtherTitles() {
-                const section = document.getElementById('authorOtherTitlesSection');
-                const tableContainer = section.querySelector('.results-container');
-                const button = document.getElementById('toggleAuthorTitlesBtn');
+        //===========================================================================
+        // updateRemovedItemsSortIcons() - Update sort visual indicators for removed items
+        //===========================================================================
+        function updateRemovedItemsSortIcons(activeField, direction) {
+            const headers = document.querySelectorAll('#removedItemsTable th');
+            headers.forEach(header => {
+                header.classList.remove('sorted', 'asc', 'desc');
+            });
 
-                if (tableContainer.style.display === 'none') {
-                    tableContainer.style.display = 'block';
-                    button.textContent = '▼ Collapse';
+            if (activeField) {
+                const activeHeader = document.querySelector(`#removedItemsTable th[data-sort="${activeField}"]`);
+                if (activeHeader) {
+                    activeHeader.classList.add('sorted', direction);
+                }
+            }
+        }
+
+        //===========================================================================
+        // viewBookDetailsFromComparison() - Navigate to Search tab from comparison
+        //===========================================================================
+        function viewBookDetailsFromComparison(barcode) {
+            // Switch to search tab
+            switchToSearchTab();
+
+            // Small delay to ensure tab is loaded
+            setTimeout(() => {
+                // Select the book (only works if it's in current libraryData)
+                const book = libraryData ? libraryData.find(b => b.barcode === barcode) : null;
+
+                if (book) {
+                    selectBook(barcode);
+
+                    // Search for the book to make it visible
+                    const searchInput = document.getElementById('searchInput');
+                    searchInput.value = book.title;
+
+                    // Trigger search
+                    const results = performSearch(book.title);
+                    displaySearchResults(results);
+
+                    // Select the specific book in the results
+                    setTimeout(() => {
+                        selectBookFromSearchResults(barcode);
+                    }, 100);
                 } else {
-                    tableContainer.style.display = 'none';
-                    button.textContent = '▶ Show Other Titles';
+                    alert('This item is not in the currently loaded collection. Load the appropriate snapshot to view details.');
                 }
-            }
+            }, 100);
+        }
 
-            //===========================================================================
-            // scrollToSection() - Scroll to section accounting for sticky navigation
-            //===========================================================================
-            function scrollToSection(elementId) {
-                const element = document.getElementById(elementId);
-                if (element) {
-                    const navHeight = document.querySelector('.tab-navigation').offsetHeight;
-                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-                    const offsetPosition = elementPosition - navHeight - 20; // 20px extra padding
+        //===========================================================================
+        // toggleAuthorOtherTitles() - Toggle the author's other titles section
+        //===========================================================================
+        function toggleAuthorOtherTitles() {
+            const section = document.getElementById('authorOtherTitlesSection');
+            const tableContainer = section.querySelector('.results-container');
+            const button = document.getElementById('toggleAuthorTitlesBtn');
 
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
+            if (tableContainer.style.display === 'none') {
+                tableContainer.style.display = 'block';
+                button.textContent = '▼ Collapse';
+            } else {
+                tableContainer.style.display = 'none';
+                button.textContent = '▶ Show Other Titles';
             }
+        }
+
+        //===========================================================================
+        // scrollToSection() - Scroll to section accounting for sticky navigation
+        //===========================================================================
+        function scrollToSection(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                const navHeight = document.querySelector('.tab-navigation').offsetHeight;
+                const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - navHeight - 20; // 20px extra padding
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
 
         // Make functions global for remaining onclick handlers (tabs and manual mapping)
         window.showTab = showTab;
@@ -9304,11 +9785,18 @@
         window.saveAsPreset = saveAsPreset;
         window.loadPreset = loadPreset;
         window.setupDisclosureArrows = setupDisclosureArrows;
+        window.deleteAllSnapshots = deleteAllSnapshots;
         window.scrollToSection = scrollToSection;
         window.showAuthorOtherTitles = showAuthorOtherTitles;
         window.toggleAuthorOtherTitles = toggleAuthorOtherTitles;
         window.viewAuthorPerformance = viewAuthorPerformance;
         window.selectBookFromOtherTitles = selectBookFromOtherTitles;
+        window.showComparisonAddedItems = showComparisonAddedItems;
+        window.showComparisonRemovedItems = showComparisonRemovedItems;
+        window.closeAddedItems = closeAddedItems;
+        window.closeRemovedItems = closeRemovedItems;
+        window.exportAddedItems = exportAddedItems;
+        window.exportRemovedItems = exportRemovedItems;
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', async function () {
@@ -9503,7 +9991,7 @@
             }
         });
 
-    //===========================================================================
+        //===========================================================================
         // showCollectionDetails() - Display detailed view for selected collection
         //===========================================================================
         function showCollectionDetails(collectionName) {
@@ -9821,45 +10309,45 @@
         }
 
         //===========================================================================
-            // showHighPerformersForCollection() - Display high-performing items for specific collection
-            //===========================================================================
-            function showHighPerformersForCollection(collectionName) {
-                const filteredData = getFilteredData();
-                const threshold = getHighPerformanceThreshold();
+        // showHighPerformersForCollection() - Display high-performing items for specific collection
+        //===========================================================================
+        function showHighPerformersForCollection(collectionName) {
+            const filteredData = getFilteredData();
+            const threshold = getHighPerformanceThreshold();
 
-                // Get high-performing items for this specific collection
-                const highPerformers = filteredData.filter(item =>
-                    item.circulation >= threshold && item.collection === collectionName
-                );
+            // Get high-performing items for this specific collection
+            const highPerformers = filteredData.filter(item =>
+                item.circulation >= threshold && item.collection === collectionName
+            );
 
-                // Sort by circulation (highest first)
-                highPerformers.sort((a, b) => b.circulation - a.circulation);
+            // Sort by circulation (highest first)
+            highPerformers.sort((a, b) => b.circulation - a.circulation);
 
-                // Store for sorting and export
-                window.currentHighPerformers = highPerformers;
-                window.currentHighPerformersCollection = collectionName;
-                window.rememberedHighPerformersPosition = true;
-                window.automaticNavigation = true;
+            // Store for sorting and export
+            window.currentHighPerformers = highPerformers;
+            window.currentHighPerformersCollection = collectionName;
+            window.rememberedHighPerformersPosition = true;
+            window.automaticNavigation = true;
 
-                // Update count and title to show filtered view
-                document.getElementById('highPerformersCount').textContent = highPerformers.length;
-                const sectionTitle = document.querySelector('#highPerformersSection h3');
-                sectionTitle.innerHTML = `High-Performing Items in "${escapeHtml(collectionName)}" (<span id="highPerformersCount">${highPerformers.length}</span> items)`;
+            // Update count and title to show filtered view
+            document.getElementById('highPerformersCount').textContent = highPerformers.length;
+            const sectionTitle = document.querySelector('#highPerformersSection h3');
+            sectionTitle.innerHTML = `High-Performing Items in "${escapeHtml(collectionName)}" (<span id="highPerformersCount">${highPerformers.length}</span> items)`;
 
-                // Add "Show All" button to the controls
-                const controlsDiv = document.querySelector('#highPerformersSection .btn').parentNode;
-                if (!document.getElementById('showAllHighPerformersBtn')) {
-                    const showAllBtn = document.createElement('button');
-                    showAllBtn.id = 'showAllHighPerformersBtn';
-                    showAllBtn.className = 'btn btn-secondary';
-                    showAllBtn.onclick = function () { showHighPerformers(); };
-                    showAllBtn.innerHTML = '📊 Show All High Performers';
-                    controlsDiv.insertBefore(showAllBtn, controlsDiv.firstChild);
-                }
+            // Add "Show All" button to the controls
+            const controlsDiv = document.querySelector('#highPerformersSection .btn').parentNode;
+            if (!document.getElementById('showAllHighPerformersBtn')) {
+                const showAllBtn = document.createElement('button');
+                showAllBtn.id = 'showAllHighPerformersBtn';
+                showAllBtn.className = 'btn btn-secondary';
+                showAllBtn.onclick = function () { showHighPerformers(); };
+                showAllBtn.innerHTML = '📊 Show All High Performers';
+                controlsDiv.insertBefore(showAllBtn, controlsDiv.firstChild);
+            }
 
-                // Populate table
-                const tableBody = document.getElementById('highPerformersTableBody');
-                tableBody.innerHTML = highPerformers.map(item => `
+            // Populate table
+            const tableBody = document.getElementById('highPerformersTableBody');
+            tableBody.innerHTML = highPerformers.map(item => `
         <tr data-barcode="${item.barcode}">
             <td onclick="event.stopPropagation(); viewBookDetailsFromHighPerformers('${item.barcode}')" style="cursor: pointer; color: #2563eb; font-weight: 500;">
                 <strong>${escapeHtml(item.title)}</strong>
@@ -9873,15 +10361,15 @@
         </tr>
     `).join('');
 
-                // Show the section
-                document.getElementById('highPerformersSection').style.display = 'block';
+            // Show the section
+            document.getElementById('highPerformersSection').style.display = 'block';
 
-                // Setup sorting
-                setupHighPerformersTableSorting();
+            // Setup sorting
+            setupHighPerformersTableSorting();
 
-                // Scroll to the section
-                scrollToSection('highPerformersSection');
-            }
+            // Scroll to the section
+            scrollToSection('highPerformersSection');
+        }
 
         //===========================================================================
         // viewBookDetailsFromHighPerformers() - Navigate to Search tab and show book details
@@ -10015,7 +10503,7 @@
             });
         }
 
-    //===========================================================================
+        //===========================================================================
         // sortGrubbyTable() - Sort grubby items table
         //===========================================================================
         function sortGrubbyTable(field, direction) {
@@ -10143,124 +10631,175 @@
             filename += '.xlsx';
 
             createExcelFile(data, headers, filename, 'High Performers');
-        }    
+        }
 
-            //===========================================================================
-            // resetDatabaseAndReload() - Reset database and reload page
-            //===========================================================================
-            async function resetDatabaseAndReload() {
-                if (!confirm('This will delete all saved snapshots and reset the database. Are you sure?')) {
-                    return;
-                }
-
-                try {
-                    showStatus('Resetting database...', 'loading');
-                    await resetDatabase();
-                    showStatus('Database reset successfully. Reloading...', 'success');
-
-                    // Reload the page after a short delay
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1500);
-
-                } catch (error) {
-                    console.error('Error resetting database:', error);
-                    showStatus('Error resetting database: ' + error.message, 'error');
-                }
+        //===========================================================================
+        // resetDatabaseAndReload() - Reset database and reload page
+        //===========================================================================
+        async function resetDatabaseAndReload() {
+            if (!confirm('This will delete all saved snapshots and reset the database. Are you sure?')) {
+                return;
             }
 
-             //===========================================================================
-            // updateCurrentCollectionStatus() - Update header collection indicator
-            //===========================================================================
-            function updateCurrentCollectionStatus() {
-                const statusDiv = document.getElementById('currentCollectionStatus');
-                const nameDiv = document.getElementById('collectionName');
+            try {
+                showStatus('Resetting database...', 'loading');
+                await resetDatabase();
+                showStatus('Database reset successfully. Reloading...', 'success');
 
-                if (!libraryData || libraryData.length === 0) {
-                    statusDiv.style.display = 'none';
-                    return;
-                }
+                // Reload the page after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
 
-                const filteredData = getFilteredData();
-                const itemCount = filteredData.length;
-                const totalCirculation = filteredData.reduce((sum, item) => sum + (item.circulation || 0), 0);
+            } catch (error) {
+                console.error('Error resetting database:', error);
+                showStatus('Error resetting database: ' + error.message, 'error');
+            }
+        }
 
-                // Determine what collection is loaded
-                let collectionName = 'Unknown Collection';
-                let collectionType = 'uploaded';
+        //===========================================================================
+        // updateCurrentCollectionStatus() - Update header collection indicator
+        //===========================================================================
+        function updateCurrentCollectionStatus() {
+            const statusDiv = document.getElementById('currentCollectionStatus');
+            const nameDiv = document.getElementById('collectionName');
 
-                if (currentSnapshotId) {
-                    if (currentSnapshotId === 'recovery_latest') {
-                        collectionName = 'Auto-saved Collection';
-                        collectionType = 'auto-saved';
-                    } else {
-                        // Try to get the snapshot name
-                        getSnapshot(currentSnapshotId).then(snapshot => {
-                            if (snapshot) {
-                                nameDiv.textContent = `${snapshot.name} • ${itemCount.toLocaleString()} items`;
-                            }
-                        }).catch(() => {
-                            nameDiv.textContent = `Saved Snapshot • ${itemCount.toLocaleString()} items`;
-                        });
-                        collectionName = 'Saved Snapshot';
-                        collectionType = 'snapshot';
-                    }
-                } else {
-                    const today = new Date().toLocaleDateString();
-                    collectionName = `Collection (${today})`;
-                    collectionType = 'fresh';
-                }
-
-                // Update the display
-                nameDiv.textContent = `${collectionName} • ${itemCount.toLocaleString()} items`;
-
-                // Set color based on type
-                if (collectionType === 'auto-saved') {
-                    statusDiv.style.background = '#fef3c7';
-                    statusDiv.style.borderColor = '#d97706';
-                    statusDiv.style.color = '#d97706';
-                } else if (collectionType === 'snapshot') {
-                    statusDiv.style.background = '#f0fdf4';
-                    statusDiv.style.borderColor = '#16a34a';
-                    statusDiv.style.color = '#16a34a';
-                } else {
-                    statusDiv.style.background = '#f0f9ff';
-                    statusDiv.style.borderColor = '#0284c7';
-                    statusDiv.style.color = '#0284c7';
-                }
-
-                statusDiv.style.display = 'block';
+            if (!libraryData || libraryData.length === 0) {
+                statusDiv.style.display = 'none';
+                return;
             }
 
-            //===========================================================================
-            // setupDisclosureArrows() - Ensure all disclosure arrows work
-            //===========================================================================
-            function setupDisclosureArrows() {
-                    const details = document.querySelectorAll('details');
+            const filteredData = getFilteredData();
+            const itemCount = filteredData.length;
+            const totalCirculation = filteredData.reduce((sum, item) => sum + (item.circulation || 0), 0);
 
-                    details.forEach(detail => {
-                        // Initialize arrow position based on current open state
-                        const arrow = detail.querySelector('summary .disclosure-arrow');
-                        if (arrow) {
-                            if (detail.open) {
-                                arrow.style.transform = 'rotate(90deg)';
-                            } else {
-                                arrow.style.transform = 'rotate(0deg)';
-                            }
+            // Determine what collection is loaded
+            let collectionName = 'Unknown Collection';
+            let collectionType = 'uploaded';
+
+            if (currentSnapshotId) {
+                if (currentSnapshotId === 'recovery_latest') {
+                    collectionName = 'Auto-saved Collection';
+                    collectionType = 'auto-saved';
+                } else {
+                    // Try to get the snapshot name
+                    getSnapshot(currentSnapshotId).then(snapshot => {
+                        if (snapshot) {
+                            nameDiv.textContent = `${snapshot.name} • ${itemCount.toLocaleString()} items`;
                         }
-
-                        detail.addEventListener('toggle', function () {
-                            const arrow = this.querySelector('summary .disclosure-arrow');
-                            if (arrow) {
-                                if (this.open) {
-                                    arrow.style.transform = 'rotate(90deg)';
-                                } else {
-                                    arrow.style.transform = 'rotate(0deg)';
-                                }
-                            }
-                        });
+                    }).catch(() => {
+                        nameDiv.textContent = `Saved Snapshot • ${itemCount.toLocaleString()} items`;
                     });
+                    collectionName = 'Saved Snapshot';
+                    collectionType = 'snapshot';
                 }
+            } else {
+                const today = new Date().toLocaleDateString();
+                collectionName = `Collection (${today})`;
+                collectionType = 'fresh';
+            }
+
+            // Update the display
+            nameDiv.textContent = `${collectionName} • ${itemCount.toLocaleString()} items`;
+
+            // Set color based on type
+            if (collectionType === 'auto-saved') {
+                statusDiv.style.background = '#fef3c7';
+                statusDiv.style.borderColor = '#d97706';
+                statusDiv.style.color = '#d97706';
+            } else if (collectionType === 'snapshot') {
+                statusDiv.style.background = '#f0fdf4';
+                statusDiv.style.borderColor = '#16a34a';
+                statusDiv.style.color = '#16a34a';
+            } else {
+                statusDiv.style.background = '#f0f9ff';
+                statusDiv.style.borderColor = '#0284c7';
+                statusDiv.style.color = '#0284c7';
+            }
+
+            statusDiv.style.display = 'block';
+        }
+
+        //===========================================================================
+        // deleteAllSnapshots() - Delete all saved snapshots with confirmation
+        //===========================================================================
+        async function deleteAllSnapshots() {
+            try {
+                const snapshots = await getAllSnapshots();
+
+                if (!snapshots || snapshots.length === 0) {
+                    alert('No snapshots to delete');
+                    return;
+                }
+
+                const confirmMessage = `Are you sure you want to delete ALL ${snapshots.length} snapshot(s)?\n\nThis action cannot be undone and will permanently remove:\n${snapshots.map(s => `• ${s.name} (${s.itemCount.toLocaleString()} items)`).join('\n')}\n\nClick OK to delete all snapshots, or Cancel to keep them.`;
+
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+
+                showStatus('Deleting all snapshots...', 'loading');
+
+                // Delete each snapshot
+                for (const snapshot of snapshots) {
+                    await deleteSnapshot(snapshot.id);
+                }
+
+                // Clear current snapshot if it was deleted
+                currentSnapshotId = null;
+                selectedSnapshot = null;
+
+                // Update UI
+                updateCurrentCollectionStatus();
+                refreshSnapshotsList();
+                updateSnapshotMetrics();
+
+                showStatus(`✅ Successfully deleted ${snapshots.length} snapshot(s)`, 'success');
+
+                // Hide status after a few seconds
+                setTimeout(() => {
+                    const uploadStatus = document.getElementById('uploadStatus');
+                    if (uploadStatus && uploadStatus.textContent.includes('Successfully deleted')) {
+                        uploadStatus.innerHTML = '';
+                        uploadStatus.className = '';
+                    }
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error deleting all snapshots:', error);
+                showStatus('Error deleting snapshots: ' + error.message, 'error');
+            }
+        }
+
+        //===========================================================================
+        // setupDisclosureArrows() - Ensure all disclosure arrows work
+        //===========================================================================
+        function setupDisclosureArrows() {
+            const details = document.querySelectorAll('details');
+
+            details.forEach(detail => {
+                // Initialize arrow position based on current open state
+                const arrow = detail.querySelector('summary .disclosure-arrow');
+                if (arrow) {
+                    if (detail.open) {
+                        arrow.style.transform = 'rotate(90deg)';
+                    } else {
+                        arrow.style.transform = 'rotate(0deg)';
+                    }
+                }
+
+                detail.addEventListener('toggle', function () {
+                    const arrow = this.querySelector('summary .disclosure-arrow');
+                    if (arrow) {
+                        if (this.open) {
+                            arrow.style.transform = 'rotate(90deg)';
+                        } else {
+                            arrow.style.transform = 'rotate(0deg)';
+                        }
+                    }
+                });
+            });
+        }
 
     </script>
 </body>
