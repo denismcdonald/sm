@@ -3181,7 +3181,7 @@
             const newRows = resultsToShow.map((book, index) => {
                 const absoluteIndex = displayedResultsCount + index;
                 return `
-                    <tr data-barcode="${escapeHtml(book.barcode)}" onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')">
+                <tr data-barcode="${escapeHtml(book.barcode)}" onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')" style="cursor: pointer;">
                         <td>
                             <div class="result-title">
                                 <strong>${escapeHtml(book.title)}</strong>
@@ -5761,6 +5761,12 @@
             }).catch(error => {
                 console.log('Book cover loading failed:', error);
                 // Keep the placeholder icon on error
+            });
+            
+            // Smooth scroll to top so user can see the selected book details
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
         }
 
@@ -9095,6 +9101,54 @@
         }
 
         //===========================================================================
+        // selectBookFromOtherTitles() - Select book without regenerating "Other titles by" table
+        //===========================================================================
+        function selectBookFromOtherTitles(barcode) {
+            currentBook = libraryData.find(book => book.barcode === barcode);
+        
+            if (!currentBook) {
+                console.log('No book found with barcode:', barcode);
+                return;
+            }
+        
+            // Update book details but DON'T regenerate the "Other titles by" table
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('bookDetails').style.display = 'block';
+        
+            document.getElementById('detailTitle').textContent = currentBook.title;
+            document.getElementById('detailAuthor').textContent = currentBook.author;
+            document.getElementById('detailYear').textContent = currentBook.year;
+            document.getElementById('detailCollection').textContent = currentBook.collection;
+            document.getElementById('detailCallNumber').textContent = currentBook.callNumber;
+            document.getElementById('detailCirculation').textContent = `${currentBook.circulation} circulations`;
+        
+            setupDetailCopyButtons();
+        
+            // Update book cover
+            const coverElement = document.getElementById('bookCover');
+            coverElement.innerHTML = `
+                <svg class="book-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 2.5rem; height: 2.5rem; color: #d1d5db;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
+                </svg>
+            `;
+        
+            // Load book cover
+            fetchBookCover(currentBook.title, currentBook.author).then(coverUrl => {
+                if (coverUrl && currentBook && currentBook.barcode === barcode) {
+                    coverElement.innerHTML = `<img src="${coverUrl}" alt="${escapeHtml(currentBook.title)}">`;
+                }
+            }).catch(error => {
+                console.log('Book cover loading failed:', error);
+            });
+            
+            // Smooth scroll to top so user can see the selected book details
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        //===========================================================================
         // showAuthorOtherTitles() - Show other titles by the selected book's author
         //===========================================================================
         function showAuthorOtherTitles(authorName, currentBarcode) {
@@ -9118,7 +9172,7 @@
             // Populate table
             const tableBody = document.getElementById('authorOtherTitlesBody');
             tableBody.innerHTML = authorBooks.map(book => `
-                <tr data-barcode="${escapeHtml(book.barcode)}" onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')" style="cursor: pointer;">
+            <tr data-barcode="${escapeHtml(book.barcode)}" onclick="selectBookFromOtherTitles('${escapeHtml(book.barcode)}')" style="cursor: pointer;">
                     <td>
                         <div class="result-title">
                             <strong>${escapeHtml(book.title)}</strong>
@@ -9254,6 +9308,7 @@
         window.showAuthorOtherTitles = showAuthorOtherTitles;
         window.toggleAuthorOtherTitles = toggleAuthorOtherTitles;
         window.viewAuthorPerformance = viewAuthorPerformance;
+        window.selectBookFromOtherTitles = selectBookFromOtherTitles;
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', async function () {
