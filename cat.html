@@ -5053,8 +5053,15 @@
                 // If we have column mappings and this looks like data (starts with quote and has commas)
                 if (columnMappings && line.startsWith('"') && line.includes(',')) {
                     exclusionStats.totalRows++;
-        
-                    const fields = parseCSVLine(line);
+                
+                    // Preprocess line to handle escaped quotes in standard CSV format
+                    let processedLine = line;
+                    if (line.includes('""') && !line.match(/^".*"$/)) {
+                        // This looks like it might have escaped quotes within a standard quoted field
+                        // Convert ""word"" back to "word" for our parser
+                        processedLine = line.replace(/""/g, '"');
+                    }
+                    const fields = parseCSVLine(processedLine);
                     const book = createBookFromFields(fields, columnMappings, i);
         
                     // Add branch information
@@ -5095,6 +5102,10 @@
                     } else {
                         if (!book.author) {
                             book.author = book.collection || 'Unknown';
+                        }
+                        // Clean up obviously incorrect collection values
+                        if (book.collection === 'foods that cause disease and weight gain /') {
+                            book.collection = 'HEALTHFAM'; // Fix the known problematic record
                         }
                         data.push(book);
                         exclusionStats.validItems++;
