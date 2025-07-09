@@ -5173,7 +5173,7 @@
                 AVAILABLE_SAMPLES[selectedYear].slice().reverse().forEach(month => {
                     const option = document.createElement('option');
                     option.value = month.value;
-                    option.textContent = `${month.label} (${month.items} items)`;
+                    option.textContent = month.label;
                     monthSelect.appendChild(option);
                 });
 
