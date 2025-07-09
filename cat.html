@@ -2345,7 +2345,7 @@
 
     </div>
 
-    
+
 
     <!-- Snapshots Tab -->
     <div id="snapshotsTab" class="tab-content hidden">
@@ -2392,14 +2392,15 @@
 
         <!-- Saved Snapshots -->
         <div class="analysis-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; width: 100%;">
-                    <h3>Saved Snapshots</h3>
-                    <button id="deleteAllSnapshotsBtn" class="btn btn-danger" onclick="deleteAllSnapshots()"
-                        style="font-size: 0.875rem; padding: 0.5rem 1rem;">
-                        🗑️ Delete All
-                    </button>
-                    </div>
-                <!-- <button id="loadSnapshotBtn" class="btn btn-secondary" onclick="loadSelectedSnapshot()">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; width: 100%;">
+                <h3>Saved Snapshots</h3>
+                <button id="deleteAllSnapshotsBtn" class="btn btn-danger" onclick="deleteAllSnapshots()"
+                    style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                    🗑️ Delete All
+                </button>
+            </div>
+            <!-- <button id="loadSnapshotBtn" class="btn btn-secondary" onclick="loadSelectedSnapshot()">
                     📁 Load Selected
                 </button> -->
             <div id="snapshotsList"></div>
@@ -2441,50 +2442,57 @@
                     <button class="btn btn-secondary" onclick="closeAddedItems()">✕ Close</button>
                 </div>
             </div>
-        
+
             <table class="analysis-table sortable-table" id="addedItemsTable">
                 <thead>
                     <tr>
                         <th class="sortable" data-sort="title" data-type="text">
                             Title
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="author" data-type="text">
                             Author
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="year" data-type="number">
                             Year
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="circulation" data-type="number">
                             Circulation
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="collection" data-type="text">
                             Collection
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="callNumber" data-type="text">
                             Call Number
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="branch" data-type="text">
                             Branch
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                     </tr>
@@ -2492,7 +2500,87 @@
                 <tbody id="addedItemsTableBody"></tbody>
             </table>
         </div>
-        
+
+    <!-- Collection Changes Detail Analysis -->
+    <div class="analysis-section" id="collectionChangesDetailSection" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+                <h3 id="collectionChangesDetailTitle">Collection Changes Detail</h3>
+                <p id="collectionChangesDetailSubtitle" style="margin: 0.5rem 0 0 0; color: #6b7280; font-size: 0.875rem;">
+                    Detailed view of changes for this collection
+                </p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-secondary" onclick="exportCollectionChangesDetail()">📊 Export to Excel</button>
+                <button class="btn btn-secondary" onclick="closeCollectionChangesDetail()">✕ Close</button>
+            </div>
+        </div>
+    
+        <table class="analysis-table sortable-table" id="collectionChangesDetailTable">
+            <thead>
+                <tr>
+                    <th class="sortable" data-sort="title" data-type="text">
+                        Title
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                            </path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="author" data-type="text">
+                        Author
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                            </path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="year" data-type="number">
+                        Year
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                            </path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="age" data-type="number">
+                        Age
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                            </path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="circulation" data-type="number">
+                        Circulation
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                            </path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="changeType" data-type="text">
+                        Change Type
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                            </path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="callNumber" data-type="text">
+                        Call Number
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                            </path>
+                        </svg>
+                    </th>
+                    <th class="sortable" data-sort="branch" data-type="text">
+                        Branch
+                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                            </path>
+                        </svg>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="collectionChangesDetailTableBody"></tbody>
+        </table>
+    </div>
+
         <!-- Removed Items Analysis -->
         <div class="analysis-section" id="removedItemsSection" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -2507,50 +2595,57 @@
                     <button class="btn btn-secondary" onclick="closeRemovedItems()">✕ Close</button>
                 </div>
             </div>
-        
+
             <table class="analysis-table sortable-table" id="removedItemsTable">
                 <thead>
                     <tr>
                         <th class="sortable" data-sort="title" data-type="text">
                             Title
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="author" data-type="text">
                             Author
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="year" data-type="number">
                             Year
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="circulation" data-type="number">
                             Circulation
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="collection" data-type="text">
                             Collection
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="callNumber" data-type="text">
                             Call Number
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                         <th class="sortable" data-sort="branch" data-type="text">
                             Branch
                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                </path>
                             </svg>
                         </th>
                     </tr>
@@ -4347,7 +4442,10 @@
                             const avgChangeClass = avgChange > 0 ? '#16a34a' : avgChange < 0 ? '#dc2626' : '#6b7280';
 
                             return `
-                                                <tr style="border-bottom: 1px solid #f3f4f6;" 
+                                                <tr style="border-bottom: 1px solid #f3f4f6; cursor: pointer;"
+                                                    onclick="showCollectionChangesDetail('${escapeHtml(collection)}', '${snapshot1.id}', '${snapshot2.id}')"
+                                                    onmouseover="this.style.backgroundColor='#f9fafb'" 
+                                                    onmouseout="this.style.backgroundColor=''" 
                                                     data-collection="${escapeHtml(collection)}"
                                                     data-new-count="${change.newCount}"
                                                     data-change="${change.change}"
@@ -4387,8 +4485,13 @@
                     </div>
                     ` : ''}
                     
-                    ${comparison.items.added.length > 0 || comparison.items.removed.length > 0 ? `
-                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                    ${comparison.items.added.length > 0 || comparison.items.removed.length > 0 || Object.keys(comparison.collections.changes).length > 0 ? `
+                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        ${Object.keys(comparison.collections.changes).length > 0 ? `
+                        <button class="btn btn-secondary" onclick="exportComparisonTable('${snapshot1.id}', '${snapshot2.id}')">
+                            📊 Export Collection Changes
+                        </button>
+                        ` : ''}
                         ${comparison.items.added.length > 0 ? `
                         <button class="btn btn-secondary" onclick="exportSnapshotDiff('added', '${snapshot1.id}', '${snapshot2.id}')">
                             📄 Export Added Items (${comparison.items.added.length})
@@ -4409,6 +4512,333 @@
                 setupComparisonTableSorting();
             }, 100);
         }
+
+        //===========================================================================
+        // showCollectionChangesDetail() - Show detailed changes for a specific collection
+        //===========================================================================
+        async function showCollectionChangesDetail(collectionName, snapshot1Id, snapshot2Id) {
+            try {
+                const [snapshot1, snapshot2] = await Promise.all([
+                    getSnapshot(snapshot1Id),
+                    getSnapshot(snapshot2Id)
+                ]);
+
+                if (!snapshot1 || !snapshot2) {
+                    alert('Error loading snapshots for detailed comparison');
+                    return;
+                }
+
+                // Get items for this collection from both snapshots
+                const collection1Items = snapshot1.data.filter(item => item.collection === collectionName);
+                const collection2Items = snapshot2.data.filter(item => item.collection === collectionName);
+
+                // Create lookup maps by barcode
+                const items1Map = new Map(collection1Items.map(item => [item.barcode, item]));
+                const items2Map = new Map(collection2Items.map(item => [item.barcode, item]));
+
+                // Find added and removed items for this collection
+                const addedItems = collection2Items.filter(item => !items1Map.has(item.barcode))
+                    .map(item => ({ ...item, changeType: 'Added', changeColor: '#16a34a' }));
+                const removedItems = collection1Items.filter(item => !items2Map.has(item.barcode))
+                    .map(item => ({ ...item, changeType: 'Removed', changeColor: '#dc2626' }));
+
+                const allChanges = [...addedItems, ...removedItems];
+
+                if (allChanges.length === 0) {
+                    alert(`No item-level changes found for collection: ${collectionName}`);
+                    return;
+                }
+
+                // Sort by change type (Added first, then Removed), then by circulation
+                allChanges.sort((a, b) => {
+                    if (a.changeType !== b.changeType) {
+                        return a.changeType === 'Added' ? -1 : 1;
+                    }
+                    return (b.circulation || 0) - (a.circulation || 0);
+                });
+
+                // Update section title and subtitle
+                document.getElementById('collectionChangesDetailTitle').textContent =
+                    `Collection Changes: ${collectionName} (${allChanges.length} items)`;
+                document.getElementById('collectionChangesDetailSubtitle').textContent =
+                    `${addedItems.length} added, ${removedItems.length} removed between "${snapshot1.name}" and "${snapshot2.name}"`;
+
+                // Populate table
+                const tableBody = document.getElementById('collectionChangesDetailTableBody');
+                tableBody.innerHTML = allChanges.map(item => {
+                    const age = getItemAge(item.year);
+                    const ageDisplay = age > 0 ? `${age} years` : 'Unknown';
+
+                    return `
+                        <tr data-barcode="${item.barcode}" onclick="viewBookDetailsFromCollectionChanges('${item.barcode}')" 
+                            style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                            <td><strong>${escapeHtml(item.title)}</strong></td>
+                            <td>${escapeHtml(item.author)}</td>
+                            <td>${item.year || 'Unknown'}</td>
+                            <td>${ageDisplay}</td>
+                            <td style="font-weight: bold;">${item.circulation}</td>
+                            <td>
+                                <span style="background: ${item.changeColor}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
+                                    ${item.changeType}
+                                </span>
+                            </td>
+                            <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+                            <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Store data for export
+                window.currentCollectionChangesDetail = {
+                    collectionName,
+                    snapshot1Name: snapshot1.name,
+                    snapshot2Name: snapshot2.name,
+                    items: allChanges
+                };
+
+                // Show the section
+                document.getElementById('collectionChangesDetailSection').style.display = 'block';
+
+                // Setup sorting for the detail table
+                setupCollectionChangesDetailSorting();
+
+                // Scroll to the section
+                scrollToSection('collectionChangesDetailSection');
+
+            } catch (error) {
+                console.error('Error showing collection changes detail:', error);
+                alert('Error loading collection changes: ' + error.message);
+            }
+        }
+
+        //===========================================================================
+        // closeCollectionChangesDetail() - Close collection changes detail section
+        //===========================================================================
+        function closeCollectionChangesDetail() {
+            document.getElementById('collectionChangesDetailSection').style.display = 'none';
+            window.currentCollectionChangesDetail = null;
+        }
+
+        //===========================================================================
+        // exportCollectionChangesDetail() - Export collection changes detail to Excel
+        //===========================================================================
+        function exportCollectionChangesDetail() {
+            if (!window.currentCollectionChangesDetail || !window.currentCollectionChangesDetail.items.length) {
+                alert('No collection changes detail to export');
+                return;
+            }
+
+            const { collectionName, snapshot1Name, snapshot2Name, items } = window.currentCollectionChangesDetail;
+
+            const headers = ['Title', 'Author', 'Year', 'Age (Years)', 'Circulation', 'Change Type', 'Call Number', 'Branch'];
+
+            const data = items.map(item => {
+                const age = getItemAge(item.year);
+                return [
+                    item.title || '',
+                    item.author || '',
+                    item.year || '',
+                    age > 0 ? age : '',
+                    item.circulation || 0,
+                    item.changeType || '',
+                    item.callNumber || '',
+                    item.branch || ''
+                ];
+            });
+
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `collection-changes-detail-${collectionName.replace(/[^a-zA-Z0-9]/g, '-')}-${today}.xlsx`;
+
+            createExcelFile(data, headers, filename, `${collectionName} Changes`);
+        }
+
+        //===========================================================================
+        // viewBookDetailsFromCollectionChanges() - Navigate to Search tab from collection changes
+        //===========================================================================
+        function viewBookDetailsFromCollectionChanges(barcode) {
+            // Switch to search tab
+            switchToSearchTab();
+
+            // Small delay to ensure tab is loaded
+            setTimeout(() => {
+                // Check if the book is in the currently loaded collection
+                const book = libraryData ? libraryData.find(b => b.barcode === barcode) : null;
+
+                if (book) {
+                    selectBook(barcode);
+
+                    // Search for the book to make it visible
+                    const searchInput = document.getElementById('searchInput');
+                    searchInput.value = book.title;
+
+                    // Trigger search
+                    const results = performSearch(book.title);
+                    displaySearchResults(results);
+
+                    // Select the specific book in the results
+                    setTimeout(() => {
+                        selectBookFromSearchResults(barcode);
+                    }, 100);
+                } else {
+                    alert('This item is not in the currently loaded collection. Load the appropriate snapshot to view details.');
+                }
+            }, 100);
+        }
+
+        //===========================================================================
+        // setupCollectionChangesDetailSorting() - Setup sorting for collection changes detail table
+        //===========================================================================
+        function setupCollectionChangesDetailSorting() {
+            const headers = document.querySelectorAll('#collectionChangesDetailTable th.sortable');
+
+            headers.forEach(header => {
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    const dataType = this.getAttribute('data-type');
+                    sortCollectionChangesDetailTable(field, dataType);
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
+        // sortCollectionChangesDetailTable() - Sort collection changes detail table
+        //===========================================================================
+        function sortCollectionChangesDetailTable(field, dataType = 'text') {
+            if (!window.currentCollectionChangesDetail || !window.currentCollectionChangesDetail.items) return;
+
+            let direction = 'asc';
+            if (window.collectionChangesDetailSortState && window.collectionChangesDetailSortState.field === field) {
+                direction = window.collectionChangesDetailSortState.direction === 'asc' ? 'desc' : 'asc';
+            }
+
+            window.collectionChangesDetailSortState = { field, direction };
+
+            // Handle special field mappings
+            let sortField = field;
+            if (field === 'age') {
+                // Sort by calculated age
+                window.currentCollectionChangesDetail.items.forEach(item => {
+                    item.age = getItemAge(item.year);
+                });
+                sortField = 'age';
+            }
+
+            const sortedData = sortTableData(window.currentCollectionChangesDetail.items, sortField, direction, dataType);
+
+            const tableBody = document.getElementById('collectionChangesDetailTableBody');
+            tableBody.innerHTML = sortedData.map(item => {
+                const age = getItemAge(item.year);
+                const ageDisplay = age > 0 ? `${age} years` : 'Unknown';
+
+                return `
+                    <tr data-barcode="${item.barcode}" onclick="viewBookDetailsFromCollectionChanges('${item.barcode}')" 
+                        style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                        <td><strong>${escapeHtml(item.title)}</strong></td>
+                        <td>${escapeHtml(item.author)}</td>
+                        <td>${item.year || 'Unknown'}</td>
+                        <td>${ageDisplay}</td>
+                        <td style="font-weight: bold;">${item.circulation}</td>
+                        <td>
+                            <span style="background: ${item.changeColor}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
+                                ${item.changeType}
+                            </span>
+                        </td>
+                        <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+                        <td style="color: #2563eb; font-weight: 500;">${escapeHtml(item.branch || 'Unknown')}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            updateCollectionChangesDetailSortIcons(field, direction);
+        }
+
+        //===========================================================================
+        // updateCollectionChangesDetailSortIcons() - Update sort visual indicators
+        //===========================================================================
+        function updateCollectionChangesDetailSortIcons(activeField, direction) {
+            const headers = document.querySelectorAll('#collectionChangesDetailTable th');
+            headers.forEach(header => {
+                header.classList.remove('sorted', 'asc', 'desc');
+            });
+
+            if (activeField) {
+                const activeHeader = document.querySelector(`#collectionChangesDetailTable th[data-sort="${activeField}"]`);
+                if (activeHeader) {
+                    activeHeader.classList.add('sorted', direction);
+                }
+            }
+        }
+
+        //===========================================================================
+        // exportComparisonTable() - Export collection changes comparison table to Excel
+        //===========================================================================
+        async function exportComparisonTable(snapshot1Id, snapshot2Id) {
+            try {
+                const [snapshot1, snapshot2] = await Promise.all([
+                    getSnapshot(snapshot1Id),
+                    getSnapshot(snapshot2Id)
+                ]);
+
+                if (!window.lastComparisonData || !window.lastComparisonData.collections.changes) {
+                    alert('No comparison data available to export');
+                    return;
+                }
+
+                const changes = window.lastComparisonData.collections.changes;
+
+                if (Object.keys(changes).length === 0) {
+                    alert('No collection changes to export');
+                    return;
+                }
+
+                const headers = [
+                    'Collection',
+                    'Items Before',
+                    'Items After',
+                    'Item Change',
+                    'Circulation Before',
+                    'Circulation After',
+                    'Circulation Change',
+                    'Avg Circulation Before',
+                    'Avg Circulation After',
+                    'Avg Change'
+                ];
+
+                const data = Object.entries(changes).map(([collection, change]) => {
+                    const avgChange = change.avgCirculation2 - change.avgCirculation1;
+                    return [
+                        collection,
+                        change.oldCount,
+                        change.newCount,
+                        change.change,
+                        change.oldCirculation,
+                        change.newCirculation,
+                        change.circulationChange,
+                        change.avgCirculation1,
+                        change.avgCirculation2,
+                        avgChange
+                    ];
+                });
+
+                const today = new Date().toISOString().split('T')[0];
+                const filename = `collection-changes-comparison-${today}-${snapshot1.name}-vs-${snapshot2.name}.xlsx`;
+
+                createExcelFile(data, headers, filename, 'Collection Changes');
+
+            } catch (error) {
+                console.error('Error exporting comparison table:', error);
+                alert('Error exporting data: ' + error.message);
+            }
+        }
+
+        //===========================================================================
 
         //===========================================================================
         // exportSnapshotDiff() - Export added/removed items to Excel
@@ -9364,7 +9794,7 @@
             }
         }
 
-    //===========================================================================
+        //===========================================================================
         // showComparisonAddedItems() - Display added items in detailed table
         //===========================================================================
         function showComparisonAddedItems() {
@@ -9520,7 +9950,7 @@
             createExcelFile(data, headers, filename, 'Removed Items');
         }
 
-    //===========================================================================
+        //===========================================================================
         // setupAddedItemsTableSorting() - Setup sorting for added items table
         //===========================================================================
         function setupAddedItemsTableSorting() {
@@ -9797,6 +10227,11 @@
         window.closeRemovedItems = closeRemovedItems;
         window.exportAddedItems = exportAddedItems;
         window.exportRemovedItems = exportRemovedItems;
+        window.exportComparisonTable = exportComparisonTable;
+        window.showCollectionChangesDetail = showCollectionChangesDetail;
+        window.closeCollectionChangesDetail = closeCollectionChangesDetail;
+        window.exportCollectionChangesDetail = exportCollectionChangesDetail;
+        window.viewBookDetailsFromCollectionChanges = viewBookDetailsFromCollectionChanges;
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', async function () {
