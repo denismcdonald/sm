@@ -62,6 +62,10 @@
             color: #6b7280;
         }
 
+        #ageCirculationDetails:not([open]) .export-btn {
+        display: none;
+        }
+
         /* Tab Navigation */
         .tab-navigation {
             background: white;
@@ -1698,16 +1702,23 @@
                     <details id="ageCirculationDetails">
                         <summary
                             style="cursor: pointer; font-weight: bold; color: #374151; display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; list-style: none;">
+                        
                             <span style="display: flex; align-items: center;">
                                 <span style="margin-right: 0.5rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block;"
                                     class="disclosure-arrow">▶</span>
                                 📊 Age vs Circulation Analysis
                             </span>
-                            <button class="btn btn-secondary" onclick="exportAgeCirculationData()"
-                                style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" title="Export all items currently shown in chart">
-                                📊 Export Chart Data
-                            </button>
+                        
+                            <!-- Wrapped export button for CSS targeting -->
+                            <span class="export-btn">
+                                <button class="btn btn-secondary" onclick="exportAgeCirculationData()"
+                                    style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" title="Export all items currently shown in chart">
+                                    📊 Export Chart Data
+                                </button>
+                            </span>
+                        
                         </summary>
+
 
                         <div style="margin-top: 1rem;">
                             <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
@@ -3897,61 +3908,72 @@
         // loadSnapshotById() - Load specific snapshot and switch to search interface
         //===========================================================================
         async function loadSnapshotById(id) {
-            try {
-                showStatus('Loading snapshot...', 'loading');
-                const snapshot = await getSnapshot(id);
+                try {
+                    showStatus('Loading snapshot...', 'loading');
 
-                if (snapshot && snapshot.data) {
-                    libraryData = snapshot.data;
-                    currentSnapshotId = id;
-                    // Update header status
-                    updateCurrentCollectionStatus();
+                    // Record start time for minimum display duration
+                    const loadStartTime = Date.now();
+                    const minimumDisplayTime = 800; // milliseconds
 
-                    // Update branch filter options
-                    updateBranchFilter();
+                    const snapshot = await getSnapshot(id);
 
-                    // Initialize search functionality
-                    initializeFuzzySearch();
+                    if (snapshot && snapshot.data) {
+                        libraryData = snapshot.data;
+                        currentSnapshotId = id;
+                        // Update header status
+                        updateCurrentCollectionStatus();
 
-                    // Small delay to ensure data is fully processed before UI updates
-                    setTimeout(() => {
-                        // Immediately switch to compact upload mode
-                        switchToCompactUpload();
+                        // Update branch filter options
+                        updateBranchFilter();
 
-                        // Force refresh of overview charts if currently on that tab
-                        const activeTab = document.querySelector('.tab-content.active');
-                        if (activeTab && activeTab.id === 'overviewTab') {
-                            loadOverviewData();
+                        // Initialize search functionality
+                        initializeFuzzySearch();
+
+                        // Ensure minimum display time has elapsed before showing success
+                        const elapsed = Date.now() - loadStartTime;
+                        if (elapsed < minimumDisplayTime) {
+                            await new Promise(resolve => setTimeout(resolve, minimumDisplayTime - elapsed));
                         }
-                    }, 100);
 
-                    // Show success message for 2 seconds
-                    showStatus(`✅ Loaded snapshot "${snapshot.name}" (${snapshot.itemCount.toLocaleString()} items)`, 'success');
+                        // Small delay to ensure data is fully processed before UI updates
+                        setTimeout(() => {
+                            // Immediately switch to compact upload mode
+                            switchToCompactUpload();
 
-                    // Hide the success message after 2 seconds
-                    window.statusClearTimer = setTimeout(() => {
-                        const uploadStatus = document.getElementById('uploadStatus');
-                        const statusEl = document.querySelector('.status-success');
-                        if (statusEl && statusEl.textContent.includes('Loaded snapshot')) {
-                            uploadStatus.innerHTML = '';
-                            uploadStatus.className = '';
-                        }
-                    }, 2000);
+                            // Force refresh of overview charts if currently on that tab
+                            const activeTab = document.querySelector('.tab-content.active');
+                            if (activeTab && activeTab.id === 'overviewTab') {
+                                loadOverviewData();
+                            }
+                        }, 100);
 
-                    // Always refresh snapshots list to show "Currently Loaded" status
-                    // (even if not currently on snapshots tab, for when user navigates there later)
-                    setTimeout(() => {
-                        refreshSnapshotsList();
-                    }, 200);
+                        // Show success message for 2 seconds
+                        showStatus(`✅ Loaded snapshot "${snapshot.name}" (${snapshot.itemCount.toLocaleString()} items)`, 'success');
 
-                } else {
-                    showStatus('Error: Snapshot not found or corrupted', 'error');
+                        // Hide the success message after 2 seconds
+                        window.statusClearTimer = setTimeout(() => {
+                            const uploadStatus = document.getElementById('uploadStatus');
+                            const statusEl = document.querySelector('.status-success');
+                            if (statusEl && statusEl.textContent.includes('Loaded snapshot')) {
+                                uploadStatus.innerHTML = '';
+                                uploadStatus.className = '';
+                            }
+                        }, 2000);
+
+                        // Always refresh snapshots list to show "Currently Loaded" status
+                        // (even if not currently on snapshots tab, for when user navigates there later)
+                        setTimeout(() => {
+                            refreshSnapshotsList();
+                        }, 200);
+
+                    } else {
+                        showStatus('Error: Snapshot not found or corrupted', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error loading snapshot:', error);
+                    showStatus('Error loading snapshot: ' + error.message, 'error');
                 }
-            } catch (error) {
-                console.error('Error loading snapshot:', error);
-                showStatus('Error loading snapshot: ' + error.message, 'error');
             }
-        }
 
         //===========================================================================
         // saveCurrentCollectionForRecovery() - Automatically save collection for session recovery
@@ -5193,11 +5215,15 @@
                 statusDiv.style.display = 'block';
                 statusDiv.className = 'status-loading';
                 statusDiv.innerHTML = `
-            <div style="padding: 1rem; border-radius: 0.5rem;">
-                📡 Loading ${sampleData.label} collection data...
-            </div>
-        `;
+        <div style="padding: 1rem; border-radius: 0.5rem;">
+            📡 Loading ${sampleData.label} collection data...
+        </div>
+    `;
                 loadBtn.disabled = true;
+
+                // Record start time for minimum display duration
+                const loadStartTime = Date.now();
+                const minimumDisplayTime = 800; // milliseconds
 
                 // Construct GitHub raw URL
                 const csvUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/refs/heads/master/${SAMPLE_DATA_PATH}/${selectedYear}/${selectedMonth}.csv`;
@@ -5212,6 +5238,12 @@
                 }
 
                 const csvText = await response.text();
+
+                // Ensure minimum display time has elapsed
+                const elapsed = Date.now() - loadStartTime;
+                if (elapsed < minimumDisplayTime) {
+                    await new Promise(resolve => setTimeout(resolve, minimumDisplayTime - elapsed));
+                }
 
                 // Parse the CSV using existing parsing logic
                 const data = parseCSV(csvText);
@@ -5233,10 +5265,7 @@
                     initializeFuzzySearch();
                     saveCurrentCollectionForRecovery();
 
-                    // Show parsing results and switch to compact mode
-                    // The user will see parsing details and can dismiss them
-                    
-                // Hide the large upload area but keep parsing results visible
+                    // Hide the large upload area but keep parsing results visible
                     const uploadArea = document.querySelector('.upload-area');
                     uploadArea.style.display = 'none';
 
@@ -5247,20 +5276,20 @@
                         headerUpload = document.createElement('div');
                         headerUpload.id = 'headerUpload';
                         headerUpload.style.cssText = `
-                            margin-left: auto;
-                            padding: 0.5rem 1rem;
-                            background: #f3f4f6;
-                            border: 1px solid #d1d5db;
-                            border-radius: 0.5rem;
-                            cursor: pointer;
-                            transition: all 0.2s;
-                            display: flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                            font-size: 0.875rem;
-                            color: #374151;
-                            font-weight: 500;
-                        `;
+                margin-left: auto;
+                padding: 0.5rem 1rem;
+                background: #f3f4f6;
+                border: 1px solid #d1d5db;
+                border-radius: 0.5rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.875rem;
+                color: #374151;
+                font-weight: 500;
+            `;
 
                         // Create the file input element first
                         const fileInput = document.createElement('input');
@@ -5270,11 +5299,11 @@
                         fileInput.style.display = 'none';
 
                         headerUpload.innerHTML = `
-                            <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                            </svg>
-                            <span>📁 Upload New Collection</span>
-                        `;
+                <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <span>📁 Upload New Collection</span>
+            `;
 
                         // Append the file input
                         headerUpload.appendChild(fileInput);
