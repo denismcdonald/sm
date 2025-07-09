@@ -428,6 +428,78 @@
             border-bottom-color: #bfdbfe;
         }
 
+    /* Author Other Titles Table Styles */
+        #authorOtherTitlesTable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            background: white;
+        }
+
+        #authorOtherTitlesTable th {
+            background-color: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.75rem 0.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            user-select: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        #authorOtherTitlesTable th:hover {
+            background-color: #f3f4f6;
+        }
+
+        #authorOtherTitlesTable th.sortable {
+            position: relative;
+            padding-right: 1.5rem;
+        }
+
+        #authorOtherTitlesTable th .sort-icon {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+
+        #authorOtherTitlesTable th:hover .sort-icon {
+            opacity: 0.6;
+        }
+
+        #authorOtherTitlesTable th.sorted .sort-icon {
+            opacity: 1;
+        }
+
+        #authorOtherTitlesTable th.sorted.asc .sort-icon {
+            transform: translateY(-50%) rotate(0deg);
+        }
+
+        #authorOtherTitlesTable th.sorted.desc .sort-icon {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        #authorOtherTitlesTable td {
+            border-bottom: 1px solid #f3f4f6;
+            padding: 0.75rem 0.5rem;
+            color: #6b7280;
+            vertical-align: top;
+        }
+
+        #authorOtherTitlesTable tr {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #authorOtherTitlesTable tr:hover {
+            background-color: #f9fafb;
+        }
+
         .result-title {
             font-weight: 500;
             color: #111827;
@@ -1306,15 +1378,51 @@
                                 style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">▼ Collapse</button>
                         </div>
                         <div class="results-container" style="max-height: 20rem;">
-                            <table class="search-results-table" id="authorOtherTitlesTable">
+                            <table class="analysis-table sortable-table" id="authorOtherTitlesTable">
                                 <thead>
                                     <tr>
-                                        <th>Title</th>
-                                        <th>Author</th>
-                                        <th>Year</th>
-                                        <th>Circulation</th>
-                                        <th>Collection</th>
-                                        <th>Branch</th>
+                                        <th class="sortable" data-sort="title" data-type="text">
+                                            Title
+                                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                style="width: 1rem; height: 1rem;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                        </th>
+                                        <th class="sortable" data-sort="author" data-type="text">
+                                            Author
+                                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                style="width: 1rem; height: 1rem;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                        </th>
+                                        <th class="sortable" data-sort="year" data-type="number">
+                                            Year
+                                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                style="width: 1rem; height: 1rem;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                        </th>
+                                        <th class="sortable" data-sort="circulation" data-type="number">
+                                            Circulation
+                                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                style="width: 1rem; height: 1rem;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                        </th>
+                                        <th class="sortable" data-sort="collection" data-type="text">
+                                            Collection
+                                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                style="width: 1rem; height: 1rem;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                        </th>
+                                        <th class="sortable" data-sort="branch" data-type="text">
+                                            Branch
+                                            <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                style="width: 1rem; height: 1rem;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="authorOtherTitlesBody">
@@ -2698,7 +2806,8 @@
             comparison: { field: null, direction: 'asc' },
             highPerformers: { field: null, direction: 'asc' },
             grubby: { field: null, direction: 'asc' },
-            newItems: { field: null, direction: 'asc' }
+            newItems: { field: null, direction: 'asc' },
+            authorOtherTitles: { field: null, direction: 'asc' }
         };
 
         //===========================================================================
@@ -3112,6 +3221,9 @@
                     break;
                 case 'author':
                     sortAuthorTable(field, newDirection);
+                    break;
+                case 'authorOtherTitles':
+                    sortAuthorOtherTitles(field, newDirection);
                     break;
                 case 'comparison':
                     sortComparisonTable(field, newDirection);
@@ -9303,6 +9415,73 @@
             }
         }
 
+    //===========================================================================
+        // setupAuthorOtherTitlesSorting() - Setup sorting for author other titles table
+        //===========================================================================
+        function setupAuthorOtherTitlesSorting() {
+            const headers = document.querySelectorAll('#authorOtherTitlesTable th.sortable');
+
+            headers.forEach(header => {
+                // Remove existing listeners by cloning
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                // Add new click listener
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    const dataType = this.getAttribute('data-type');
+                    sortAuthorOtherTitles(field, dataType);
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
+        // sortAuthorOtherTitles() - Sort author other titles table
+        //===========================================================================
+        function sortAuthorOtherTitles(field, direction) {
+            if (!window.currentAuthorOtherTitles) return;
+
+            // Update sort state
+            tableSortStates.authorOtherTitles = { field, direction };
+
+            // Determine data type based on field
+            const dataType = ['year', 'circulation'].includes(field) ? 'number' : 'text';
+
+            // Sort the books
+            const sortedBooks = sortTableData(window.currentAuthorOtherTitles, field, direction, dataType);
+
+            // Re-render the table
+            const tableBody = document.getElementById('authorOtherTitlesBody');
+            tableBody.innerHTML = sortedBooks.map(book => `
+        <tr data-barcode="${escapeHtml(book.barcode)}" onclick="selectBookFromOtherTitles('${escapeHtml(book.barcode)}')" style="cursor: pointer;">
+            <td>
+                <div class="result-title">
+                    <strong>${escapeHtml(book.title)}</strong>
+                </div>
+                <div class="result-meta">${escapeHtml(book.callNumber)}</div>
+            </td>
+            <td>
+                <div class="result-author">${escapeHtml(book.author)}</div>
+            </td>
+            <td>${escapeHtml(book.year || 'Unknown')}</td>
+            <td><strong>${book.circulation}</strong></td>
+            <td>
+                <div style="font-size: 0.75rem;">${escapeHtml(book.collection)}</div>
+            </td>
+            <td>
+                <div style="font-size: 0.75rem; color: #2563eb; font-weight: 500;">${escapeHtml(book.branch || 'Unknown')}</div>
+            </td>
+        </tr>
+    `).join('');
+
+            // Update sort icons
+            updateSortIcons('authorOtherTitles');
+        }
+
         //===========================================================================
         // clearAuthorTitlesSort() - Clear author titles table sort
         //===========================================================================
@@ -9774,6 +9953,9 @@
                     </td>
                 </tr>
             `).join('');
+
+            // Store current author books for sorting
+            window.currentAuthorOtherTitles = authorBooks;
 
             // Show the section
             document.getElementById('authorOtherTitlesSection').style.display = 'block';
@@ -10348,6 +10530,8 @@
                         tableType = 'weeding';
                     } else if (table.id === 'authorTable') {
                         tableType = 'author';
+                    } else if (table.id === 'authorOtherTitlesTable') {
+                        tableType = 'authorOtherTitles';
                     }
 
                     if (field) {
