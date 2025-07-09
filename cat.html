@@ -36,6 +36,7 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            position: relative;
         }
 
         .header-content:hover {
@@ -426,78 +427,6 @@
 
         .search-results-table tr.selected td {
             border-bottom-color: #bfdbfe;
-        }
-
-    /* Author Other Titles Table Styles */
-        #authorOtherTitlesTable {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.875rem;
-            background: white;
-        }
-
-        #authorOtherTitlesTable th {
-            background-color: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 0.75rem 0.5rem;
-            text-align: left;
-            font-weight: 600;
-            color: #374151;
-            cursor: pointer;
-            user-select: none;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        #authorOtherTitlesTable th:hover {
-            background-color: #f3f4f6;
-        }
-
-        #authorOtherTitlesTable th.sortable {
-            position: relative;
-            padding-right: 1.5rem;
-        }
-
-        #authorOtherTitlesTable th .sort-icon {
-            position: absolute;
-            right: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.3;
-            transition: opacity 0.2s;
-        }
-
-        #authorOtherTitlesTable th:hover .sort-icon {
-            opacity: 0.6;
-        }
-
-        #authorOtherTitlesTable th.sorted .sort-icon {
-            opacity: 1;
-        }
-
-        #authorOtherTitlesTable th.sorted.asc .sort-icon {
-            transform: translateY(-50%) rotate(0deg);
-        }
-
-        #authorOtherTitlesTable th.sorted.desc .sort-icon {
-            transform: translateY(-50%) rotate(180deg);
-        }
-
-        #authorOtherTitlesTable td {
-            border-bottom: 1px solid #f3f4f6;
-            padding: 0.75rem 0.5rem;
-            color: #6b7280;
-            vertical-align: top;
-        }
-
-        #authorOtherTitlesTable tr {
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        #authorOtherTitlesTable tr:hover {
-            background-color: #f9fafb;
         }
 
         .result-title {
@@ -1115,13 +1044,14 @@
                     fill="#2563eb" />
             </svg>
             <div class="header-text">
-                <h1>Vitalstatistix!</h1>
+                <h1>Glenelg Libraries</h1>
                 <p>Collection Analysis Tool (CAT)</p>
             </div>
             <!-- In the tab-navigation div -->
             <div id="currentCollectionStatus" onclick="event.stopPropagation(); showTab('snapshots');" style="
-                margin-left: auto; 
-                margin-right: 1rem;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
                 padding: 0.5rem 0.75rem;
                 background: #f0f9ff;
                 border: 1px solid #0284c7;
@@ -1182,6 +1112,32 @@
         <div class="container">
             <!-- Global Branch Filter -->
 
+<!-- Compact Sample Data Selection -->
+<div
+    style="margin-bottom: 1rem; padding: 0.75rem 1rem; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem;">
+    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; justify-content: space-between;">
+        <div
+            style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #374151; font-weight: 500;">
+            <span>📊</span>
+            <span>Load Stored Collection:</span>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <select id="sampleYear" style="padding: 0.25rem 0.5rem; font-size: 0.875rem; min-width: 80px;"
+                onchange="updateSampleMonths()">
+                <option value="">Year...</option>
+            </select>
+            <select id="sampleMonth" style="padding: 0.25rem 0.5rem; font-size: 0.875rem; min-width: 100px;" disabled>
+                <option value="">Month...</option>
+            </select>
+            <button id="loadSampleBtn" class="btn btn-primary" onclick="loadSampleData()" disabled
+                style="font-size: 0.75rem; padding: 0.25rem 0.75rem;">
+                Load
+            </button>
+        </div>
+    </div>
+    <div id="sampleLoadingStatus" style="margin-top: 0.5rem; display: none;"></div>
+</div>
+
             <!-- Upload Area (shown when no data loaded) -->
             <div id="uploadSection">
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
@@ -1190,6 +1146,9 @@
                     <input type="file" id="fileInput" accept=".csv" style="display: none;">
                     <button class="btn btn-primary" style="margin-top: 1rem;">Choose File</button>
                 </div>
+                
+                <!-- NEW: Sample Data Selection -->
+                
                 <div id="uploadStatus"></div>
             </div>
 
@@ -1364,17 +1323,14 @@
                 <div id="authorOtherTitlesSection"
                     style="display: none; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
                     <div class="panel">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <h4 id="authorOtherTitlesHeader">Other titles by this author</h4>
-                                <button class="btn btn-primary" id="viewAuthorPerformanceBtn"
-                                    onclick="viewAuthorPerformance()"
+                                <button class="btn btn-primary" id="viewAuthorPerformanceBtn" onclick="viewAuthorPerformance()"
                                     style="font-size: 0.75rem; padding: 0.25rem 0.75rem; margin-left: 1rem;">📊 View
                                     Performance</button>
                             </div>
-                            <button class="btn btn-secondary" id="toggleAuthorTitlesBtn"
-                                onclick="toggleAuthorOtherTitles()"
+                            <button class="btn btn-secondary" id="toggleAuthorTitlesBtn" onclick="toggleAuthorOtherTitles()"
                                 style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">▼ Collapse</button>
                         </div>
                         <div class="results-container" style="max-height: 20rem;">
@@ -1385,47 +1341,54 @@
                                             Title
                                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                                 style="width: 1rem; height: 1rem;">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                                </path>
                                             </svg>
                                         </th>
                                         <th class="sortable" data-sort="author" data-type="text">
                                             Author
                                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                                 style="width: 1rem; height: 1rem;">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                                </path>
                                             </svg>
                                         </th>
                                         <th class="sortable" data-sort="year" data-type="number">
                                             Year
                                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                                 style="width: 1rem; height: 1rem;">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                                </path>
                                             </svg>
                                         </th>
                                         <th class="sortable" data-sort="circulation" data-type="number">
                                             Circulation
                                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                                 style="width: 1rem; height: 1rem;">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                                </path>
                                             </svg>
                                         </th>
                                         <th class="sortable" data-sort="collection" data-type="text">
                                             Collection
                                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                                 style="width: 1rem; height: 1rem;">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                                </path>
                                             </svg>
                                         </th>
                                         <th class="sortable" data-sort="branch" data-type="text">
                                             Branch
                                             <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                                 style="width: 1rem; height: 1rem;">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7">
+                                                </path>
                                             </svg>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody id="authorOtherTitlesBody">
+                                    <!-- Table rows will be populated by JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -1736,14 +1699,14 @@
                         <summary
                             style="cursor: pointer; font-weight: bold; color: #374151; display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; list-style: none;">
                             <span style="display: flex; align-items: center;">
-                                <span
-                                    style="margin-right: 0.5rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block;"
+                                <span style="margin-right: 0.5rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block;"
                                     class="disclosure-arrow">▶</span>
                                 📊 Age vs Circulation Analysis
                             </span>
-                            <span style="font-size: 0.875rem; color: #6b7280; font-weight: normal;">
-                                Visual decision matrix for weeding
-                            </span>
+                            <button class="btn btn-secondary" onclick="exportAgeCirculationData()"
+                                style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" title="Export all items currently shown in chart">
+                                📊 Export Chart Data
+                            </button>
                         </summary>
 
                         <div style="margin-top: 1rem;">
@@ -2536,6 +2499,7 @@
             </div>
             <div id="comparisonResults"></div>
         </div>
+
         <!-- Added Items Analysis -->
         <div class="analysis-section" id="addedItemsSection" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -2791,6 +2755,16 @@
         // Global branch filtering
         let availableBranches = [];
         let currentBranchFilter = '';
+
+        // Sample data configuration
+            const GITHUB_REPO = 'denismcdonald/denismcdonald.github.io';
+            const SAMPLE_DATA_PATH = 'data';
+            const AVAILABLE_SAMPLES = {
+                2025: [
+                    { value: 'June-2025', label: 'June 2025' }
+                    // Add more months as you upload them
+                ]
+            };
 
         // Pagination state
         let allSearchResults = []; // Store all search results
@@ -5135,6 +5109,246 @@
         }
 
         //===========================================================================
+        // Sample Data Management Functions
+        //===========================================================================
+
+        //===========================================================================
+        // initializeSampleDataSelectors() - Populate year dropdown on page load
+        //===========================================================================
+        function initializeSampleDataSelectors() {
+            const yearSelect = document.getElementById('sampleYear');
+            if (!yearSelect) return;
+
+            // Clear existing options except the first
+            yearSelect.innerHTML = '<option value="">Select year...</option>';
+
+            // Add available years
+            Object.keys(AVAILABLE_SAMPLES).sort((a, b) => b - a).forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+        }
+
+        //===========================================================================
+        // updateSampleMonths() - Update month dropdown based on selected year
+        //===========================================================================
+        function updateSampleMonths() {
+            const yearSelect = document.getElementById('sampleYear');
+            const monthSelect = document.getElementById('sampleMonth');
+            const loadBtn = document.getElementById('loadSampleBtn');
+
+            const selectedYear = yearSelect.value;
+
+            // Clear month options
+            monthSelect.innerHTML = '<option value="">Select month...</option>';
+            monthSelect.disabled = !selectedYear;
+            loadBtn.disabled = true;
+
+            if (selectedYear && AVAILABLE_SAMPLES[selectedYear]) {
+                // Add months for selected year (most recent first)
+                AVAILABLE_SAMPLES[selectedYear].slice().reverse().forEach(month => {
+                    const option = document.createElement('option');
+                    option.value = month.value;
+                    option.textContent = `${month.label} (${month.items} items)`;
+                    monthSelect.appendChild(option);
+                });
+
+                monthSelect.disabled = false;
+
+                // Enable load button when month is selected
+                monthSelect.addEventListener('change', function () {
+                    loadBtn.disabled = !this.value;
+                });
+            }
+        }
+
+        //===========================================================================
+        // loadSampleData() - Fetch and load selected sample CSV from GitHub
+        //===========================================================================
+        async function loadSampleData() {
+            const yearSelect = document.getElementById('sampleYear');
+            const monthSelect = document.getElementById('sampleMonth');
+            const statusDiv = document.getElementById('sampleLoadingStatus');
+            const loadBtn = document.getElementById('loadSampleBtn');
+
+            const selectedYear = yearSelect.value;
+            const selectedMonth = monthSelect.value;
+
+            if (!selectedYear || !selectedMonth) {
+                alert('Please select both year and month');
+                return;
+            }
+
+            // Find the sample metadata
+            const sampleData = AVAILABLE_SAMPLES[selectedYear].find(s => s.value === selectedMonth);
+            if (!sampleData) {
+                alert('Sample data not found');
+                return;
+            }
+
+            try {
+                // Show loading status
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'status-loading';
+                statusDiv.innerHTML = `
+            <div style="padding: 1rem; border-radius: 0.5rem;">
+                📡 Loading ${sampleData.label} collection data...
+            </div>
+        `;
+                loadBtn.disabled = true;
+
+                // Construct GitHub raw URL
+                const csvUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/refs/heads/master/${SAMPLE_DATA_PATH}/${selectedYear}/${selectedMonth}.csv`;
+
+                console.log('Fetching sample data from:', csvUrl);
+
+                // Fetch the CSV file
+                const response = await fetch(csvUrl);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const csvText = await response.text();
+
+                // Parse the CSV using existing parsing logic
+                const data = parseCSV(csvText);
+
+                if (data && data.length > 0) {
+                    // Set as library data
+                    libraryData = data;
+
+                    // Clear current snapshot ID since this is sample data
+                    currentSnapshotId = null;
+
+                    // Update header status with sample data indicator
+                    updateCurrentCollectionStatus();
+
+                    // Update branch filter options
+                    updateBranchFilter();
+
+                    // Initialize search and save for recovery
+                    initializeFuzzySearch();
+                    saveCurrentCollectionForRecovery();
+
+                    // Show parsing results and switch to compact mode
+                    // The user will see parsing details and can dismiss them
+                    
+                // Hide the large upload area but keep parsing results visible
+                    const uploadArea = document.querySelector('.upload-area');
+                    uploadArea.style.display = 'none';
+
+                    // Add compact upload to header if not already there
+                    let headerUpload = document.getElementById('headerUpload');
+                    if (!headerUpload) {
+                        const headerContent = document.querySelector('.header-content');
+                        headerUpload = document.createElement('div');
+                        headerUpload.id = 'headerUpload';
+                        headerUpload.style.cssText = `
+                            margin-left: auto;
+                            padding: 0.5rem 1rem;
+                            background: #f3f4f6;
+                            border: 1px solid #d1d5db;
+                            border-radius: 0.5rem;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            font-size: 0.875rem;
+                            color: #374151;
+                            font-weight: 500;
+                        `;
+
+                        // Create the file input element first
+                        const fileInput = document.createElement('input');
+                        fileInput.type = 'file';
+                        fileInput.id = 'fileInputCompact';
+                        fileInput.accept = '.csv';
+                        fileInput.style.display = 'none';
+
+                        headerUpload.innerHTML = `
+                            <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <span>📁 Upload New Collection</span>
+                        `;
+
+                        // Append the file input
+                        headerUpload.appendChild(fileInput);
+
+                        // Add hover effect
+                        headerUpload.addEventListener('mouseenter', () => {
+                            headerUpload.style.backgroundColor = '#e5e7eb';
+                            headerUpload.style.borderColor = '#2563eb';
+                        });
+                        headerUpload.addEventListener('mouseleave', () => {
+                            headerUpload.style.backgroundColor = '#f3f4f6';
+                            headerUpload.style.borderColor = '#d1d5db';
+                        });
+
+                        // Add click handler
+                        headerUpload.onclick = () => fileInput.click();
+
+                        // Add file input listener
+                        fileInput.addEventListener('change', (e) => {
+                            if (e.target.files.length > 0) {
+                                handleFile(e.target.files[0]);
+                            }
+                        });
+
+                        headerContent.appendChild(headerUpload);
+                    }
+
+                    // Hide the sample loading status since parsing results will show instead
+                    statusDiv.style.display = 'none';
+                    statusDiv.innerHTML = '';
+                    statusDiv.className = '';
+
+                    // Show the main interface
+                    document.getElementById('uploadSection').style.display = 'block';
+                    document.getElementById('searchTab').classList.remove('hidden');
+
+                } else {
+                    throw new Error('No valid data found in CSV file');
+                }
+
+            } catch (error) {
+                console.error('Error loading sample data:', error);
+
+                // Show error status
+                statusDiv.className = 'status-error';
+                statusDiv.innerHTML = `
+            <div style="padding: 1rem; border-radius: 0.5rem;">
+                ❌ Error loading ${sampleData.label}: ${error.message}
+                <br><small>The sample file may not be uploaded yet or there may be a network issue.</small>
+            </div>
+        `;
+
+                // Auto-hide error after 10 seconds
+                setTimeout(() => {
+                    dismissSampleStatus();
+                }, 10000);
+            } finally {
+                loadBtn.disabled = false;
+            }
+        }
+
+        //===========================================================================
+        // dismissSampleStatus() - Hide sample loading status
+        //===========================================================================
+        function dismissSampleStatus() {
+            const statusDiv = document.getElementById('sampleLoadingStatus');
+            if (statusDiv) {
+                statusDiv.style.display = 'none';
+                statusDiv.innerHTML = '';
+                statusDiv.className = '';
+            }
+        }
+
+        //===========================================================================
         // parseCSVLine() - Parse a single CSV line handling your specific format
         //===========================================================================
         function parseCSVLine(line) {
@@ -6712,7 +6926,7 @@
             const loadedFrom = currentSnapshotId ? 'Loaded from snapshot' : 'Recently uploaded';
 
             currentCollectionDetails.innerHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
             <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #16a34a;">
                 <div style="font-weight: bold; color: #16a34a;">Total Items</div>
                 <div style="font-size: 1.5rem; font-weight: bold;">${totalItems.toLocaleString()}</div>
@@ -8078,6 +8292,97 @@
         }
 
         //===========================================================================
+        // exportAgeCirculationData() - Export all items currently displayed in age vs circulation chart
+        //===========================================================================
+        function exportAgeCirculationData() {
+                // Check if the chart exists and is visible
+                if (!window.ageCirculationChartInstance) {
+                    alert('Chart must be open to export data. Please expand the Age vs Circulation Analysis section first.');
+                    return;
+                }
+
+                const chart = window.ageCirculationChartInstance;
+
+                // Get only the visible datasets (respecting Chart.js legend filtering)
+                const visibleDatasets = chart.data.datasets.filter((dataset, index) => {
+                    // Check if this dataset is currently visible (not hidden by legend clicks)
+                    return chart.isDatasetVisible(index);
+                });
+
+                if (visibleDatasets.length === 0) {
+                    alert('No visible data categories to export. Please ensure at least one category is visible in the chart legend.');
+                    return;
+                }
+
+                // Collect all data points from visible datasets
+                const visibleDataPoints = [];
+                visibleDatasets.forEach(dataset => {
+                    dataset.data.forEach(point => {
+                        if (point.barcode) {
+                            // Find the full item data using the barcode
+                            const item = libraryData.find(item => item.barcode === point.barcode);
+                            if (item) {
+                                visibleDataPoints.push(item);
+                            }
+                        }
+                    });
+                });
+
+                if (visibleDataPoints.length === 0) {
+                    alert('No data points found to export');
+                    return;
+                }
+
+                const headers = ['Title', 'Author', 'Year', 'Age (Years)', 'Circulation', 'Collection', 'Call Number', 'Category', 'Branch'];
+
+                const grubbyThreshold = parseInt(document.getElementById('grubbyThreshold').value);
+                const circulationThreshold = parseInt(document.getElementById('circulationThreshold').value);
+                const ageFilter = document.getElementById('ageFilter').value;
+
+                const data = visibleDataPoints.map(item => {
+                    const age = getItemAge(item.year);
+                    const circulation = item.circulation;
+
+                    // Determine category (same logic as chart)
+                    let category = 'Others';
+                    const lowCirculation = circulationThreshold === 0
+                        ? circulation === 0
+                        : circulation < circulationThreshold;
+                    const meetsAgeFilter = ageFilter === 'none' || age >= parseInt(ageFilter);
+
+                    if (lowCirculation && meetsAgeFilter) {
+                        category = 'Weeding Candidates';
+                    } else if (circulation >= grubbyThreshold) {
+                        category = 'Grubby Items';
+                    } else if (circulation >= 15) {
+                        category = 'Good Performers';
+                    }
+
+                    return [
+                        item.title || '',
+                        item.author || '',
+                        item.year || '',
+                        age,
+                        circulation,
+                        item.collection || '',
+                        item.callNumber || '',
+                        category,
+                        item.branch || ''
+                    ];
+                });
+
+                // Sort by circulation (highest first) for consistency
+                data.sort((a, b) => b[4] - a[4]);
+
+                const today = new Date().toISOString().split('T')[0];
+                const visibleCategories = visibleDatasets.map(d => d.label).join('-');
+                let filename = `age-circulation-visible-${today}-${visibleCategories.toLowerCase().replace(/\s+/g, '-')}`;
+                filename += `.xlsx`;
+
+                createExcelFile(data, headers, filename, 'Age vs Circulation Analysis');
+            }
+
+        //===========================================================================
         // exportGrubbyItems() - Export grubby items to Excel
         //===========================================================================
         function exportGrubbyItems() {
@@ -9415,73 +9720,6 @@
             }
         }
 
-    //===========================================================================
-        // setupAuthorOtherTitlesSorting() - Setup sorting for author other titles table
-        //===========================================================================
-        function setupAuthorOtherTitlesSorting() {
-            const headers = document.querySelectorAll('#authorOtherTitlesTable th.sortable');
-
-            headers.forEach(header => {
-                // Remove existing listeners by cloning
-                const newHeader = header.cloneNode(true);
-                header.parentNode.replaceChild(newHeader, header);
-
-                // Add new click listener
-                newHeader.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const field = this.getAttribute('data-sort');
-                    const dataType = this.getAttribute('data-type');
-                    sortAuthorOtherTitles(field, dataType);
-                });
-
-                newHeader.style.cursor = 'pointer';
-            });
-        }
-
-        //===========================================================================
-        // sortAuthorOtherTitles() - Sort author other titles table
-        //===========================================================================
-        function sortAuthorOtherTitles(field, direction) {
-            if (!window.currentAuthorOtherTitles) return;
-
-            // Update sort state
-            tableSortStates.authorOtherTitles = { field, direction };
-
-            // Determine data type based on field
-            const dataType = ['year', 'circulation'].includes(field) ? 'number' : 'text';
-
-            // Sort the books
-            const sortedBooks = sortTableData(window.currentAuthorOtherTitles, field, direction, dataType);
-
-            // Re-render the table
-            const tableBody = document.getElementById('authorOtherTitlesBody');
-            tableBody.innerHTML = sortedBooks.map(book => `
-        <tr data-barcode="${escapeHtml(book.barcode)}" onclick="selectBookFromOtherTitles('${escapeHtml(book.barcode)}')" style="cursor: pointer;">
-            <td>
-                <div class="result-title">
-                    <strong>${escapeHtml(book.title)}</strong>
-                </div>
-                <div class="result-meta">${escapeHtml(book.callNumber)}</div>
-            </td>
-            <td>
-                <div class="result-author">${escapeHtml(book.author)}</div>
-            </td>
-            <td>${escapeHtml(book.year || 'Unknown')}</td>
-            <td><strong>${book.circulation}</strong></td>
-            <td>
-                <div style="font-size: 0.75rem;">${escapeHtml(book.collection)}</div>
-            </td>
-            <td>
-                <div style="font-size: 0.75rem; color: #2563eb; font-weight: 500;">${escapeHtml(book.branch || 'Unknown')}</div>
-            </td>
-        </tr>
-    `).join('');
-
-            // Update sort icons
-            updateSortIcons('authorOtherTitles');
-        }
-
         //===========================================================================
         // clearAuthorTitlesSort() - Clear author titles table sort
         //===========================================================================
@@ -9522,6 +9760,49 @@
             }
 
             updateAuthorTitlesSortIcons(null, null);
+        }
+
+        //===========================================================================
+        // sortAuthorOtherTitles() - Sort author other titles table
+        //===========================================================================
+        function sortAuthorOtherTitles(field, direction) {
+            if (!window.currentAuthorOtherTitles) return;
+
+            // Update sort state
+            tableSortStates.authorOtherTitles = { field, direction };
+
+            // Determine data type based on field
+            const dataType = ['year', 'circulation'].includes(field) ? 'number' : 'text';
+
+            // Sort the books
+            const sortedBooks = sortTableData(window.currentAuthorOtherTitles, field, direction, dataType);
+
+            // Re-render the table
+            const tableBody = document.getElementById('authorOtherTitlesBody');
+            tableBody.innerHTML = sortedBooks.map(book => `
+                <tr data-barcode="${escapeHtml(book.barcode)}" onclick="selectBookFromOtherTitles('${escapeHtml(book.barcode)}')" style="cursor: pointer;">
+                    <td>
+                        <div class="result-title">
+                            <strong>${escapeHtml(book.title)}</strong>
+                        </div>
+                        <div class="result-meta">${escapeHtml(book.callNumber)}</div>
+                    </td>
+                    <td>
+                        <div class="result-author">${escapeHtml(book.author)}</div>
+                    </td>
+                    <td>${escapeHtml(book.year || 'Unknown')}</td>
+                    <td><strong>${book.circulation}</strong></td>
+                    <td>
+                        <div style="font-size: 0.75rem;">${escapeHtml(book.collection)}</div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.75rem; color: #2563eb; font-weight: 500;">${escapeHtml(book.branch || 'Unknown')}</div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Update sort icons
+            updateSortIcons('authorOtherTitles');
         }
 
         //===========================================================================
@@ -9954,7 +10235,7 @@
                 </tr>
             `).join('');
 
-            // Store current author books for sorting
+        // Store current author books for sorting
             window.currentAuthorOtherTitles = authorBooks;
 
             // Show the section
@@ -10413,6 +10694,9 @@
         window.showCollectionChangesDetail = showCollectionChangesDetail;
         window.closeCollectionChangesDetail = closeCollectionChangesDetail;
         window.exportCollectionChangesDetail = exportCollectionChangesDetail;
+        window.updateSampleMonths = updateSampleMonths;
+        window.loadSampleData = loadSampleData;
+        window.dismissSampleStatus = dismissSampleStatus;
         window.viewBookDetailsFromCollectionChanges = viewBookDetailsFromCollectionChanges;
 
         // Event listeners
@@ -10422,6 +10706,9 @@
 
             // Setup disclosure arrows
             setupDisclosureArrows();
+
+            // Initialize sample data selectors
+            initializeSampleDataSelectors();
 
             // Initialize IndexedDB
             try {
