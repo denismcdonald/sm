@@ -6059,6 +6059,55 @@
         }
 
         //===========================================================================
+        // isBookCollection() - Check if collection contains actual books
+        //===========================================================================
+        function isBookCollection(collection) {
+            if (!collection) return true; // Default to book if unknown
+
+            const multimediaKeywords = [
+                'dvd', 'bluray', 'blu-ray', 'video', 'film', 'movie', 'cinema',
+                'cd', 'music', 'audio', 'audiobook', 'sound', 'mp3',
+                'game', 'playstation', 'xbox', 'nintendo', 'gaming',
+                'software', 'digital', 'electronic'
+            ];
+
+            const collectionLower = collection.toLowerCase();
+            return !multimediaKeywords.some(keyword => collectionLower.includes(keyword));
+        }
+
+        //===========================================================================
+        // getMediaIcon() - Get appropriate icon for multimedia collections
+        //===========================================================================
+        function getMediaIcon(collection) {
+            if (!collection) return null;
+
+            const collectionLower = collection.toLowerCase();
+
+            if (collectionLower.includes('dvd') || collectionLower.includes('bluray') || collectionLower.includes('video') || collectionLower.includes('movie') || collectionLower.includes('film')) {
+                return `<svg style="width: 2.5rem; height: 2.5rem; color: #7c3aed;" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+        </svg>`;
+            }
+
+            if (collectionLower.includes('cd') || collectionLower.includes('music') || collectionLower.includes('audio')) {
+                return `<svg style="width: 2.5rem; height: 2.5rem; color: #16a34a;" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>`;
+            }
+
+            if (collectionLower.includes('game')) {
+                return `<svg style="width: 2.5rem; height: 2.5rem; color: #dc2626;" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M21.58 16.09l-1.09-7.66C20.21 6.46 18.52 5 16.53 5H7.47C5.48 5 3.79 6.46 3.51 8.43l-1.09 7.66C2.2 17.63 3.39 19 4.94 19h.65c.96 0 1.84-.53 2.29-1.38L9 16h6l1.12 1.62c.45.85 1.33 1.38 2.29 1.38h.65c1.55 0 2.74-1.37 2.52-2.91zM7.5 12C6.67 12 6 11.33 6 10.5S6.67 9 7.5 9 9 9.67 9 10.5 8.33 12 7.5 12zM16.5 12c-.83 0-1.5-.67-1.5-1.5S15.67 9 16.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+        </svg>`;
+            }
+
+            // Default media icon
+            return `<svg style="width: 2.5rem; height: 2.5rem; color: #6b7280;" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/>
+    </svg>`;
+        }
+
+        //===========================================================================
         // isMultimediaCollection() - Check if collection contains multimedia items or other materials that don't require authors
         //===========================================================================
         function isMultimediaCollection(collection) {
@@ -6470,31 +6519,113 @@
         }
 
         //===========================================================================
-        // fetchBookCover() - Fetches book cover image from Google Books API
+        // fetchBookCover() - Enhanced book cover fetching with better matching
         //===========================================================================
         async function fetchBookCover(title, author) {
             const key = `${title}-${author}`;
             if (bookCovers[key]) return bookCovers[key];
 
             try {
-                const query = encodeURIComponent(`${title} ${author}`.trim());
-                const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=1`);
-                const data = await response.json();
+                // Clean and prepare search terms
+                const cleanTitle = title.replace(/[^\w\s]/g, '').trim();
+                const cleanAuthor = author.replace(/[^\w\s]/g, '').trim();
 
-                let imageUrl = null;
-                if (data.items && data.items.length > 0) {
-                    const volumeInfo = data.items[0].volumeInfo;
-                    if (volumeInfo.imageLinks) {
-                        imageUrl = volumeInfo.imageLinks.thumbnail?.replace('http:', 'https:');
+                // Try multiple search strategies
+                const searchQueries = [
+                    // Most specific first - use Google Books field search
+                    `intitle:"${cleanTitle}" inauthor:"${cleanAuthor}"`,
+                    // Fallback to less specific but still structured
+                    `intitle:${cleanTitle} inauthor:${cleanAuthor}`,
+                    // Original approach as final fallback
+                    `${cleanTitle} ${cleanAuthor}`
+                ];
+
+                for (const query of searchQueries) {
+                    const encodedQuery = encodeURIComponent(query);
+                    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodedQuery}&maxResults=5`);
+                    const data = await response.json();
+
+                    if (data.items && data.items.length > 0) {
+                        // Look for the best match among results
+                        const bestMatch = findBestBookMatch(data.items, cleanTitle, cleanAuthor);
+
+                        if (bestMatch && bestMatch.volumeInfo.imageLinks) {
+                            const imageUrl = bestMatch.volumeInfo.imageLinks.thumbnail?.replace('http:', 'https:');
+                            if (imageUrl) {
+                                bookCovers[key] = imageUrl;
+                                return imageUrl;
+                            }
+                        }
                     }
                 }
 
-                bookCovers[key] = imageUrl;
-                return imageUrl;
+                // No suitable match found
+                bookCovers[key] = null;
+                return null;
+
             } catch (error) {
                 console.error('Error fetching book cover:', error);
+                bookCovers[key] = null;
                 return null;
             }
+        }
+
+        //===========================================================================
+        // findBestBookMatch() - Find the best matching book from search results
+        //===========================================================================
+        function findBestBookMatch(items, targetTitle, targetAuthor) {
+            let bestMatch = null;
+            let bestScore = 0;
+
+            for (const item of items) {
+                const volumeInfo = item.volumeInfo;
+                if (!volumeInfo.title || !volumeInfo.authors) continue;
+
+                const bookTitle = volumeInfo.title.toLowerCase().replace(/[^\w\s]/g, '');
+                const bookAuthor = volumeInfo.authors[0].toLowerCase().replace(/[^\w\s]/g, '');
+
+                // Calculate similarity scores
+                const titleScore = calculateSimilarity(targetTitle.toLowerCase(), bookTitle);
+                const authorScore = calculateSimilarity(targetAuthor.toLowerCase(), bookAuthor);
+
+                // Combined score with title weighted more heavily
+                const combinedScore = (titleScore * 0.7) + (authorScore * 0.3);
+
+                // Only consider if both title and author have reasonable similarity
+                if (titleScore > 0.6 && authorScore > 0.4 && combinedScore > bestScore) {
+                    bestScore = combinedScore;
+                    bestMatch = item;
+                }
+            }
+
+            return bestMatch;
+        }
+
+        //===========================================================================
+        // calculateSimilarity() - Simple string similarity calculation
+        //===========================================================================
+        function calculateSimilarity(str1, str2) {
+            if (str1 === str2) return 1.0;
+
+            // Simple word overlap calculation
+            const words1 = str1.split(/\s+/);
+            const words2 = str2.split(/\s+/);
+
+            let matches = 0;
+            const maxWords = Math.max(words1.length, words2.length);
+
+            for (const word1 of words1) {
+                if (word1.length > 2) { // Skip very short words
+                    for (const word2 of words2) {
+                        if (word1.includes(word2) || word2.includes(word1)) {
+                            matches++;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return maxWords > 0 ? matches / maxWords : 0;
         }
 
         //===========================================================================
@@ -6689,16 +6820,24 @@
                 </svg>
             `;
 
-            // THEN load book cover in background (non-blocking)
-            fetchBookCover(currentBook.title, currentBook.author).then(coverUrl => {
-                if (coverUrl && currentBook && currentBook.barcode === barcode) {
-                    // Only update if we're still showing the same book
-                    coverElement.innerHTML = `<img src="${coverUrl}" alt="${escapeHtml(currentBook.title)}">`;
+            // THEN load book cover in background (non-blocking) - but only for books
+            if (isBookCollection(currentBook.collection)) {
+                fetchBookCover(currentBook.title, currentBook.author).then(coverUrl => {
+                    if (coverUrl && currentBook && currentBook.barcode === barcode) {
+                        // Only update if we're still showing the same book
+                        coverElement.innerHTML = `<img src="${coverUrl}" alt="${escapeHtml(currentBook.title)}">`;
+                    }
+                }).catch(error => {
+                    console.log('Book cover loading failed:', error);
+                    // Keep the placeholder icon on error
+                });
+            } else {
+                // For multimedia items, show an appropriate icon instead of trying to fetch a cover
+                const mediaIcon = getMediaIcon(currentBook.collection);
+                if (mediaIcon) {
+                    coverElement.innerHTML = mediaIcon;
                 }
-            }).catch(error => {
-                console.log('Book cover loading failed:', error);
-                // Keep the placeholder icon on error
-            });
+            }
 
             // Smooth scroll to top so user can see the selected book details
             window.scrollTo({
@@ -10730,6 +10869,10 @@
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', async function () {
+
+            // Clear any cached book covers to get fresh results with improved matching
+            bookCovers = {};
+
             // Ensure upload section is visible by default
             document.getElementById('uploadSection').style.display = 'block';
 
