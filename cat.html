@@ -431,7 +431,6 @@
         }
 
         .search-results-table th.sortable {
-            position: relative;
             padding-right: 1.5rem;
         }
 
@@ -623,6 +622,7 @@ div#bookDetails.book-detail .book-cover-section {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-right: 3rem;
     height: 100%;
     justify-content: flex-start;
 }
@@ -646,7 +646,7 @@ div#bookDetails.book-detail .book-cover-section {
     color: #111827;
     margin: 0;
     line-height: 1.2;
-    max-height: 3.6rem;
+    max-height: 3.8rem;
     overflow: hidden;
     word-wrap: break-word;
     hyphens: auto;
@@ -671,6 +671,7 @@ div#bookDetails.book-detail .book-cover-section {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    margin-left: 2.5rem;
     font-size: 0.85rem;
     color: #6b7280;
     font-weight: 500;
@@ -1681,7 +1682,7 @@ div#bookDetails.book-detail .book-cover-section {
                         <!-- Column 4: Second Details -->
                         <div class="book-details-column">
                             <div class="detail-field">
-                                <label>Item Barcode</label>
+                                <label>Item ID</label>
                                 <div>
                                     <span id="detailBarcode"></span>
                                     <button class="copy-btn-small" title="Copy barcode">
