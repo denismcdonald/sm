@@ -1625,6 +1625,7 @@
         #untrackAllWeedingBtn,
         #untrackAllChartModalBtn,
         #collectionUntrackSelectedBtn,
+        #untrackAllTrackingBtn,
         .btn-danger {
             background-color: #d34949;
             color: white;
@@ -1636,7 +1637,8 @@
         #chartModalUntrackSelectedBtn:hover,
         #untrackAllChartModalBtn:hover,
         #untrackAllWeedingBtn:hover,
-        #untrackAllSearchBtn:hover {
+        #untrackAllSearchBtn:hover,
+        #untrackAllTrackingBtn:hover {
             background-color: #ad3c3c;
         }
 
@@ -3482,8 +3484,9 @@
                     </div>
                 </div>
 
-                <div class="filter-controls">
-                    <div class="filter-group">
+                <div class="filter-controls"
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; min-width: 0;">
+                    <div class="filter-group" style="flex-shrink: 1; min-width: 0;">
                         <div class="tracking-mode-selector" id="trackingModeSelector">
                             <label style="font-weight: 500; margin-right: 1rem;">Track items for:</label>
                             <div class="mode-buttons" style="display: inline-flex; gap: 0.5rem; flex-wrap: wrap;">
@@ -3497,7 +3500,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="margin-left: auto; display: flex; gap: 0.5rem; align-items: center;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0;">
                         <button id="emailHeywoodBtn" class="btn btn-secondary" onclick="emailLocationItems('heywood')"
                             style="border-color: #059669; padding: 0.375rem 0.75rem; font-size: 0.8rem;">
                             📧 Heywood
@@ -3514,25 +3517,31 @@
                 </div>
 
                 <!-- Bulk Actions -->
-                <div class="bulk-actions" id="trackingBulkActions">
-                    <button class="bulk-track-btn" id="changeReasonSelectedBtn" onclick="bulkChangeReasonSelected('tracking')" disabled>
-                        Change Reason (0)
-                    </button>
-                    <button class="bulk-track-btn" id="untrackTrackingSelectedBtn" onclick="bulkUntrackSelected('tracking')" disabled>
-                        Untrack Selected (0)
-                    </button>
-                    <button class="bulk-track-btn" id="untrackAllTrackingBtn" onclick="bulkUntrackAll('tracking')">
-                        Untrack All
-                    </button>
-                    <!-- Export Buttons -->
-                    <button id="exportAllTrackingBtn" class="btn btn-secondary" onclick="exportAllTracking()">
-                        📊 Export All
-                    </button>
-                    <button id="exportSelectedTrackingBtn" class="btn btn-secondary" onclick="exportSelectedTracking()" disabled>
-                        📋 Export Selected (0)
-                    </button>
-                    <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-left: 1rem;">
-                        <label for="exportReasonSelect" style="font-size: 0.875rem; font-weight: 500;">Export by reason:</label>
+                <div class="bulk-actions" id="trackingBulkActions"
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; min-width: 0;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-shrink: 1; min-width: 0;">
+                        <button class="bulk-track-btn" id="changeReasonSelectedBtn" onclick="bulkChangeReasonSelected('tracking')"
+                            disabled>
+                            Change Reason (0)
+                        </button>
+                        <button class="bulk-track-btn" id="untrackTrackingSelectedBtn" onclick="bulkUntrackSelected('tracking')"
+                            disabled>
+                            Untrack Selected (0)
+                        </button>
+                        <button class="bulk-track-btn" id="untrackAllTrackingBtn" onclick="bulkUntrackAll('tracking')">
+                            Untrack All
+                        </button>
+                        <!-- Export Buttons -->
+                        <button id="exportAllTrackingBtn" class="btn btn-secondary" onclick="exportAllTracking()">
+                            📊 Export All
+                        </button>
+                        <button id="exportSelectedTrackingBtn" class="btn btn-secondary" onclick="exportSelectedTracking()" disabled>
+                            📋 Export Selected (0)
+                        </button>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+                        <label for="exportReasonSelect" style="font-size: 0.875rem; font-weight: 500; white-space: nowrap;">Export by
+                            reason:</label>
                         <select id="exportReasonSelect" class="form-select" style="width: auto; font-size: 0.875rem;">
                             <option value="send-to-heywood">Heywood</option>
                             <option value="send-to-casterton">Casterton</option>
@@ -5444,6 +5453,10 @@
                     selector = '#newItemsTable th';
                     clearBtnId = 'clearNewItemsSortBtn';
                     break;
+                case 'tracking':
+                    selector = '.tracking-table th';
+                    clearBtnId = ''; // No clear button for tracking table
+                    break;
                 default:
                     return;
             }
@@ -5573,6 +5586,9 @@
                     break;
                 case 'newItems':
                     sortNewItemsTable(field, newDirection);
+                    break;
+                case 'tracking':
+                    sortTrackingTable(field, newDirection);
                     break;
             }
         }
@@ -5817,6 +5833,49 @@
         }
 
         //===========================================================================
+        // sortTrackingTable() - Sort tracking table
+        //===========================================================================
+        function sortTrackingTable(field, direction) {
+            // Update sort state
+            tableSortStates.tracking = { field, direction };
+
+            // Get current table data from DOM (following established pattern)
+            const tableBody = document.querySelector('.tracking-table tbody');
+            const rows = Array.from(tableBody.querySelectorAll('tr[data-barcode]'));
+
+            if (rows.length === 0) return;
+
+            // Extract data from rows for sorting (following weeding table pattern)
+            const data = rows.map(row => {
+                const cells = row.querySelectorAll('td');
+                return {
+                    element: row,
+                    title: cells[1]?.textContent?.trim() || '',
+                    author: cells[2]?.textContent?.trim() || '',
+                    reason: cells[3]?.textContent?.trim() || '',
+                    location: cells[4]?.textContent?.trim() || '',
+                    dateAdded: cells[5]?.textContent?.trim() || ''
+                };
+            });
+
+            // Determine data type based on field
+            const dataType = field === 'dateAdded' ? 'date' : 'text';
+
+            // Sort the data using existing utility function
+            const sortedData = sortTableData(data, field, direction, dataType);
+
+            // Clear table body
+            tableBody.innerHTML = '';
+
+            // Re-append rows in sorted order
+            sortedData.forEach(item => {
+                tableBody.appendChild(item.element);
+            });
+
+            updateSortIcons('tracking');
+        }
+
+        //===========================================================================
         // setupTableSortEventListeners() - Setup event listeners for all sortable tables
         //===========================================================================
         function setupTableSortEventListeners() {
@@ -5829,7 +5888,8 @@
                 { selector: '#collectionTable th.sortable', type: 'collection' },
                 { selector: '#weedingTable th.sortable', type: 'weeding' },
                 { selector: '#authorTable th.sortable', type: 'author' },
-                { selector: '#grubbyTable th.sortable', type: 'grubby' }
+                { selector: '#grubbyTable th.sortable', type: 'grubby' },
+                { selector: '.tracking-table th.sortable', type: 'tracking' }
             ];
 
             tableConfigs.forEach(config => {
@@ -6841,8 +6901,6 @@
                 // Also refresh the main tracking table to show the newly tracked item
                 trackingDataLoaded = false;
                 await loadTrackingTab();
-
-                showStatus(`Item tracked for ${formatTrackingReason(reason)}`, 'success');
 
                 showStatus(`Item tracked for ${formatTrackingReason(reason)}`, 'success');
             } catch (error) {
@@ -15351,10 +15409,38 @@
         }
 
         //===========================================================================
+        // setupTrackingTableSorting() - Setup sorting for tracking table
+        //===========================================================================
+        function setupTrackingTableSorting() {
+            const headers = document.querySelectorAll('.tracking-table th.sortable');
+
+            headers.forEach(header => {
+                // Remove existing listeners by cloning
+                const newHeader = header.cloneNode(true);
+                header.parentNode.replaceChild(newHeader, header);
+
+                // Add new click listener
+                newHeader.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const field = this.getAttribute('data-sort');
+                    handleHeaderClick(field, 'tracking');
+                });
+
+                newHeader.style.cursor = 'pointer';
+            });
+        }
+
+        //===========================================================================
         // refreshTrackingTable() - Refresh tracking items table
         //===========================================================================
-        function refreshTrackingTable() {
-            const trackingArray = Array.from(trackedItemsCache.values());
+        function refreshTrackingTable(providedData = null) {
+            let trackingArray;
+            if (providedData) {
+                trackingArray = providedData;
+            } else {
+                trackingArray = Array.from(trackedItemsCache.values());
+            }
 
             if (trackingArray.length === 0) {
                 document.getElementById('trackingTableContainer').innerHTML = `
@@ -15381,11 +15467,36 @@
                             <th style="width: 40px; text-align: center;">
                                 <input type="checkbox" class="select-all-checkbox" onchange="toggleAllItems(this, 'tracking')">
                             </th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Reason</th>
-                            <th>Location</th>
-                            <th>Date Added</th>
+                            <th class="sortable" data-sort="title" data-type="text">
+                                Title
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="author" data-type="text">
+                                Author
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="reason" data-type="text">
+                                Reason
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="location" data-type="text">
+                                Location
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="dateAdded" data-type="date">
+                                Date Added
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -15395,15 +15506,15 @@
                                 <td style="text-align: center;">
                                     <input type="checkbox" class="item-checkbox tracking-item-checkbox" value="${item.barcode}">
                                 </td>
-                                <td><strong>${escapeHtml(item.title)}</strong></td>
-                                <td>${escapeHtml(item.author)}</td>
-                                <td>
+                                <td onclick="selectBookFromTable('${item.barcode}')" style="cursor: pointer;"><strong>${escapeHtml(item.title)}</strong></td>
+                                <td onclick="selectBookFromTable('${item.barcode}')" style="cursor: pointer;">${escapeHtml(item.author)}</td>
+                                <td onclick="selectBookFromTable('${item.barcode}')" style="cursor: pointer;">
                                     <span style="background: #eff6ff; color: #2563eb; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem;">
                                         ${formatTrackingReason(item.reason)}
                                     </span>
                                 </td>
-                                <td>${escapeHtml(item.location)}</td>
-                                <td>${new Date(item.dateAdded).toLocaleDateString()}</td>
+                                <td onclick="selectBookFromTable('${item.barcode}')" style="cursor: pointer;">${escapeHtml(item.location)}</td>
+                                <td onclick="selectBookFromTable('${item.barcode}')" style="cursor: pointer;">${new Date(item.dateAdded).toLocaleDateString()}</td>
                                 <td>
                                     <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"
                                             onclick="handleUntrackFromTrackingTable('${item.barcode}')">
@@ -15417,6 +15528,11 @@
             `;
 
             document.getElementById('trackingTableContainer').innerHTML = tableHTML;
+
+            // Setup sorting event listeners for the new table
+            setTimeout(() => {
+                setupTrackingTableSorting();
+            }, 10);
         }
 
 
