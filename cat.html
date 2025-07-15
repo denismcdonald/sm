@@ -371,91 +371,108 @@
             table-layout: fixed;
         }
 
+        /* Search Results Table Column Widths */
         /* Checkbox column */
         .search-results-table th:nth-child(1),
         .search-results-table td:nth-child(1) {
             width: 40px;
-        }
-
-        /* Title + Author */
-        .search-results-table th:nth-child(2),
-        .search-results-table td:nth-child(2) {
-            width: 37%;
-        }
-
-        /* Year */
-        .search-results-table th:nth-child(3),
-        .search-results-table td:nth-child(3) {
-            width: 7%;
-        }
-
-        /* Age */
-        .search-results-table th:nth-child(4),
-        .search-results-table td:nth-child(4) {
-            width: 8%;
-        }
-
-        /* Circulation */
-        .search-results-table th:nth-child(5),
-        .search-results-table td:nth-child(5) {
-            width: 9%;
-        }
-
-        /* Collection */
-        .search-results-table th:nth-child(6),
-        .search-results-table td:nth-child(6) {
-            width: 12%;
-        }
-
-        /* Branch */
-        .search-results-table th:nth-child(7),
-        .search-results-table td:nth-child(7) {
-            width: 13%;
             text-align: center;
         }
 
-        /* Track button column */
+        /* Copy column */
+        .search-results-table th:nth-child(2),
+        .search-results-table td:nth-child(2) {
+            width: 60px;
+            text-align: center;
+        }
+
+        /* Title column */
+        .search-results-table th:nth-child(3),
+        .search-results-table td:nth-child(3) {
+            width: 30%;
+        }
+
+        /* Collection column */
+        .search-results-table th:nth-child(4),
+        .search-results-table td:nth-child(4) {
+            width: 120px;
+        }
+
+        /* Published column */
+        .search-results-table th:nth-child(5),
+        .search-results-table td:nth-child(5) {
+            width: 80px;
+            text-align: center;
+        }
+
+        /* Age column */
+        .search-results-table th:nth-child(6),
+        .search-results-table td:nth-child(6) {
+            width: 90px;
+            text-align: center;
+        }
+
+        /* Circulation column */
+        .search-results-table th:nth-child(7),
+        .search-results-table td:nth-child(7) {
+            width: 80px;
+            text-align: center;
+        }
+
+        /* Branch column */
         .search-results-table th:nth-child(8),
         .search-results-table td:nth-child(8) {
             width: 100px;
             text-align: center;
         }
 
+        /* Track button column */
+        .search-results-table th:nth-child(9),
+        .search-results-table td:nth-child(9) {
+            width: 100px;
+            text-align: center;
+        }
+
         /* Tracking Table Column Widths */
-        .tracking-table th:nth-child(1),
-        .tracking-table td:nth-child(1) {
-            width: 40px; /* Checkbox */
-        }
+.tracking-table th:nth-child(1),
+.tracking-table td:nth-child(1) {
+    width: 40px; /* Checkbox */
+}
 
-        .tracking-table th:nth-child(2),
-        .tracking-table td:nth-child(2) {
-            width: 40%; /* Title */
-        }
+.tracking-table th:nth-child(2),
+.tracking-table td:nth-child(2) {
+    width: 60px; /* Copy */
+}
 
-        .tracking-table th:nth-child(3),
-        .tracking-table td:nth-child(3) {
-            width: 20%; /* Author */
-        }
+.tracking-table th:nth-child(3),
+.tracking-table td:nth-child(3) {
+    width: 35%; /* Title */
+}
 
-        .tracking-table th:nth-child(4),
-        .tracking-table td:nth-child(4) {
-            width: 15%; /* Reason */
-        }
+.tracking-table th:nth-child(4),
+.tracking-table td:nth-child(4) {
+    width: 20%; /* Author */
+}
 
-        .tracking-table th:nth-child(5),
-        .tracking-table td:nth-child(5) {
-            width: 10%; /* Location */
-        }
+.tracking-table th:nth-child(5),
+.tracking-table td:nth-child(5) {
+    width: 15%; /* Reason */
+}
 
-        .tracking-table th:nth-child(6),
-        .tracking-table td:nth-child(6) {
-            width: 10%; /* Date Added */
-        }
+.tracking-table th:nth-child(6),
+.tracking-table td:nth-child(6) {
+    width: 10%; /* Location */
+}
 
-        .tracking-table th:nth-child(7),
-        .tracking-table td:nth-child(7) {
-            width: 80px; /* Actions */
-        }
+.tracking-table th:nth-child(7),
+.tracking-table td:nth-child(7) {
+    width: 10%; /* Date Added */
+}
+
+.tracking-table th:nth-child(8),
+.tracking-table td:nth-child(8) {
+    width: 80px; /* Actions */
+}
 
         .search-results-table th {
             background-color: #f9fafb;
@@ -1094,7 +1111,7 @@
             background: #f8fafc;
             border: 1px solid #e5e7eb;
             border-radius: 0.5rem;
-            margin-bottom: 1rem;
+            /* margin-bottom: 1rem; */
         }
 
         .mode-buttons {
@@ -1113,7 +1130,7 @@
         .filter-controls {
             display: flex;
             gap: 1rem;
-            /* margin-bottom: 1rem; */
+            margin-bottom: 1rem;
             flex-wrap: wrap;
         }
 
@@ -1674,6 +1691,13 @@
         #exportPortlandBtn:hover {
             background-color: #b85300;
         }
+
+        /* Position copy buttons slightly lower */
+        span[onclick*="copyTitleToClipboard"],
+        span[onclick*="copyBarcodeToClipboard"] {
+            margin-top: 5px !important;
+        }
+
     </style>
 </head>
 
@@ -2002,63 +2026,62 @@
                     <div id="searchInfo" class="search-info" style="display: none;"></div>
                     <table class="search-results-table" id="searchResultsTable">
                         <thead>
-                            <tr>
-                                <th style="width: 40px; text-align: center;">
-                                    <input type="checkbox" id="selectAllSearchHeader" class="select-all-checkbox"
-                                        onchange="toggleAllItems(this, 'search')">
-                                </th>
-                                <th class="sortable" data-sort="title">
-                                    Title
-                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        style="width: 1rem; height: 1rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 15l7-7 7 7"></path>
-                                    </svg>
-                                </th>
-                                <th class="sortable" data-sort="year">
-                                    Year
-                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        style="width: 1rem; height: 1rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 15l7-7 7 7"></path>
-                                    </svg>
-                                </th>
-                                <th class="sortable" data-sort="age">
-                                    Age
-                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        style="width: 1rem; height: 1rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 15l7-7 7 7"></path>
-                                    </svg>
-                                </th>
-                                <th class="sortable" data-sort="circulation">
-                                    Circulation
-                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        style="width: 1rem; height: 1rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 15l7-7 7 7"></path>
-                                    </svg>
-                                </th>
-                                <th class="sortable" data-sort="collection">
-                                    Collection
-                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        style="width: 1rem; height: 1rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 15l7-7 7 7"></path>
-                                    </svg>
-                                </th>
-                                <th class="sortable" data-sort="branch">
-                                    Branch
-                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        style="width: 1rem; height: 1rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 15l7-7 7 7"></path>
-                                    </svg>
-                                </th>
-                                <th style="width: 100px; text-align: center;">
-                                    Track
-                                </th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px; text-align: center;">
+                                        <input type="checkbox" id="selectAllSearchHeader" class="select-all-checkbox"
+                                            onchange="toggleAllItems(this, 'search')">
+                                    </th>
+                                    <th style="width: 60px; text-align: center; padding: 0.5rem 0.25rem;">
+                                        Copy
+                                    </th>
+                                    <th class="sortable" data-sort="title">
+                                        Title
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            style="width: 1rem; height: 1rem;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="collection">
+                                        Collection
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            style="width: 1rem; height: 1rem;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="year">
+                                        Published
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            style="width: 1rem; height: 1rem;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="age">
+                                        Age
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            style="width: 1rem; height: 1rem;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="circulation">
+                                        Circulation
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            style="width: 1rem; height: 1rem;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                        </svg>
+                                    </th>
+                                    <th class="sortable" data-sort="branch">
+                                        Branch
+                                        <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            style="width: 1rem; height: 1rem;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                        </svg>
+                                    </th>
+                                    <th style="width: 100px; text-align: center;">
+                                        Track
+                                    </th>
+                                </tr>
+                            </thead>
                         </thead>
                         <tbody id="searchResultsBody">
                         </tbody>
@@ -2277,6 +2300,7 @@
                                     <input type="checkbox" class="select-all-checkbox" id="collectionSelectAllCheckbox"
                                         onchange="toggleAllItems(this, 'collection')">
                                 </th>
+                                <th style="width: 60px; text-align: center; font-size: 0.875rem;">Copy</th>
                                 <th class="sortable" data-sort="title" data-type="text">
                                     Title
                                     <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2536,6 +2560,7 @@
                 <table class="analysis-table sortable-table" id="grubbyTable">
                     <thead>
                         <tr>
+                            <th style="width: 50px; text-align: center; font-size: 0.875rem;">Copy</th>
                             <th class="sortable" data-sort="title" data-type="text">
                                 Title
                                 <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2649,69 +2674,72 @@
 
                 <table class="analysis-table sortable-table" id="weedingTable">
                     <thead>
-                        <tr>
-                            <th style="width: 40px; text-align: center;">
-                                <input type="checkbox" id="selectAllWeedingHeader" class="select-all-checkbox"
-                                    onchange="toggleAllWeedingItems(this)">
-                            </th>
-                            <th class="sortable" data-sort="title" data-type="text">
-                                Title
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="author" data-type="text">
-                                Author
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="year" data-type="number">
-                                Date Added
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="callNumber" data-type="text">
-                                Call Number
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="collection" data-type="text">
-                                Collection
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="circulation" data-type="number">
-                                Circulation
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="age" data-type="number">
-                                Age
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="branch" data-type="text">
-                                Branch
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="actions-column">Actions</th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;">
+                                    <input type="checkbox" id="selectAllWeedingHeader" class="select-all-checkbox"
+                                        onchange="toggleAllWeedingItems(this)">
+                                </th>
+                                <th style="width: 50px; text-align: center; font-size: 0.875rem;">Copy</th>
+                                <th class="sortable" data-sort="title" data-type="text">
+                                    Title
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="author" data-type="text">
+                                    Author
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="year" data-type="number">
+                                    Date Added
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="callNumber" data-type="text">
+                                    Call Number
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="collection" data-type="text">
+                                    Collection
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="circulation" data-type="number">
+                                    Circulation
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="age" data-type="number">
+                                    Age
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="sortable" data-sort="branch" data-type="text">
+                                    Branch
+                                    <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </th>
+                                <th class="actions-column">Actions</th>
+                            </tr>
+                        </thead>
                     </thead>
                     <tbody id="weedingTableBody"></tbody>
                 </table>
@@ -3108,6 +3136,7 @@
                                     <input type="checkbox" class="select-all-checkbox" id="authorDetailsSelectAllCheckbox"
                                         onchange="toggleAllItems(this, 'authorDetails')">
                                 </th>
+                                <th style="width: 60px; text-align: center; font-size: 0.875rem;">Copy</th>
                                 <th class="sortable" data-sort="title" data-type="text">
                                     Title
                                     <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -4051,7 +4080,7 @@
             const trackingData = isTracked ? await getTrackingData(barcode) : null;
 
             // Update the title cell (second cell, after checkbox)
-            const titleCell = row.children[1];
+            const titleCell = row.children[2];
             titleCell.innerHTML = `
         ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
         <strong>${escapeHtml(item.title)}</strong>
@@ -4184,29 +4213,35 @@
                 }
 
                 row.innerHTML = `
-            <td style="text-align: center;">
-                <input type="checkbox" class="item-checkbox chart-modal-item-checkbox" 
-                       value="${item.barcode}" onchange="updateTrackSelectedButton('chartModal')">
-            </td>
-            <td onclick="selectBookFromTable('${item.barcode}')">
-                ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
-                <strong>${escapeHtml(item.title)}</strong>
-                ${isTracked ? `<span class="tracking-reason">${formatTrackingReason(trackingData.reason)}</span>` : ''}
-            </td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(item.author)}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(yearDisplay)}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')"><code>${escapeHtml(item.callNumber)}</code></td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(item.collection)}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${item.circulation}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${ageDisplay}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')" style="color: #2563eb; font-weight: 500;">${escapeHtml(formatBranchName(item.branch || 'Unknown'))}</td>
-            <td class="actions-column">
-                ${isTracked ?
+                <td style="text-align: center;">
+                    <input type="checkbox" class="item-checkbox chart-modal-item-checkbox"
+                        value="${item.barcode}" onchange="updateTrackSelectedButton('chartModal')">
+                </td>
+                <td style="text-align: center; padding: 0.5rem 0.25rem; white-space: nowrap; min-width: 60px;" onclick="event.stopPropagation();">
+                    <span onclick="copyTitleToClipboard('${escapeForJavaScript(item.title)}', event)" 
+                        style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                        title="Copy title">📄</span>
+                    <span onclick="copyBarcodeToClipboard('${item.barcode}', event)" 
+                        style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                        title="Copy ID">#️⃣</span>
+                </td>
+                <td onclick="selectBookFromTable('${item.barcode}')">
+                    ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
+                    <strong>${escapeHtml(item.title)}</strong>
+                    ${isTracked ? `<span class="tracking-reason">${formatTrackingReason(trackingData.reason)}</span>` : ''}
+                </td>
+                <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(item.author)}</td>
+                <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(item.collection)}</td>
+                <td onclick="selectBookFromTable('${item.barcode}')">${ageDisplay}</td>
+                <td onclick="selectBookFromTable('${item.barcode}')">${item.circulation}</td>
+                <td onclick="selectBookFromTable('${item.barcode}')" style="color: #2563eb; font-weight: 500;">${escapeHtml(formatBranchName(item.branch || 'Unknown'))}</td>
+                <td class="actions-column">
+                    ${isTracked ?
                         `<button class="untrack-btn" onclick="handleUntrackItem('${item.barcode}', event)">Untrack</button>` :
                         `<button class="track-btn" onclick="handleTrackItem('${item.barcode}', 'chartModal', event)">Track</button>`
                     }
-            </td>
-        `;
+                </td>
+            `;
 
                 newRows.push(row);
             }
@@ -4217,6 +4252,83 @@
 
             // Update checkbox states
             updateTrackSelectedButton('chartModal');
+        }
+
+        //===========================================================================
+        // copyTitleToClipboard() - Copy item title to clipboard
+        //===========================================================================
+        async function copyTitleToClipboard(title, event) {
+            event.stopPropagation(); // Prevent row click
+            
+            try {
+                await navigator.clipboard.writeText(title);
+                showStatus(`Copied title: ${title}`, 'success');
+                
+                // Brief visual feedback
+                const icon = event.target;
+                const originalText = icon.textContent;
+                icon.textContent = '✓';
+                icon.style.color = '#16a34a';
+                setTimeout(() => {
+                    icon.textContent = originalText;
+                    icon.style.color = '';
+                }, 1000);
+                
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = title;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showStatus(`Copied title: ${title}`, 'success');
+            }
+        }
+
+        //===========================================================================
+        // copyBarcodeToClipboard() - Copy item ID to clipboard
+        //===========================================================================
+        async function copyBarcodeToClipboard(barcode, event) {
+            event.stopPropagation(); // Prevent row click
+            
+            try {
+                await navigator.clipboard.writeText(barcode);
+                showStatus(`Copied ID: ${barcode}`, 'success');
+                
+                // Brief visual feedback
+                const icon = event.target;
+                const originalText = icon.textContent;
+                icon.textContent = '✓';
+                icon.style.color = '#16a34a';
+                setTimeout(() => {
+                    icon.textContent = originalText;
+                    icon.style.color = '';
+                }, 1000);
+                
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = barcode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showStatus(`Copied ID: ${barcode}`, 'success');
+            }
+        }
+
+        //===========================================================================
+        // escapeForJavaScript() - Escape string for safe use in JavaScript
+        //===========================================================================
+        function escapeForJavaScript(str) {
+            if (!str) return '';
+            return str.replace(/\\/g, '\\\\')   // Escape backslashes first
+                .replace(/'/g, "\\'")      // Escape single quotes
+                .replace(/"/g, '\\"')      // Escape double quotes
+                .replace(/\n/g, '\\n')     // Escape newlines
+                .replace(/\r/g, '\\r')     // Escape carriage returns
+                .replace(/\t/g, '\\t');    // Escape tabs
         }
 
         //===========================================================================
@@ -4250,7 +4362,7 @@
             console.log('trackingData:', trackingData);
 
             // Update the title cell (second cell, after checkbox)
-            const titleCell = row.children[1];
+            const titleCell = row.children[2];
             titleCell.innerHTML = `
         ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
         <strong>${escapeHtml(item.title)}</strong>
@@ -4595,6 +4707,14 @@
                 <input type="checkbox" class="item-checkbox weeding-item-checkbox" 
                        value="${item.barcode}" onchange="updateTrackSelectedButton('weeding')">
             </td>
+            <td style="text-align: center; padding: 0.5rem 0.25rem; white-space: nowrap; min-width: 60px;">
+                <span onclick="copyTitleToClipboard('${escapeForJavaScript(item.title)}', event)" 
+                    style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                    title="Copy title">📄</span>
+                <span onclick="copyBarcodeToClipboard('${item.barcode}', event)" 
+                    style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                    title="Copy ID">#️⃣</span>
+            </td>
             <td onclick="selectBookFromTable('${item.barcode}')">
                 ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
                 <strong>${escapeHtml(item.title)}</strong>
@@ -4609,9 +4729,9 @@
             <td onclick="selectBookFromTable('${item.barcode}')" style="color: #2563eb; font-weight: 500;">${escapeHtml(formatBranchName(item.branch || 'Unknown'))}</td>
             <td class="actions-column">
                 ${isTracked ?
-                        `<button class="untrack-btn" onclick="handleUntrackItem('${item.barcode}', event)">Untrack</button>` :
-                        `<button class="track-btn" onclick="handleTrackItem('${item.barcode}', 'weeding', event)">Track</button>`
-                    }
+                    `<button class="untrack-btn" onclick="handleUntrackItem('${item.barcode}', event)">Untrack</button>` :
+                    `<button class="track-btn" onclick="handleTrackItem('${item.barcode}', 'weeding', event)">Track</button>`
+                }
             </td>
         `;
 
@@ -4787,7 +4907,7 @@
             const trackingData = isTracked ? await getTrackingData(barcode) : null;
 
             // Update the title cell (second cell, after checkbox)
-            const titleCell = row.children[1];
+            const titleCell = row.children[2];
             titleCell.innerHTML = `
         ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
         <strong>${escapeHtml(item.title)}</strong>
@@ -5334,9 +5454,9 @@
                 return {
                     element: row,
                     book: book,
-                    title: cells[1]?.textContent?.trim() || '',
-                    year: parseInt(cells[2]?.textContent?.trim()) || 0,
-                    age: cells[3]?.textContent?.includes('< 1 year') ? 0 : parseInt(cells[3]?.textContent?.replace(' years', '')) || 0,
+                    title: cells[2]?.textContent?.trim() || '',
+                    year: parseInt(cells[4]?.textContent?.trim()) || 0,
+                    age: cells[5]?.textContent?.includes('< 1 year') ?
                     circulation: parseInt(cells[4]?.textContent?.trim()) || 0,
                     collection: cells[5]?.textContent?.trim() || '',
                     branch: cells[6]?.textContent?.trim() || ''
@@ -5521,7 +5641,7 @@
                     loadOverviewData();
                     break;
                 case 'weeding':
-                    updateWeedingAnalysis();
+                    clearWeedingTableSort();
                     break;
                 case 'author':
                     updateAuthorAnalysis();
@@ -5652,17 +5772,17 @@
             // Extract data from rows for sorting
             const data = rows.map(row => {
                 const cells = row.querySelectorAll('td');
-                const yearText = cells[2]?.textContent?.trim() || '';
-                const ageText = cells[6]?.textContent?.trim() || '';
+                const yearText = cells[4]?.textContent?.trim() || '';
+                const ageText = cells[8]?.textContent?.trim() || '';
 
                 return {
                     element: row,
-                    title: cells[0]?.textContent?.trim() || '',
-                    author: cells[1]?.textContent?.trim() || '',
+                    title: cells[2]?.textContent?.trim() || '',
+                    author: cells[3]?.textContent?.trim() || '',
                     year: yearText === 'Unknown' ? 0 : parseInt(yearText) || 0,
-                    callNumber: cells[3]?.textContent?.trim() || '',
-                    collection: cells[4]?.textContent?.trim() || '',
-                    circulation: parseInt(cells[5]?.textContent || '0'),
+                    callNumber: cells[5]?.textContent?.trim() || '',
+                    collection: cells[6]?.textContent?.trim() || '',
+                    circulation: parseInt(cells[7]?.textContent || '0'),
                     age: ageText === 'Unknown' ? 0 : parseInt(ageText.replace(' years', '')) || 0
                 };
             });
@@ -5689,6 +5809,58 @@
                 tableBody.appendChild(row);
             });
 
+            updateSortIcons('weeding');
+        }
+
+    //===========================================================================
+        // clearWeedingTableSort() - Clear weeding table sort without regenerating data
+        //===========================================================================
+        function clearWeedingTableSort() {
+            // Reset sort state
+            tableSortStates.weeding = { field: null, direction: 'asc' };
+
+            // Get current table data from DOM (same pattern as sortWeedingTable)
+            const tableBody = document.getElementById('weedingTableBody');
+            const rows = Array.from(tableBody.querySelectorAll('tr[data-barcode]')); // Only data rows
+
+            if (rows.length === 0) {
+                updateSortIcons('weeding');
+                return;
+            }
+
+            // Extract data with original array index to restore original order
+            const data = rows.map((row, index) => {
+                const barcode = row.getAttribute('data-barcode');
+
+                // Find this item's original position in weedingCandidates array
+                const originalIndex = weedingCandidates.findIndex(item => item.barcode === barcode);
+
+                return {
+                    element: row,
+                    originalIndex: originalIndex >= 0 ? originalIndex : index // fallback to current index
+                };
+            });
+
+            // Sort by original array position to restore original order
+            data.sort((a, b) => a.originalIndex - b.originalIndex);
+
+            // Store non-data rows (like the "more items" indicator)
+            const nonDataRows = Array.from(tableBody.querySelectorAll('tr:not([data-barcode])'));
+
+            // Clear table body
+            tableBody.innerHTML = '';
+
+            // Re-append rows in original order
+            data.forEach(item => {
+                tableBody.appendChild(item.element);
+            });
+
+            // Re-append non-data rows at the end
+            nonDataRows.forEach(row => {
+                tableBody.appendChild(row);
+            });
+
+            // Update sort icons to show no sorting
             updateSortIcons('weeding');
         }
 
@@ -5941,27 +6113,36 @@
                     <input type="checkbox" class="item-checkbox search-item-checkbox" 
                         value="${book.barcode}" onchange="updateTrackSelectedButton('search')">
                 </td>
+                <td style="text-align: center; padding: 0.5rem 0.25rem; white-space: nowrap; min-width: 60px;">
+                    <span onclick="copyTitleToClipboard('${escapeForJavaScript(book.title)}', event)" 
+                        style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                        title="Copy title">📄</span>
+                    <span onclick="copyBarcodeToClipboard('${book.barcode}', event)" 
+                        style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                        title="Copy ID">#️⃣</span>
+                </td>
                 <td onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')">
                     ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
                     <strong>${escapeHtml(book.title)}</strong>
                     <br><span style="font-size: 0.8em; color: #6b7280;">${book.author ? escapeHtml(book.author) : '<em>No Author Found</em>'}</span>
                     ${isTracked ? `<br><span class="tracking-reason">${formatTrackingReason(trackingData.reason)}</span>` : ''}
                 </td>
+                <td onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')">${escapeHtml(book.collection)}</td>
                 <td onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')">${escapeHtml(book.year || 'Unknown Year')}</td>
                 <td onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')">${(() => {
                         const age = getItemAge(book.itemCreated);
                         return age >= 0 ? (age === 0 ? '< 1 year' : `${age} years`) : 'Unknown';
                     })()}</td>
                 <td onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')">${book.circulation}</td>
-                <td onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')">${escapeHtml(book.collection || 'Unknown Collection')}</td>
-                <td style="color: #2563eb;" onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')">${escapeHtml(formatBranchName(book.branch || 'Unknown'))}</td>
+                <td onclick="selectBookFromSearchResults('${escapeHtml(book.barcode)}')" style="color: #2563eb; font-weight: 500;">${escapeHtml(formatBranchName(book.branch || 'Unknown'))}</td>
                 <td class="actions-column">
                     ${isTracked ?
                         `<button class="untrack-btn" onclick="handleUntrackItem('${book.barcode}', event)">Untrack</button>` :
                         `<button class="track-btn" onclick="handleTrackItem('${book.barcode}', 'search', event)">Track</button>`
                     }
                 </td>
-            </tr>`;
+            </tr>
+        `;
             }));
 
             resultsBody.insertAdjacentHTML('beforeend', newRows.join(''));
@@ -12721,12 +12902,20 @@
                         <td style="text-align: center;">
                             <input type="checkbox" class="item-checkbox author-details-item-checkbox" value="${book.barcode}" onchange="updateTrackSelectedButton('authorDetails')">
                         </td>
+                        <td style="text-align: center; padding: 0.5rem 0.25rem; white-space: nowrap; min-width: 60px;" onclick="event.stopPropagation();">
+                            <span onclick="copyTitleToClipboard('${escapeForJavaScript(book.title)}', event)" 
+                                style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                                title="Copy title">📄</span>
+                            <span onclick="copyBarcodeToClipboard('${book.barcode}', event)" 
+                                style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                                title="Copy ID">#️⃣</span>
+                        </td>
                         <td onclick="event.stopPropagation(); viewBookDetails('${book.barcode}')" style="cursor: pointer; color: #2563eb; font-weight: 500;">
                             <span class="tracking-indicator" id="trackingIndicator-${book.barcode}" style="color: #2563eb; margin-right: 0.25rem; display: none;">📌</span>
                             <strong>${escapeHtml(book.title)}</strong>
                             <span class="tracking-reason" id="trackingReason-${book.barcode}" style="font-size: 0.75rem; background: #eff6ff; color: #2563eb; padding: 0.125rem 0.25rem; border-radius: 0.25rem; margin-left: 0.5rem; display: none;"></span>
                         </td>
-                        <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${book.year || 'Unknown'}</td>
+                        <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${book.itemCreated || 'Unknown'}</td>
                         <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${escapeHtml(book.collection)}</td>
                         <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><strong>${book.circulation}</strong></td>
                         <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">
@@ -12869,21 +13058,37 @@
             titlesBody.innerHTML = sortedBooks.map(book => {
                 const performance = getItemPerformanceLevel(book.circulation);
                 return `
-                    <tr data-barcode="${book.barcode}" data-title="${escapeHtml(book.title)}" data-year="${book.year || 0}" data-collection="${escapeHtml(book.collection)}" data-circulation="${book.circulation}" data-performance="${book.circulation}" data-call-number="${escapeHtml(book.callNumber)}">
-                        <td onclick="event.stopPropagation(); viewBookDetails('${book.barcode}')" style="cursor: pointer; color: #2563eb; font-weight: 500;">
-                            <strong>${escapeHtml(book.title)}</strong>
-                        </td>
-                        <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${book.year || 'Unknown'}</td>
-                        <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${escapeHtml(book.collection)}</td>
-                        <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><strong>${book.circulation}</strong></td>
-                        <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">
-                            <span style="background: ${performance.color}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
-                                ${performance.label}
-                            </span>
-                        </td>
-                        <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><code style="font-size: 0.75rem;">${escapeHtml(book.callNumber)}</code></td>
-                    </tr>
-                `;
+        <tr data-barcode="${book.barcode}" data-title="${escapeHtml(book.title)}" data-year="${book.itemCreated || 0}" data-collection="${escapeHtml(book.collection)}" data-circulation="${book.circulation}" data-performance="${book.circulation}" data-call-number="${escapeHtml(book.callNumber)}" class="author-table-row">
+            <td style="text-align: center;">
+                <input type="checkbox" class="item-checkbox author-details-item-checkbox" value="${book.barcode}" onchange="updateTrackSelectedButton('authorDetails')">
+            </td>
+            <td style="text-align: center; padding: 0.25rem; white-space: nowrap; width: 60px;" onclick="event.stopPropagation();">
+                <span onclick="copyTitleToClipboard('${escapeForJavaScript(book.title)}', event)" 
+                      style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                      title="Copy title">📄</span>
+                <span onclick="copyBarcodeToClipboard('${book.barcode}', event)" 
+                      style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                      title="Copy ID">#️⃣</span>
+            </td>
+            <td onclick="event.stopPropagation(); viewBookDetails('${book.barcode}')" style="cursor: pointer; color: #2563eb; font-weight: 500;">
+                <span class="tracking-indicator" id="trackingIndicator-${book.barcode}" style="color: #2563eb; margin-right: 0.25rem; display: none;">📌</span>
+                <strong>${escapeHtml(book.title)}</strong>
+                <span class="tracking-reason" id="trackingReason-${book.barcode}" style="font-size: 0.75rem; background: #eff6ff; color: #2563eb; padding: 0.125rem 0.25rem; border-radius: 0.25rem; margin-left: 0.5rem; display: none;"></span>
+            </td>
+            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${book.itemCreated || 'Unknown'}</td>
+            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${escapeHtml(book.collection)}</td>
+            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><strong>${book.circulation}</strong></td>
+            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">
+                <span style="background: ${performance.color}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
+                    ${performance.label}
+                </span>
+            </td>
+            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><code style="font-size: 0.75rem;">${escapeHtml(book.callNumber)}</code></td>
+            <td style="text-align: center;" onclick="event.stopPropagation();">
+                <button class="track-btn tracking-action-${book.barcode}" onclick="handleTrackItem('${book.barcode}', 'authorDetails', event)">Track</button>
+            </td>
+        </tr>
+    `;
             }).join('');
 
             // Update sort icons
@@ -12917,36 +13122,49 @@
         // clearAuthorTitlesSort() - Clear author titles table sort
         //===========================================================================
         function clearAuthorTitlesSort() {
-            window.authorTitlesSortState = null;
-
-            if (window.currentAuthorBooks) {
-                // Re-sort by circulation (default)
-                const sortedBooks = [...window.currentAuthorBooks].sort((a, b) => b.circulation - a.circulation);
-
-                const titlesBody = document.getElementById('authorTitlesBody');
-                titlesBody.innerHTML = sortedBooks.map(book => {
-                    const performance = getItemPerformanceLevel(book.circulation);
-                    return `
-                        <tr data-barcode="${book.barcode}" data-title="${escapeHtml(book.title)}" data-year="${book.year || 0}" data-collection="${escapeHtml(book.collection)}" data-circulation="${book.circulation}" data-performance="${book.circulation}" data-call-number="${escapeHtml(book.callNumber)}">
-                            <td onclick="event.stopPropagation(); viewBookDetails('${book.barcode}')" style="cursor: pointer; color: #2563eb; font-weight: 500;">
-                                <strong>${escapeHtml(book.title)}</strong>
-                            </td>
-                            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${book.year || 'Unknown'}</td>
-                            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${escapeHtml(book.collection)}</td>
-                            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><strong>${book.circulation}</strong></td>
-                            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">
-                                <span style="background: ${performance.color}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
-                                    ${performance.label}
-                                </span>
-                            </td>
-                            <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><code style="font-size: 0.75rem;">${escapeHtml(book.callNumber)}</code></td>
-                        </tr>
-                    `;
-                }).join('');
+                window.authorTitlesSortState = null;
+                if (window.currentAuthorBooks) {
+                    // Re-sort by circulation (default)
+                    const sortedBooks = [...window.currentAuthorBooks].sort((a, b) => b.circulation - a.circulation);
+                    const titlesBody = document.getElementById('authorTitlesBody');
+                    titlesBody.innerHTML = sortedBooks.map(book => {
+                        const performance = getItemPerformanceLevel(book.circulation);
+                        return `
+                <tr data-barcode="${book.barcode}" data-title="${escapeHtml(book.title)}" data-year="${book.itemCreated || 0}" data-collection="${escapeHtml(book.collection)}" data-circulation="${book.circulation}" data-performance="${book.circulation}" data-call-number="${escapeHtml(book.callNumber)}" class="author-table-row">
+                    <td style="text-align: center;">
+                        <input type="checkbox" class="item-checkbox author-details-item-checkbox" value="${book.barcode}" onchange="updateTrackSelectedButton('authorDetails')">
+                    </td>
+                    <td style="text-align: center; padding: 0.25rem; white-space: nowrap; width: 60px;" onclick="event.stopPropagation();">
+                        <span onclick="copyTitleToClipboard('${escapeForJavaScript(book.title)}', event)" 
+                              style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                              title="Copy title">📄</span>
+                        <span onclick="copyBarcodeToClipboard('${book.barcode}', event)" 
+                              style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                              title="Copy ID">#️⃣</span>
+                    </td>
+                    <td onclick="event.stopPropagation(); viewBookDetails('${book.barcode}')" style="cursor: pointer; color: #2563eb; font-weight: 500;">
+                        <span class="tracking-indicator" id="trackingIndicator-${book.barcode}" style="color: #2563eb; margin-right: 0.25rem; display: none;">📌</span>
+                        <strong>${escapeHtml(book.title)}</strong>
+                        <span class="tracking-reason" id="trackingReason-${book.barcode}" style="font-size: 0.75rem; background: #eff6ff; color: #2563eb; padding: 0.125rem 0.25rem; border-radius: 0.25rem; margin-left: 0.5rem; display: none;"></span>
+                    </td>
+                    <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${book.itemCreated || 'Unknown'}</td>
+                    <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">${escapeHtml(book.collection)}</td>
+                    <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><strong>${book.circulation}</strong></td>
+                    <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;">
+                        <span style="background: ${performance.color}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
+                            ${performance.label}
+                        </span>
+                    </td>
+                    <td onclick="selectBook('${book.barcode}')" style="cursor: pointer;"><code style="font-size: 0.75rem;">${escapeHtml(book.callNumber)}</code></td>
+                    <td style="text-align: center;" onclick="event.stopPropagation();">
+                        <button class="track-btn tracking-action-${book.barcode}" onclick="handleTrackItem('${book.barcode}', 'authorDetails', event)">Track</button>
+                    </td>
+                </tr>
+            `;
+                    }).join('');
+                }
+                updateAuthorTitlesSortIcons(null, null);
             }
-
-            updateAuthorTitlesSortIcons(null, null);
-        }
 
         //===========================================================================
         // sortAuthorOtherTitles() - Sort author other titles table
@@ -14239,13 +14457,21 @@
                 return `
         <tr data-barcode="${item.barcode}" data-title="${escapeHtml(item.title)}" data-author="${escapeHtml(item.author)}" data-year="${item.year || 0}" data-circulation="${item.circulation}" data-performance="${performance.level === 'high' ? 3 : performance.level === 'good' ? 2 : performance.level === 'fair' ? 1 : 0}" data-call-number="${escapeHtml(item.callNumber)}" onclick="viewBookDetails('${item.barcode}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
             <td style="text-align: center;" onclick="event.stopPropagation();">
-                <input type="checkbox" class="item-checkbox collection-item-checkbox" value="${item.barcode}" onchange="updateTrackSelectedButton('collection')">
-            </td>
-            <td style="color: #6b7280; font-weight: 500;">
-                <span class="tracking-placeholder-${item.barcode}"></span>
-                <strong>${escapeHtml(item.title)}</strong>
-                <span class="tracking-reason-${item.barcode}"></span>
-            </td>
+            <input type="checkbox" class="item-checkbox collection-item-checkbox" value="${item.barcode}" onchange="updateTrackSelectedButton('collection')">
+        </td>
+        <td style="text-align: center; padding: 0.5rem 0.25rem; white-space: nowrap; min-width: 60px;" onclick="event.stopPropagation();">
+            <span onclick="copyTitleToClipboard('${escapeForJavaScript(item.title)}', event)" 
+                style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                title="Copy title">📄</span>
+            <span onclick="copyBarcodeToClipboard('${item.barcode}', event)" 
+                style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                title="Copy ID">#️⃣</span>
+        </td>
+        <td style="color: #6b7280; font-weight: 500;">
+            <span class="tracking-placeholder-${item.barcode}"></span>
+            <strong>${escapeHtml(item.title)}</strong>
+            <span class="tracking-reason-${item.barcode}"></span>
+        </td>
             <td>${escapeHtml(item.author)}</td>
             <td>${(() => {
                         const age = getItemAge(item.itemCreated);
@@ -14508,7 +14734,7 @@
             const trackingData = isTracked ? await getTrackingData(barcode) : null;
 
             // Update the title cell (second cell, after checkbox)
-            const titleCell = row.children[1];
+            const titleCell = row.children[2];
             titleCell.innerHTML = `
         ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
         <strong>${escapeHtml(item.title)}</strong>
@@ -14609,7 +14835,15 @@
             <td style="text-align: center;" onclick="event.stopPropagation();">
                 <input type="checkbox" class="item-checkbox collection-item-checkbox" value="${item.barcode}" onchange="updateTrackSelectedButton('collection')">
             </td>
-            <td style="color: #2563eb; font-weight: 500;">
+            <td style="text-align: center; padding: 0.5rem 0.25rem; white-space: nowrap; min-width: 60px;" onclick="event.stopPropagation();">
+                <span onclick="copyTitleToClipboard('${escapeForJavaScript(item.title)}', event)" 
+                      style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                      title="Copy title">📄</span>
+                <span onclick="copyBarcodeToClipboard('${item.barcode}', event)" 
+                      style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                      title="Copy ID">#️⃣</span>
+            </td>
+            <td style="color: #6b7280; font-weight: 500;">
                 <span class="tracking-placeholder-${item.barcode}"></span>
                 <strong>${escapeHtml(item.title)}</strong>
                 <span class="tracking-reason-${item.barcode}"></span>
@@ -14637,15 +14871,57 @@
             loadCollectionTrackingData(sortedItems);
         }
 
-        //===========================================================================
+    //===========================================================================
         // clearCollectionItemsSort() - Clear collection items sort
         //===========================================================================
         function clearCollectionItemsSort() {
             window.collectionItemsSortState = null;
             if (window.currentCollectionItems) {
                 const sortedItems = [...window.currentCollectionItems].sort((a, b) => b.circulation - a.circulation);
-                // Re-render with default sort...
-                // (Same rendering code as above)
+
+                // Re-render with default sort (same structure as sortCollectionItems)
+                const itemsBody = document.getElementById('collectionItemsBody');
+                itemsBody.innerHTML = sortedItems.map(item => {
+                    const performance = getItemPerformanceLevel(item.circulation);
+                    return `
+                <tr data-barcode="${item.barcode}" data-title="${escapeHtml(item.title)}" data-author="${escapeHtml(item.author)}" data-year="${item.year || 0}" data-circulation="${item.circulation}" data-performance="${performance.level === 'high' ? 3 : performance.level === 'good' ? 2 : performance.level === 'fair' ? 1 : 0}" data-call-number="${escapeHtml(item.callNumber)}" onclick="viewBookDetails('${item.barcode}')" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor=''">
+                    <td style="text-align: center;" onclick="event.stopPropagation();">
+                        <input type="checkbox" class="item-checkbox collection-item-checkbox" value="${item.barcode}" onchange="updateTrackSelectedButton('collection')">
+                    </td>
+                    <td style="text-align: center; padding: 0.5rem 0.25rem; white-space: nowrap; min-width: 60px;" onclick="event.stopPropagation();">
+                        <span onclick="copyTitleToClipboard('${escapeForJavaScript(item.title)}', event)" 
+                              style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                              title="Copy title">📄</span>
+                        <span onclick="copyBarcodeToClipboard('${item.barcode}', event)" 
+                              style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                              title="Copy ID">#️⃣</span>
+                    </td>
+                    <td style="color: #6b7280; font-weight: 500;">
+                        <span class="tracking-placeholder-${item.barcode}"></span>
+                        <strong>${escapeHtml(item.title)}</strong>
+                        <span class="tracking-reason-${item.barcode}"></span>
+                    </td>
+                    <td>${escapeHtml(item.author)}</td>
+                    <td>${(() => {
+                            const age = getItemAge(item.itemCreated);
+                            return age > 0 ? (age === 1 ? '1 year' : `${age} years`) : '< 1 year';
+                        })()}</td>
+                    <td><strong>${item.circulation}</strong></td>
+                    <td>
+                        <span style="background: ${performance.color}; color: white; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
+                            ${performance.label}
+                        </span>
+                    </td>
+                    <td><code style="font-size: 0.75rem;">${escapeHtml(item.callNumber)}</code></td>
+                    <td style="text-align: center;" onclick="event.stopPropagation();">
+                        <button class="track-btn tracking-action-${item.barcode}" onclick="handleTrackItem('${item.barcode}', 'collection', event)">Track</button>
+                    </td>
+                </tr>
+                `;
+                }).join('');
+
+                // Reload tracking data for the sorted items
+                loadCollectionTrackingData(sortedItems);
             }
             updateCollectionItemsSortIcons(null, null);
         }
@@ -15359,8 +15635,8 @@
             const trackingData = await getTrackingData(barcode);
             if (!trackingData) return;
 
-            // Update the reason cell (4th column - Title, Author, Reason, Location, Date, Actions)
-            const reasonCell = row.children[3];
+            // Update the reason cell (5th column - Checkbox, Copy, Title, Author, Reason, Location, Date, Actions)
+            const reasonCell = row.children[4];
             reasonCell.innerHTML = `
         <span style="background: #eff6ff; color: #2563eb; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem;">
             ${formatTrackingReason(trackingData.reason)}
@@ -15467,6 +15743,7 @@
                             <th style="width: 40px; text-align: center;">
                                 <input type="checkbox" class="select-all-checkbox" onchange="toggleAllItems(this, 'tracking')">
                             </th>
+                            <th style="width: 45px !important; max-width: 45px !important; text-align: center; font-size: 0.875rem;">Copy</th>
                             <th class="sortable" data-sort="title" data-type="text">
                                 Title
                                 <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15505,6 +15782,14 @@
                             <tr data-barcode="${item.barcode}">
                                 <td style="text-align: center;">
                                     <input type="checkbox" class="item-checkbox tracking-item-checkbox" value="${item.barcode}">
+                                </td>
+                                <td style="text-align: center; padding: 0.25rem; white-space: nowrap; width: 60px !important; max-width: 60px !important;" onclick="event.stopPropagation();">
+                                    <span onclick="copyTitleToClipboard('${escapeForJavaScript(item.title)}', event)" 
+                                        style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                                        title="Copy title">📄</span>
+                                    <span onclick="copyBarcodeToClipboard('${item.barcode}', event)" 
+                                        style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                                        title="Copy ID">#️⃣</span>
                                 </td>
                                 <td onclick="selectBookFromTable('${item.barcode}')" style="cursor: pointer;"><strong>${escapeHtml(item.title)}</strong></td>
                                 <td onclick="selectBookFromTable('${item.barcode}')" style="cursor: pointer;">${escapeHtml(item.author)}</td>
@@ -16085,29 +16370,35 @@ Kirsten`;
                 }
 
                 row.innerHTML = `
-            <td style="text-align: center;">
-                <input type="checkbox" class="item-checkbox chart-modal-item-checkbox" 
-                       value="${item.barcode}" onchange="updateTrackSelectedButton('chartModal')">
-            </td>
-            <td onclick="selectBookFromTable('${item.barcode}')">
-                ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
-                <strong>${escapeHtml(item.title)}</strong>
-                ${isTracked ? `<span class="tracking-reason">${formatTrackingReason(trackingData.reason)}</span>` : ''}
-            </td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(item.author)}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(yearDisplay)}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')"><code>${escapeHtml(item.callNumber)}</code></td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(item.collection)}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${item.circulation}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')">${ageDisplay}</td>
-            <td onclick="selectBookFromTable('${item.barcode}')" style="color: #2563eb; font-weight: 500;">${escapeHtml(formatBranchName(item.branch || 'Unknown'))}</td>
-            <td class="actions-column">
-                ${isTracked ?
-                        `<button class="untrack-btn" onclick="handleUntrackItem('${item.barcode}', event)">Untrack</button>` :
-                        `<button class="track-btn" onclick="handleTrackItem('${item.barcode}', 'chartModal', event)">Track</button>`
-                    }
-            </td>
-        `;
+                    <td style="text-align: center;">
+                        <input type="checkbox" class="item-checkbox chart-modal-item-checkbox"
+                            value="${item.barcode}" onchange="updateTrackSelectedButton('chartModal')">
+                    </td>
+                    <td style="text-align: center; padding: 0.5rem 0.25rem; white-space: nowrap; min-width: 60px;" onclick="event.stopPropagation();">
+                        <span onclick="copyTitleToClipboard('${escapeForJavaScript(item.title)}', event)" 
+                            style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                            title="Copy title">📄</span>
+                        <span onclick="copyBarcodeToClipboard('${item.barcode}', event)" 
+                            style="cursor: pointer; color: #6b7280; font-size: 0.85rem; display: inline-block; width: 20px; text-align: center;" 
+                            title="Copy ID">#️⃣</span>
+                    </td>
+                    <td onclick="selectBookFromTable('${item.barcode}')">
+                        ${isTracked ? '<span class="tracking-indicator">📌</span>' : ''}
+                        <strong>${escapeHtml(item.title)}</strong>
+                        ${isTracked ? `<span class="tracking-reason">${formatTrackingReason(trackingData.reason)}</span>` : ''}
+                    </td>
+                    <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(item.author)}</td>
+                    <td onclick="selectBookFromTable('${item.barcode}')">${escapeHtml(item.collection)}</td>
+                    <td onclick="selectBookFromTable('${item.barcode}')">${ageDisplay}</td>
+                    <td onclick="selectBookFromTable('${item.barcode}')">${item.circulation}</td>
+                    <td onclick="selectBookFromTable('${item.barcode}')" style="color: #2563eb; font-weight: 500;">${escapeHtml(formatBranchName(item.branch || 'Unknown'))}</td>
+                    <td class="actions-column">
+                        ${isTracked ?
+                            `<button class="untrack-btn" onclick="handleUntrackItem('${item.barcode}', event)">Untrack</button>` :
+                            `<button class="track-btn" onclick="handleTrackItem('${item.barcode}', 'chartModal', event)">Track</button>`
+                        }
+                    </td>
+                `;
 
                 tableBody.appendChild(row);
             }
@@ -16275,111 +16566,6 @@ Kirsten`;
                         onclick="bulkTrackSelected('chartModal')" disabled>
                         Track Selected (0)
                     </button>
-                    <button class="bulk-track-btn" id="chartModalUntrackSelectedBtn"
-                        onclick="bulkUntrackSelected('chartModal')" disabled>
-                        Untrack Selected (0)
-                    </button>
-                    <button class="bulk-track-btn" onclick="bulkTrackAll('chartModal')">
-                        Track All
-                    </button>
-                    <button class="bulk-track-btn" id="untrackAllChartModalBtn" onclick="bulkUntrackAll('chartModal')">
-                        Untrack All
-                    </button>
-                </div>
-
-                <!-- Items Table -->
-                <table class="analysis-table sortable-table" id="chartItemsTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 40px; text-align: center;">
-                                <input type="checkbox" id="selectAllChartModal" class="select-all-checkbox"
-                                    onchange="toggleAllItems(this, 'chartModal')">
-                            </th>
-                            <th class="sortable" data-sort="collection" data-type="text">
-                                Collection
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="performanceLevel" data-type="text">
-                                Performance
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="items" data-type="number">
-                                Items
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="totalCirculation" data-type="number">
-                                Total Circulation
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="avgCirculation" data-type="number">
-                                Avg. Circulation
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="highPerformers" data-type="number">
-                                High Performers
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                            <th class="sortable" data-sort="lowCirculation" data-type="number">
-                                Low Circulation
-                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 15l7-7 7 7"></path>
-                                </svg>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="chartItemsTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chart Items Modal -->
-    <div id="chartItemsModal" class="modal hidden">
-        <div class="modal-content" style="width: 95%; max-width: 1200px; max-height: 90vh; overflow-y: auto;">
-            <div class="modal-header">
-                <h2 id="chartItemsModalTitle">Items at Selected Point</h2>
-                <button class="modal-close" onclick="closeChartItemsModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <!-- Tracking Mode Selector -->
-                <div class="tracking-mode-selector" style="margin-bottom: 1rem;">
-                    <label style="font-weight: 500; margin-right: 1rem;">Track items for:</label>
-                    <div class="mode-buttons" style="display: inline-flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <button class="mode-btn" data-mode="send-to-heywood">Heywood</button>
-                        <button class="mode-btn" data-mode="send-to-casterton">Casterton</button>
-                        <button class="mode-btn" data-mode="send-to-portland">Portland</button>
-                        <button class="mode-btn" data-mode="send-to-mobile-library">Mobile</button>
-                        <button class="mode-btn" data-mode="weeding-candidate">Weeding</button>
-                        <button class="mode-btn" data-mode="monitor-performance">Monitor</button>
-                        <button class="mode-btn" data-mode="replacement-candidate">Replace</button>
-                    </div>
-                </div>
-
-                <!-- Bulk Actions -->
-                <div class="bulk-actions" id="chartModalBulkActions" style="margin-bottom: 1rem;">
-                    <button class="bulk-track-btn" id="chartModalTrackSelectedBtn"
-                        onclick="bulkTrackSelected('chartModal')" disabled>
-                        Track Selected (0)
-                    </button>
                     <button class="bulk-track-btn" onclick="bulkTrackAll('chartModal')">
                         Track All
                     </button>
@@ -16400,14 +16586,43 @@ Kirsten`;
                                 <input type="checkbox" id="selectAllChartModal" class="select-all-checkbox"
                                     onchange="toggleAllItems(this, 'chartModal')">
                             </th>
-                            <th class="sortable" data-sort="title" data-type="text">Title</th>
-                            <th class="sortable" data-sort="author" data-type="text">Author</th>
-                            <th class="sortable" data-sort="itemCreated" data-type="number">Year</th>
-                            <th class="sortable" data-sort="callNumber" data-type="text">Call Number</th>
-                            <th class="sortable" data-sort="collection" data-type="text">Collection</th>
-                            <th class="sortable" data-sort="circulation" data-type="number">Circulation</th>
-                            <th class="sortable" data-sort="age" data-type="number">Age</th>
-                            <th class="sortable" data-sort="branch" data-type="text">Branch</th>
+                            <th style="width: 60px; text-align: center; font-size: 0.875rem;">Copy</th>
+                            <th class="sortable" data-sort="title" data-type="text">
+                                Title
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="author" data-type="text">
+                                Author
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="collection" data-type="text">
+                                Collection
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="age" data-type="number">
+                                Age
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="circulation" data-type="number">
+                                Circulation
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
+                            <th class="sortable" data-sort="branch" data-type="text">
+                                Branch
+                                <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </th>
                             <th style="width: 100px;">Actions</th>
                         </tr>
                     </thead>
