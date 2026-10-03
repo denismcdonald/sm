@@ -14,8 +14,6 @@ The lightweight converter supports the supplied note's headings, paragraphs and 
 
 Dale's wording is retained without editorial changes. The page opens directly with the contents and map. “Sharal & Beyond” remains the browser-tab title.
 
-## Map versions
+## Map
 
-`DnD Map.jpeg` is the untouched source photograph. `map-cleaned.png` is an AI shadow-removal version. The cleaned map includes the corrected Pardo label. The cleanup makes the map easier to read but has changed some faint handwriting; refer to the original for exact labels. The page includes an “Original photo” button beside the cleaned map. Both images are embedded in index.html.
-
-Image edit brief: Remove the camera/person shadow and uneven lighting while retaining the map's handwriting, pencil lines, positions, borders and framing. Created with the built-in image editing tool.
+`map-corrected.png` is the default map, with all requested place-name corrections. `DnD Map.jpeg` is the untouched original photograph. Both images are embedded in index.html. Use “Original photo” to switch to the photograph and “Back to map” to return, either on the page or in the full-size view. Keep both image files alongside build.py when rebuilding.
